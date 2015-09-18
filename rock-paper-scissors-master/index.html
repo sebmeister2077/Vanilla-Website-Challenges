@@ -260,6 +260,7 @@
             </section>
         </dialog>
         <script>
+            const SCORE_LOCATION = location.pathname + 'score'
             const BEATING_RULES = Object.seal({
                 scissors: 'paper',
                 rock: 'scissors',
@@ -309,9 +310,13 @@
                     })
                 $('#outcome').removeClass('max-w-[100%]').addClass('max-w-0')
             })
-            var score = 0
+            $(window).on('beforeunload', saveScore)
+
+            var score = parseInt(localStorage.getItem(SCORE_LOCATION) || '0')
             var userSelection = null
             var houseSelection = null
+
+            $('#score').text(score)
             function elementClickListener(el) {
                 return function (e) {
                     const destinationId = 'user-selection'
@@ -444,6 +449,9 @@
                         home.attr('data-active', '')
                     }, 500)
                 }
+            }
+            function saveScore() {
+                localStorage.setItem(SCORE_LOCATION, score.toString())
             }
         </script>
     </body>

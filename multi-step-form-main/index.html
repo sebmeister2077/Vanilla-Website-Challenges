@@ -468,9 +468,8 @@
                 height: 40px;
                 z-index: 2;
             }
-            .page:nth-of-type(1):has(input:invalid):has(#try-go-next-page:checked)
-                footer
-                label[for='try-go-next-page'] {
+            .page:nth-of-type(1):has(#try-go-next-page:checked) footer label[for='try-go-next-page'],
+            .page:nth-of-type(1):not(:has(.content * input:placeholder-shown)) footer label[for='try-go-next-page'] {
                 display: none;
             }
             .page:nth-of-type(1):has(input:invalid) footer .next-step {

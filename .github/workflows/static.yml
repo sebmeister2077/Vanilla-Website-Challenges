@@ -23,6 +23,19 @@ concurrency:
 
 jobs:
   # Single deploy job since we're just deploying
+  add-csp-header:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set CSP header
+        run: echo "Content-Security-Policy: default-src 'self';" >> $GITHUB_WORKSPACE/index.html
+      - name: Commit changes
+        run: |
+          git config --global user.email "ppro9092@gmail.com"
+          git config --global user.name "Seba"
+          git commit -am "Add CSP header"
+          git push
   deploy:
     environment:
       name: github-pages

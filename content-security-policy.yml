@@ -1,0 +1,21 @@
+name: Add CSP header
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  add-csp-header:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set CSP header
+        run: echo "Content-Security-Policy: default-src 'self';" >> $GITHUB_WORKSPACE/index.html
+      - name: Commit changes
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git commit -am "Add CSP header"
+          git push

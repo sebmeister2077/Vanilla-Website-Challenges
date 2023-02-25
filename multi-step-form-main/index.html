@@ -535,6 +535,7 @@
                 cursor: pointer;
                 will-change: color;
                 transition: 0.3s color;
+                font-family: UbuntuBold;
                 height: 100%;
                 display: grid;
                 align-items: center;
@@ -785,7 +786,8 @@
                 }
                 .page {
                     background-color: transparent;
-                    padding-inline: 10px;
+                    --page-inline-padding: 16px;
+                    padding-inline: var(--page-inline-padding);
                     animation: none !important;
                 }
                 .page-overlay {
@@ -793,7 +795,7 @@
                 }
                 .page .navigation-buttons {
                     background-color: white;
-                    margin-left: -10px;
+                    margin-left: calc(-1 * var(--page-inline-padding));
                     margin-bottom: -18px;
                     padding: 10px;
                     width: 100dvw;
@@ -826,6 +828,20 @@
                     flex-direction: column;
                     gap: 4px;
                     margin-right: auto;
+                }
+                .page:nth-of-type(4) .total {
+                    margin-top: 1.25rem;
+                }
+                .page:nth-of-type(5) {
+                    justify-content: flex-start;
+                }
+                .page:nth-of-type(5) .content {
+                    align-items: center;
+                    gap: 16px;
+                    padding-block: 56px;
+                }
+                .page:nth-of-type(5) .content * {
+                    text-align: center;
                 }
                 .steps {
                     display: none;
@@ -908,10 +924,10 @@
             </aside>
             <!-- Selected pages -->
             <input id="p1" hidden type="radio" name="currentpage" />
-            <input id="p2" hidden type="radio" checked name="currentpage" />
+            <input id="p2" hidden type="radio" name="currentpage" />
             <input id="p3" hidden type="radio" name="currentpage" />
             <input id="p4" hidden type="radio" name="currentpage" />
-            <input id="p5" hidden type="radio" name="currentpage" />
+            <input id="p5" hidden type="radio" checked name="currentpage" />
             <form id="form">
                 <div class="page">
                     <main class="content">

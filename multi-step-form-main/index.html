@@ -49,7 +49,7 @@
                 justify-content: center;
                 background-color: var(--magnolia);
                 font-family: Ubuntu;
-                overflow: hidden;
+                overflow: clip;
             }
             @keyframes toast-popup {
                 0% {
@@ -203,15 +203,15 @@
                 40% {
                     transform: translateZ(calc(var(--perspective) / 10)) translateX(calc(100% + 20px));
                     opacity: 0.8;
-                    z-index: 2;
+                    z-index: 3;
                 }
                 60% {
                     transform: translateZ(calc(var(--perspective) / 10));
                     opacity: 0.9;
-                    z-index: 2;
+                    z-index: 3;
                 }
                 100% {
-                    z-index: 2;
+                    z-index: 3;
                     opacity: 1;
                     transform: none;
                 }
@@ -358,7 +358,7 @@
                 margin-left: auto;
             }
             .page .next-step {
-                border-radius: 8px;
+                border-radius: 6px;
                 padding: 12px 18px;
                 background-color: var(--marine-blue);
                 color: var(--magnolia);
@@ -750,6 +750,52 @@
             }
             body:has(#p5:checked) .toast:not(noscript)::after {
                 content: 'Form data has been sent using standard data format to an api';
+            }
+
+            /* Mobile styles */
+            @media only screen and (max-width: 650px) {
+                body {
+                    height: 100dvh;
+                }
+                .card {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 0px;
+                    padding-inline: 0px;
+                    background-color: var(--magnolia);
+                }
+                form {
+                    overflow: hidden;
+                    height: 90%;
+                    margin-top: auto;
+                }
+                #p1:checked ~ form .page:nth-child(1),
+                #p2:checked ~ form .page:nth-child(2),
+                #p3:checked ~ form .page:nth-child(3),
+                #p4:checked ~ form .page:nth-child(4),
+                #p5:checked ~ form .page:nth-child(5) {
+                    opacity: 1;
+                }
+                .page {
+                    background-color: transparent;
+                    padding-inline: 10px;
+                    animation: none !important;
+                }
+                .page-overlay {
+                    background-color: transparent;
+                }
+                .page .navigation-buttons {
+                    background-color: white;
+                    margin-left: -10px;
+                    margin-bottom: -18px;
+                    padding: 10px;
+                    width: 100dvw;
+                }
+                .steps {
+                    display: none;
+                    position: fixed;
+                    top: 0px;
+                }
             }
         </style>
     </head>

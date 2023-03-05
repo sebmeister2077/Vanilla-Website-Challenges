@@ -41,7 +41,8 @@
             }
             body {
                 margin: 0;
-                height: 100vh;
+                height: 100dvh;
+                width: 100vw;
                 box-sizing: border-box;
                 display: flex;
                 align-items: center;
@@ -93,6 +94,7 @@
                 background-color: var(--white);
                 box-shadow: 0px 2px 6px var(--cool-gray);
                 height: 500px;
+                width: clamp(650px, 80vw, 800px);
                 overflow: visible;
             }
             .steps {
@@ -195,7 +197,7 @@
                 }
                 20% {
                     transform: translateZ(calc(var(--perspective) / -10)) translateX(calc(100% + 20px));
-                    opacity: 0.2;
+                    opacity: 0.4;
                     z-index: -1;
                 }
                 40% {
@@ -470,8 +472,11 @@
                 cursor: pointer;
             }
             .page:nth-of-type(2) .pricing-card .subscription-name {
+                overflow: hidden;
+                text-overflow: ellipsis;
                 font-family: UbuntuMedium;
                 color: var(--marine-blue);
+                width: 100%;
             }
             .page:nth-of-type(2) .pricing-card .price {
                 font-size: 0.8rem;
@@ -820,8 +825,8 @@
                 </div>
             </aside>
             <!-- Selected pages -->
-            <input id="p1" hidden type="radio" checked name="currentpage" />
-            <input id="p2" hidden type="radio" name="currentpage" />
+            <input id="p1" hidden type="radio" name="currentpage" />
+            <input id="p2" hidden type="radio" checked name="currentpage" />
             <input id="p3" hidden type="radio" name="currentpage" />
             <input id="p4" hidden type="radio" name="currentpage" />
             <input id="p5" hidden type="radio" name="currentpage" />
@@ -870,7 +875,7 @@
                     </header>
 
                     <section class="pricings">
-                        <label class="pricing-card" for="arcade">
+                        <label class="pricing-card" for="arcade" title="Arcade">
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
                                 <g fill="none" fill-rule="evenodd">
                                     <circle cx="20" cy="20" r="20" fill="#FFAF7E" />
@@ -885,7 +890,7 @@
                             <span class="price">$9</span>
                         </label>
                         <input hidden checked name="pricing" id="arcade" type="radio" value="9" />
-                        <label class="pricing-card" for="advanced">
+                        <label class="pricing-card" for="advanced" title="Advanced">
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
                                 <g fill="none" fill-rule="evenodd">
                                     <circle cx="20" cy="20" r="20" fill="#F9818E" />
@@ -900,7 +905,7 @@
                             <span class="price">$12</span>
                         </label>
                         <input hidden name="pricing" id="advanced" type="radio" value="12" />
-                        <label class="pricing-card" for="pro">
+                        <label class="pricing-card" for="pro" title="Pro">
                             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
                                 <g fill="none" fill-rule="evenodd">
                                     <circle cx="20" cy="20" r="20" fill="#483EFF" />

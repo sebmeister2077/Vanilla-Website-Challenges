@@ -781,80 +781,41 @@
                     margin-top: auto;
                 }
 
-                /* This Page is visible #p1:checked ~ form .page:nth-child(1),
+                #p1:checked ~ form .page:nth-child(-n),
+                #p2:checked ~ form .page:nth-child(-n + 1),
+                #p3:checked ~ form .page:nth-child(-n + 2),
+                #p4:checked ~ form .page:nth-child(-n + 3),
+                #p5:checked ~ form .page:nth-child(-n + 4) {
+                    transform: translateX(-150%);
+                }
+
+                /* All pages after */
+                #p1:checked ~ form .page:nth-child(n + 2),
+                #p2:checked ~ form .page:nth-child(n + 3),
+                #p3:checked ~ form .page:nth-child(n + 4),
+                #p4:checked ~ form .page:nth-child(n + 5),
+                #p5:checked ~ form .page:nth-child(n + 6) {
+                    transform: translateX(150%);
+                }
+
+                /* This page is visible */
+                #p1:checked ~ form .page:nth-child(1),
                 #p2:checked ~ form .page:nth-child(2),
                 #p3:checked ~ form .page:nth-child(3),
                 #p4:checked ~ form .page:nth-child(4),
                 #p5:checked ~ form .page:nth-child(5) {
                     opacity: 1;
                     z-index: 3;
-                } */
-                /* All pages before */
-                @keyframes move-up-and-left {
-                    0% {
-                        opacity: 1;
-                    }
-                    30% {
-                        opacity: 0.9;
-                        transform: translateZ(calc(var(--perspective) / 10));
-                    }
-                    99% {
-                        opacity: 0.2;
-                        z-index: 3;
-                        transform: translateZ(calc(var(--perspective) / 10)) translateX(-120%);
-                    }
-                    100% {
-                        z-index: -1;
-                        transform: translateZ(calc(var(--perspective) / 10)) translateX(-120%);
-                    }
-                }
-                #p1:checked ~ form .page:nth-child(-n),
-                #p2:checked ~ form .page:nth-child(-n + 1),
-                #p3:checked ~ form .page:nth-child(-n + 2),
-                #p4:checked ~ form .page:nth-child(-n + 3),
-                #p5:checked ~ form .page:nth-child(-n + 4) {
-                    animation: move-up-and-left 3s forwards !important;
-                }
-
-                /* All pages after */
-                @keyframes move-up-and-right {
-                    0% {
-                        opacity: 1;
-                    }
-                    30% {
-                        opacity: 0.9;
-                        transform: translateZ(calc(var(--perspective) / 10));
-                    }
-                    99% {
-                        opacity: 0.2;
-                        z-index: 3;
-                        transform: translateZ(calc(var(--perspective) / 10)) translateX(120%);
-                    }
-                    100% {
-                        z-index: -1;
-                        transform: translateZ(calc(var(--perspective) / 10)) translateX(120%);
-                    }
-                }
-                #p1:checked ~ form .page:nth-child(n + 2),
-                #p2:checked ~ form .page:nth-child(n + 3),
-                #p3:checked ~ form .page:nth-child(n + 4),
-                #p4:checked ~ form .page:nth-child(n + 5),
-                #p5:checked ~ form .page:nth-child(n + 6) {
-                    animation: move-up-and-right 3s forwards reverse !important;
-                }
-                #p1:checked ~ form .page:nth-child(1),
-                #p2:checked ~ form .page:nth-child(2),
-                #p3:checked ~ form .page:nth-child(3),
-                #p4:checked ~ form .page:nth-child(4),
-                #p5:checked ~ form .page:nth-child(5) {
-                    animation-play-state: running;
                 }
                 .page {
                     background-color: transparent;
                     --page-inline-padding: 16px;
                     padding-inline: var(--page-inline-padding);
-                    /* animation: none !important; */
-                    animation-play-state: paused;
+                    animation: none !important;
+                    will-change: opacity, transform;
+                    transition: opacity 0.9s, transform 1.5s ease-in-out;
+                    opacity: 0;
+                    z-index: -1;
                     /* transform: translateZ(calc(var(--perspective) / 10)) translateX(120%); */
                 }
                 .page-overlay {
@@ -1069,6 +1030,7 @@
                                 type="text"
                                 placeholder="e.g. Stephen King"
                                 pattern="^[a-zA-z ]{3,30}$"
+                                value="Sebas"
                             />
 
                             <label for="email">Email Address</label>
@@ -1078,6 +1040,7 @@
                                 id="email"
                                 placeholder="e.g. stephenking@lorem.com"
                                 type="email"
+                                value="sadhaj@dajks.com"
                             />
 
                             <label for="phone">Phone Number</label>
@@ -1088,6 +1051,7 @@
                                 name="phone"
                                 placeholder="e.g. +1 234 567 890"
                                 pattern="^[\+]*[\d ]{8,20}$"
+                                value="132132321314"
                             />
                         </section>
                     </main>

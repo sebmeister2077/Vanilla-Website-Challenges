@@ -623,6 +623,13 @@
                 will-change: background-color, border;
                 transition: 0.3s background-color, 0.3s border;
             }
+            .page:nth-of-type(3) .add-ons .checkbox svg {
+                transform: scale(0);
+                transition: 0.5s transform cubic-bezier(0.42, 0, 0.39, 1.89);
+            }
+            .page:nth-of-type(3) .add-ons label:has(+ input:checked) .checkbox svg {
+                transform: scale(1);
+            }
             .page:nth-of-type(3) .add-ons label:has(+ input:checked) .checkbox {
                 border: 1px solid var(--purplish-blue);
                 background-color: var(--purplish-blue);
@@ -923,6 +930,12 @@
     </head>
     <body>
         <article class="card">
+            <!-- Selected pages -->
+            <input id="p1" hidden type="radio" name="currentpage" />
+            <input id="p2" hidden type="radio" name="currentpage" />
+            <input id="p3" hidden type="radio" checked name="currentpage" />
+            <input id="p4" hidden type="radio" name="currentpage" />
+            <input id="p5" hidden type="radio" name="currentpage" />
             <aside class="steps">
                 <svg
                     class="background mobile"
@@ -1024,12 +1037,6 @@
                     </div>
                 </div>
             </aside>
-            <!-- Selected pages -->
-            <input id="p1" hidden type="radio" checked name="currentpage" />
-            <input id="p2" hidden type="radio" name="currentpage" />
-            <input id="p3" hidden type="radio" name="currentpage" />
-            <input id="p4" hidden type="radio" name="currentpage" />
-            <input id="p5" hidden type="radio" name="currentpage" />
             <form id="form">
                 <div class="page">
                     <main class="content">

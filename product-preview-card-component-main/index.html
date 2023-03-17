@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+
+    <title>Frontend Mentor | Product preview card component</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
+      body {
+        background-color: hsl(32, 37%, 92%);
+        display: grid;
+        place-items: center;
+        height: 100vh;
+        margin: 0px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      .card {
+        width: 600px;
+        height: 450px;
+        background-color: hsl(0, 0%, 100%);
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+      }
+      img {
+        height: 450px;
+        width: 50%;
+      }
+      .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        width: 50%;
+        padding: 32px;
+      }
+      .curentprice {
+        font-size: 32px;
+        font-weight: bold;
+        color: hsl(158, 36%, 37%);
+      }
+      .oldprice {
+        color: hsl(228, 12%, 48%);
+        text-decoration: line-through;
+      }
+
+      .cartbtn {
+        color: hsl(0, 0%, 100%);
+        background-color: hsl(158, 36%, 37%);
+        border-radius: 5px;
+        width: 100%;
+        padding: 10px 10px 10px 10px;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .cartbtn:hover {
+        background-color: hsl(158, 36%, 27%);
+      }
+
+      .title {
+        font-size: 36px;
+        font-weight: bold;
+        color: hsl(212, 21%, 14%);
+      }
+      .perfume {
+        margin-right: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <img src="./images/image-product-desktop.jpg" />
+      <div class="content">
+        <div class="perfume">Perfume</div>
+
+        <div class="title">Gabrielle Essence Eau De Parfum</div>
+        <div style="text-align: center; font-family: 'Montserrat'">
+          Lorem ipsum dolor amet consectetur adipisicing elit. Expedita, quae
+        </div>
+        <div class="price">
+          <span class="curentprice">149$</span>
+          <span class="oldprice">179$</span>
+        </div>
+        <div class="cartbtn">
+          <svg width="15" height="16" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M14.383 10.388a2.397 2.397 0 0 0-1.518-2.222l1.494-5.593a.8.8 0 0 0-.144-.695.8.8 0 0 0-.631-.28H2.637L2.373.591A.8.8 0 0 0 1.598 0H0v1.598h.983l1.982 7.4a.8.8 0 0 0 .799.59h8.222a.8.8 0 0 1 0 1.599H1.598a.8.8 0 1 0 0 1.598h.943a2.397 2.397 0 1 0 4.507 0h1.885a2.397 2.397 0 1 0 4.331-.376 2.397 2.397 0 0 0 1.12-2.021ZM11.26 7.99H4.395L3.068 3.196h9.477L11.26 7.991Zm-6.465 6.392a.8.8 0 1 1 0-1.598.8.8 0 0 1 0 1.598Zm6.393 0a.8.8 0 1 1 0-1.598.8.8 0 0 1 0 1.598Z"
+              fill="#FFF"
+            />
+          </svg>
+          Add to Cart
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

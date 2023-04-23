@@ -1,52 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Home</title>
-  </head>
-  <style>
-    @keyframes toast-popup {
-      0% {
-        transform: translateY(-100%);
-      }
-      15% {
-        transform: translateY(20px);
-      }
-      85% {
-        transform: translateY(20px);
-      }
-      100% {
-        transform: translateY(-100%);
-      }
-    }
-    .construction-popup {
-      background-color: rgb(250 202 21);
-      padding: 12px 16px;
-      border-radius: 12px;
-      position: fixed;
-      top: 0px;
-      transform: translateY(-100%);
-      animation: toast-popup 6s ease-in-out 1s 1;
-    }
+    <head>
+        <title>Home</title>
+        <style>
+            @keyframes toast-popup {
+                0% {
+                    transform: translateY(-100%);
+                }
+                15% {
+                    transform: translateY(20px);
+                }
+                85% {
+                    transform: translateY(20px);
+                }
+                100% {
+                    transform: translateY(-100%);
+                }
+            }
+            .construction-popup {
+                background-color: rgb(250 202 21);
+                padding: 12px 16px;
+                border-radius: 12px;
+                position: fixed;
+                top: 0px;
+                transform: translateY(-100%);
+                animation: toast-popup 6s ease-in-out 1s 1;
+            }
 
-    body {
-      margin: 0;
-      height: 100vh;
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--magnolia);
-      font-family: Ubuntu;
-      overflow: hidden;
-    }
-  </style>
-  <body>
-    <header class="construction-popup">This page is under construction</header>
+            body {
+                margin: 0;
+                height: 100vh;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: var(--magnolia);
+                font-family: Ubuntu;
+                overflow: hidden;
+            }
+            nav ul {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+        </style>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    </head>
 
-    <nav>
-      <ul>
-        <li><a href="./multi-step-form-main/">Multi step form (no JS)</a></li>
-      </ul>
-    </nav>
-  </body>
+    <body>
+        <header class="construction-popup">This page is under construction</header>
+
+        <nav>
+            <ul>
+                <li><a href="./multi-step-form-main/">Multi step form (no JS)</a></li>
+                <li><a href="./mirror/">Mirror</a></li>
+            </ul>
+        </nav>
+    </body>
 </html>

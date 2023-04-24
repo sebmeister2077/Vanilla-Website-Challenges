@@ -1,0 +1,15 @@
+{
+    "name": "rest-countries-api-with-color-theme-switcher-master",
+    "version": "1.0.0",
+    "description": "![Design preview for the REST Countries API with color theme switcher coding challenge](./design/desktop-preview.jpg)",
+    "main": "index.js",
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "vite": "^4.3.1"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    }
+}

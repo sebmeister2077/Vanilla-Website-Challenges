@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "esnext",
+    "allowJs": true,
+    "sourceMap": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "baseUrl": "./src",
+    "outFile": "src/index.js",
+    "paths": {
+      "@/*": ["*"]
+    }
+  },
+  "include": ["src/*.ts"],
+  "exclude": ["node_modules"]
+}

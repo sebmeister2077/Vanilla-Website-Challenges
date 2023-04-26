@@ -43,6 +43,30 @@
             main {
                 width: 100%;
                 padding: 20px 32px;
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+            }
+            .countries {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                grid-gap: 32px;
+            }
+            .country {
+                background-color: #f0f0f0;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                min-width: 200px; /* ensures a minimum width of 100px */
+            }
+            .country img {
+                width: 100%;
+            }
+            .country :where(.country-details, .country-name) {
+                padding: 8px 20px;
             }
         </style>
     </head>
@@ -75,9 +99,11 @@
                     <article class="country">
                         <figure>
                             <img />
+                            <figcaption>
+                                <h4 class="country-name"></h4>
+                            </figcaption>
                         </figure>
-                        <h4 class="country-name"></h4>
-                        <address>
+                        <address class="country-details">
                             <div>
                                 <label for="population-">Population</label>
                                 <span id="population-"></span>

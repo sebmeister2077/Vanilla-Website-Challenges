@@ -1,6 +1,12 @@
 const API_ENDPOINT = 'https://restcountries.com/v3.1/'
 const FIELDS = '?fields=name,capital,region,flags,population'
 
+//initial
+getAllCountries().then((countries) => {
+    console.log(countries[0])
+    countries.slice(0, 10).forEach(createTemplate)
+})
+
 async function searchCountryByName(name) {
     return (await fetch(`${API_ENDPOINT}name/${name}${FIELDS}`)).json()
 }
@@ -12,14 +18,9 @@ async function getAllCountries() {
     return (await fetch(`${API_ENDPOINT}all${FIELDS}`)).json()
 }
 
-getAllCountries().then((countries) => {
-    console.log(countries[0])
-    countries.slice(0, 10).forEach(createTemplate)
-})
-
 function createTemplate(country) {
     const template = document.getElementById('country-template')
-    const main = document.getElementsByTagName('main')[0]
+    const main = document.querySelector('.countries')
     const content = template.content.cloneNode(true)
 
     //image

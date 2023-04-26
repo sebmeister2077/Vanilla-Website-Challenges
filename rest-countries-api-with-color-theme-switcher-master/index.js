@@ -1,21 +1,46 @@
 const API_ENDPOINT = 'https://restcountries.com/v3.1/'
 const FIELDS = '?fields=name,capital,region,flags,population'
+const PAGE_SIZE = 20
 
 //initial
-getAllCountries().then((countries) => {
-    console.log(countries[0])
-    countries.slice(0, 10).forEach(createTemplate)
+getAllCountries().then(applyNewCountries)
+
+region.addEventListener('change', function () {
+    const newRegion = this.value
+    searchCountriesByRegion(newRegion).then(applyNewCountries)
 })
 
-async function searchCountryByName(name) {
-    return (await fetch(`${API_ENDPOINT}name/${name}${FIELDS}`)).json()
+var searchNameTimeout
+var searchNameAbort
+searchName.addEventListener('keypress', function () {
+    const newName = this.value.trim()
+    console.log(newName)
+    if (searchNameTimeout) clearTimeout(searchNameTimeout)
+    searchNameAbort?.abort()
+    searchNameAbort = new AbortController()
+    searchNameTimeout = setTimeout(() => {
+        searchCountriesByName(newName, searchNameAbort.signal).then(applyNewCountries)
+        searchNameTimeout = null
+        searchNameAbort = null
+    }, 1000)
+})
+
+async function searchCountriesByName(name, signal) {
+    const result = await fetch(`${API_ENDPOINT}name/${name}${FIELDS}`, { signal })
+    if (result.status === 404) return []
+    return await result.json()
 }
 
-async function searchCountryByRegion(region) {
+async function searchCountriesByRegion(region) {
     return (await fetch(`${API_ENDPOINT}region/${region}${FIELDS}`)).json()
 }
 async function getAllCountries() {
     return (await fetch(`${API_ENDPOINT}all${FIELDS}`)).json()
+}
+
+function applyNewCountries(newCountries) {
+    document.querySelectorAll('.country').forEach((el) => el.remove())
+    newCountries.slice(0, PAGE_SIZE).forEach(createTemplate)
 }
 
 function createTemplate(country) {

@@ -14,7 +14,6 @@ var searchNameTimeout
 var searchNameAbort
 searchName.addEventListener('keypress', function () {
     const newName = this.value.trim()
-    console.log(newName)
     if (searchNameTimeout) clearTimeout(searchNameTimeout)
     searchNameAbort?.abort()
     searchNameAbort = new AbortController()
@@ -46,8 +45,17 @@ function applyNewCountries(newCountries) {
 function createTemplate(country) {
     const template = document.getElementById('country-template')
     const main = document.querySelector('.countries')
+    //content is a document fragment, it is not equal to the html dom element
     const content = template.content.cloneNode(true)
 
+    const anchor = content.querySelector('a')
+    anchor.href = `${window.location.origin}${window.location.pathname}?country=${encodeURIComponent(
+        country.name.official
+    )}`
+    anchor.onclick = (e) => {
+        e.preventDefault()
+        history.pushState({ searchName: searchName.value, region: region.value }, '', anchor.href)
+    }
     //image
     const image = content.querySelector('img')
     if (image) {

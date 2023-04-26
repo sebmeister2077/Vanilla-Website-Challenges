@@ -5,6 +5,12 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Rest Countries</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;600;800&display=swap"
+            rel="stylesheet"
+        />
 
         <style>
             svg {
@@ -35,6 +41,9 @@
             }
             body {
                 height: 100vh;
+                display: flex;
+                flex-direction: column;
+                font-family: 'Nunito Sans', sans-serif;
             }
             * {
                 box-sizing: border-box;
@@ -46,6 +55,8 @@
                 display: flex;
                 flex-direction: column;
                 gap: 24px;
+                overflow-y: auto;
+                flex-grow: 1;
             }
             .countries {
                 display: grid;
@@ -64,20 +75,40 @@
                 text-decoration: none;
                 min-width: 200px; /* ensures a minimum width of 100px */
             }
+            .country-name {
+                font-weight: 800;
+                font-size: 1.05rem;
+            }
             .country label {
                 cursor: pointer;
+                font-weight: 600;
+            }
+            .country label + span {
+                font-weight: 300;
             }
             .country img {
+                height: 160px;
                 width: 100%;
             }
             .country :where(.country-details, .country-name) {
                 padding: 8px 20px;
             }
+            .country .country-details {
+                font-style: normal;
+                font-size: 0.9rem;
+            }
+            body > header {
+                padding: 12px 32px;
+                box-shadow: 0px 2px 6px #00000029;
+            }
+            header h2 {
+                font-weight: 800;
+            }
         </style>
     </head>
     <body>
         <header>
-            <h2>Where in the world</h2>
+            <h2>Where in the world?</h2>
         </header>
         <main>
             <header class="appbar">

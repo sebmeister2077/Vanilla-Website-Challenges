@@ -65,7 +65,7 @@
             }
             .countries {
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
                 grid-gap: 32px;
             }
             .country {
@@ -78,7 +78,13 @@
                 gap: 6px;
                 color: unset;
                 text-decoration: none;
-                min-width: 200px; /* ensures a minimum width of 100px */
+                max-width: 350px;
+                min-width: 240px; /* ensures a minimum width of 100px */
+            }
+            @media only screen and (width < 592px) {
+                .country {
+                    max-width: 100%;
+                }
             }
             .country-name {
                 font-weight: 800;

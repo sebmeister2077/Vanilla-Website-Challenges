@@ -16,7 +16,7 @@ if (state.name) {
 region.addEventListener('change', function () {
     const newRegion = this.value
     searchName.value = ''
-    history.replaceState({ ...(history.state ?? {}), region: newRegion }, '')
+    history.replaceState({ name: null, region: newRegion }, '')
     searchCountriesByRegion(newRegion).then(applyNewCountries)
 })
 
@@ -29,7 +29,7 @@ searchName.addEventListener('change', function () {
     searchNameAbort = new AbortController()
     searchNameTimeout = setTimeout(() => {
         region.value = 'global'
-        history.replaceState({ ...(history.state ?? {}), name: newName }, '')
+        history.replaceState({ region: null, name: newName }, '')
         searchCountriesByName(newName, searchNameAbort.signal).then(applyNewCountries)
         searchNameTimeout = null
         searchNameAbort = null

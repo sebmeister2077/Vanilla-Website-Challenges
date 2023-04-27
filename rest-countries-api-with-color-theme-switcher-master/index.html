@@ -13,6 +13,25 @@
         />
 
         <style>
+            body {
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                font-family: 'Nunito Sans', sans-serif;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0px;
+            }
+            main {
+                width: 100%;
+                padding: 20px 32px;
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+                overflow-y: auto;
+                flex-grow: 1;
+            }
             svg {
                 min-width: 24px;
                 width: 24px;
@@ -43,25 +62,6 @@
                 width: 100%;
                 display: flex;
                 justify-content: space-between;
-            }
-            body {
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                font-family: 'Nunito Sans', sans-serif;
-            }
-            * {
-                box-sizing: border-box;
-                margin: 0px;
-            }
-            main {
-                width: 100%;
-                padding: 20px 32px;
-                display: flex;
-                flex-direction: column;
-                gap: 24px;
-                overflow-y: auto;
-                flex-grow: 1;
             }
             .countries {
                 display: grid;

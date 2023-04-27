@@ -3,21 +3,33 @@ const FIELDS = '?fields=name,capital,region,flags,population'
 const PAGE_SIZE = 20
 
 //initial
-getAllCountries().then(applyNewCountries)
-
+const { state } = history
+if (!state) getAllCountries().then(applyNewCountries)
+if (state.region) {
+    region.value = state.region
+    searchCountriesByRegion(state.region).then(applyNewCountries)
+}
+if (state.name) {
+    searchName.value = state.name
+    searchCountriesByName(state.name).then(applyNewCountries)
+}
 region.addEventListener('change', function () {
     const newRegion = this.value
+    searchName.value = ''
+    history.replaceState({ ...(history.state ?? {}), region: newRegion }, '')
     searchCountriesByRegion(newRegion).then(applyNewCountries)
 })
 
 var searchNameTimeout
 var searchNameAbort
-searchName.addEventListener('keypress', function () {
+searchName.addEventListener('change', function () {
     const newName = this.value.trim()
     if (searchNameTimeout) clearTimeout(searchNameTimeout)
     searchNameAbort?.abort()
     searchNameAbort = new AbortController()
     searchNameTimeout = setTimeout(() => {
+        region.value = 'global'
+        history.replaceState({ ...(history.state ?? {}), name: newName }, '')
         searchCountriesByName(newName, searchNameAbort.signal).then(applyNewCountries)
         searchNameTimeout = null
         searchNameAbort = null

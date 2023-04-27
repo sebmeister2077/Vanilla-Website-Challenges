@@ -13,7 +13,31 @@
         />
 
         <style>
+            :root {
+                --dark-blue: hsl(209, 23%, 22%);
+                --very-dark-blue: hsl(207, 26%, 17%);
+                --very-dark-blue: hsl(200, 15%, 8%);
+                --dark-gray: hsl(0, 0%, 52%);
+                --very-light-gray: hsl(0, 0%, 98%);
+                --white: hsl(0, 0%, 100%);
+            }
+            html {
+                --elements: var(--white);
+                --background: var(--very-light-gray);
+                --input: var(--dark-gray);
+                --text: var(--very-dark-blue);
+            }
+            @media (prefers-color-scheme: dark) {
+                html {
+                    --elements: var(--dark-blue);
+                    --background: var(--very-dark-blue);
+                    --input: var(--very-light-gray);
+                    --text: var(--white);
+                }
+            }
             body {
+                color: var(--text);
+                background-color: var(--background);
                 height: 100vh;
                 display: flex;
                 flex-direction: column;
@@ -38,9 +62,10 @@
                 height: 24px;
             }
             .search-icon {
-                fill: hsla(0, 0%, 52%, 0.683);
+                fill: var(--input);
             }
             .search {
+                background-color: var(--elements);
                 display: flex;
                 border-radius: 6px;
                 padding: 8px 16px;
@@ -48,11 +73,15 @@
                 overflow: hidden;
             }
             .search input {
+                color: var(--input);
+                background-color: transparent;
                 outline: none;
                 border: none;
                 width: calc(100% - 24px);
             }
             .region {
+                color: var(--input);
+                background-color: var(--elements);
                 border: none;
                 padding: 8px 16px;
                 box-shadow: 0px 2px 6px #00000029;
@@ -69,7 +98,7 @@
                 grid-gap: 32px;
             }
             .country {
-                background-color: #ffffff;
+                background-color: var(--elements);
                 box-shadow: 0px 2px 6px #00000029;
                 border-radius: 4px;
                 overflow: hidden;
@@ -109,6 +138,7 @@
                 font-size: 0.9rem;
             }
             body > header {
+                background-color: var(--elements);
                 padding: 12px 32px;
                 box-shadow: 0px 2px 6px #00000029;
             }

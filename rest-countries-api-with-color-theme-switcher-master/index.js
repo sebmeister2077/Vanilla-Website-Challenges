@@ -1,15 +1,24 @@
 const API_ENDPOINT = 'https://restcountries.com/v3.1/'
 const FIELDS = '?fields=name,capital,region,flags,population'
 const PAGE_SIZE = 20
+const COUNTRY_NAMES_LOCATION = 'country-names'
 
 //initial
+initializeAutocompleteList()
 const { state } = history
-if (!state) getAllCountries().then(applyNewCountries)
-if (state.region) {
+if (!state?.region && !state?.name)
+    getAllCountries()
+        .then((allCountries) => {
+            localStorage.setItem(COUNTRY_NAMES_LOCATION, JSON.stringify(allCountries.map((c) => c.name.common)))
+            initializeAutocompleteList()
+            return allCountries
+        })
+        .then(applyNewCountries)
+if (state?.region) {
     region.value = state.region
     searchCountriesByRegion(state.region).then(applyNewCountries)
 }
-if (state.name) {
+if (state?.name) {
     searchName.value = state.name
     searchCountriesByName(state.name).then(applyNewCountries)
 }
@@ -62,9 +71,8 @@ function createTemplate(country) {
     const content = template.content.cloneNode(true)
 
     const anchor = content.querySelector('a')
-    anchor.href = `${window.location.origin}${window.location.pathname}?country=${encodeURIComponent(
-        country.name.official
-    )}`
+    anchor.id = country.name.official
+    anchor.href = `${window.location.origin}${window.location.pathname}#${country.name.official}`
     anchor.onclick = (e) => {
         e.preventDefault()
         history.pushState({ searchName: searchName.value, region: region.value }, '', anchor.href)
@@ -99,4 +107,21 @@ function setValueForLabel(content, id, idSuffix, givenValue) {
     label.htmlFor = newId
     value.id = newId
     value.innerText = givenValue
+}
+
+function initializeAutocompleteList() {
+    if (countryNamesList.children.length) return
+    const countryNames = localStorage.getItem(COUNTRY_NAMES_LOCATION)
+    if (!countryNames) return
+    let parsedNames
+    try {
+        parsedNames = JSON.parse(countryNames)
+    } catch {
+        return
+    }
+    parsedNames.forEach((name) => {
+        const option = document.createElement('option')
+        option.value = name
+        countryNamesList.append(option)
+    })
 }

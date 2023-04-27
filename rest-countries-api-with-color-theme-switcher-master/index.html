@@ -69,15 +69,19 @@
                 display: flex;
                 border-radius: 6px;
                 padding: 8px 16px;
+                gap: 8px;
                 box-shadow: 0px 0px 6px 1px hsla(0, 0%, 0%, 0.2);
                 overflow: hidden;
+            }
+            .search input::placeholder {
+                color: currentColor;
             }
             .search input {
                 color: var(--input);
                 background-color: transparent;
                 outline: none;
                 border: none;
-                width: calc(100% - 24px);
+                width: calc(100% - 32px);
             }
             .region {
                 color: var(--input);
@@ -107,7 +111,7 @@
                 gap: 6px;
                 color: unset;
                 text-decoration: none;
-                max-width: 350px;
+                max-width: 300px;
                 min-width: 240px; /* ensures a minimum width of 100px */
             }
             @media only screen and (width < 592px) {

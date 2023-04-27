@@ -30,7 +30,8 @@ searchName.addEventListener('change', function () {
     searchNameTimeout = setTimeout(() => {
         region.value = 'global'
         history.replaceState({ region: null, name: newName }, '')
-        searchCountriesByName(newName, searchNameAbort.signal).then(applyNewCountries)
+        if (newName) searchCountriesByName(newName, searchNameAbort.signal).then(applyNewCountries)
+        else getAllCountries().then(applyNewCountries)
         searchNameTimeout = null
         searchNameAbort = null
     }, 1000)

@@ -1,8 +1,12 @@
 const API_ENDPOINT = 'https://restcountries.com/v3.1/'
 const FIELDS = '?fields=name,capital,region,flags,population'
-const PAGE_SIZE = 20
+const PAGE_SIZE = calculatePageSize()
+console.log(PAGE_SIZE)
 const COUNTRY_NAMES_LOCATION = 'country-names'
 
+let countries = []
+let currentPage = 0
+const countryContainer = document.getElementsByTagName('main')[0]
 //initial
 initializeAutocompleteList()
 const { state } = history
@@ -46,6 +50,20 @@ searchName.addEventListener('change', function () {
     }, 1000)
 })
 
+countryContainer.addEventListener('scroll', function (e) {
+    const OFFSET = 300 //pixels
+    const isScrolledToBottom = this.scrollHeight - this.scrollTop <= this.clientHeight + OFFSET
+    if (!isScrolledToBottom) return
+
+    const noMoreCountries = countries.length / PAGE_SIZE <= currentPage + 1
+    if (noMoreCountries) {
+        console.log('No more countries')
+        return
+    }
+    currentPage++
+    countries.slice(currentPage, currentPage * PAGE_SIZE).forEach(createTemplate)
+})
+
 async function searchCountriesByName(name, signal) {
     const result = await fetch(`${API_ENDPOINT}name/${name}${FIELDS}`, { signal })
     if (result.status === 404) return []
@@ -60,8 +78,10 @@ async function getAllCountries() {
 }
 
 function applyNewCountries(newCountries) {
+    countries = newCountries
+    currentPage = 0
     document.querySelectorAll('.country').forEach((el) => el.remove())
-    newCountries.slice(0, PAGE_SIZE).forEach(createTemplate)
+    newCountries.slice(currentPage, PAGE_SIZE).forEach(createTemplate)
 }
 
 function createTemplate(country) {
@@ -129,4 +149,11 @@ function initializeAutocompleteList() {
 
 function normalizeText(str) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+}
+
+function calculatePageSize() {
+    const { innerHeight, innerWidth } = window
+    const APPROXIMATE_COUNTRY_WIDTH = 300,
+        APPROXIMATE_COUNTRY_HEIGHT = 300
+    return Math.round((innerWidth * innerHeight) / (APPROXIMATE_COUNTRY_WIDTH * APPROXIMATE_COUNTRY_HEIGHT) + 2)
 }

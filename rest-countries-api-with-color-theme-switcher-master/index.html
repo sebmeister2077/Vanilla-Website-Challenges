@@ -11,7 +11,10 @@
             href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;600;800&display=swap"
             rel="stylesheet"
         />
-
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+        />
         <style>
             :root {
                 --dark-blue: hsl(209, 23%, 22%);
@@ -55,6 +58,7 @@
                 gap: 24px;
                 overflow-y: auto;
                 flex-grow: 1;
+                position: relative;
             }
             svg {
                 min-width: 24px;
@@ -91,6 +95,8 @@
                 box-shadow: 0px 2px 6px #00000029;
             }
             .appbar {
+                position: sticky;
+                top: 0px;
                 display: flex;
                 width: 100%;
                 display: flex;
@@ -141,10 +147,6 @@
                 font-style: normal;
                 font-size: 0.9rem;
             }
-            #Suriname:target {
-                outline: 3px solid red;
-                background-color: red;
-            }
             body > header {
                 background-color: var(--elements);
                 padding: 12px 32px;
@@ -153,13 +155,25 @@
             header h2 {
                 font-weight: 800;
             }
+            .go-to-top {
+                position: fixed;
+                right: 24px;
+                bottom: 24px;
+                background-color: var(--elements);
+                color: var(--text);
+                border-radius: 50%;
+                aspect-ratio: 1/1;
+                padding: 12px;
+                border: none;
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
         <header>
             <h2>Where in the world?</h2>
         </header>
-        <main>
+        <main id="main">
             <header class="appbar">
                 <div class="search">
                     <svg class="search-icon" viewBox="0 0 24 24">
@@ -212,6 +226,9 @@
                     </a>
                 </template>
             </section>
+            <button class="material-symbols-outlined go-to-top" onclick="main.scrollTo({ top:0,behavior:'smooth'});">
+                expand_less
+            </button>
         </main>
         <script defer src="./index.js"></script>
     </body>

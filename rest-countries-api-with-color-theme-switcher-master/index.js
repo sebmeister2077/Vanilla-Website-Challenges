@@ -6,7 +6,7 @@ const COUNTRY_NAMES_LOCATION = 'country-names'
 //initial
 initializeAutocompleteList()
 const { state } = history
-if (!state?.region && !state?.name)
+if ((!state?.region || state?.region === 'global') && !state?.name)
     getAllCountries()
         .then((allCountries) => {
             localStorage.setItem(COUNTRY_NAMES_LOCATION, JSON.stringify(allCountries.map((c) => c.name.common)))
@@ -14,7 +14,7 @@ if (!state?.region && !state?.name)
             return allCountries
         })
         .then(applyNewCountries)
-if (state?.region) {
+if (state?.region && state?.region !== 'global') {
     region.value = state.region
     searchCountriesByRegion(state.region).then(applyNewCountries)
 }
@@ -71,8 +71,8 @@ function createTemplate(country) {
     const content = template.content.cloneNode(true)
 
     const anchor = content.querySelector('a')
-    anchor.id = country.name.official
-    anchor.href = `${window.location.origin}${window.location.pathname}#${country.name.official}`
+    anchor.id = normalizeText(country.name.common)
+    anchor.href = `#${anchor.id}`
     anchor.onclick = (e) => {
         e.preventDefault()
         history.pushState({ searchName: searchName.value, region: region.value }, '', anchor.href)
@@ -121,7 +121,12 @@ function initializeAutocompleteList() {
     }
     parsedNames.forEach((name) => {
         const option = document.createElement('option')
-        option.value = name
+        //copied from chatgpt but works
+        option.value = normalizeText(name)
         countryNamesList.append(option)
     })
+}
+
+function normalizeText(str) {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }

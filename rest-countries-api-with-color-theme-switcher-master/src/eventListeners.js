@@ -1,5 +1,5 @@
 import { PAGE_SIZE, getAllCountries, searchCountriesByName, searchCountriesByRegion } from './apiMethods.js'
-import { createTemplate } from './domFunctions.js'
+import { applyNewCountries, createTemplate } from './domFunctions.js'
 import { throttleFunction } from './helpers.js'
 
 export function regionChangeListener() {
@@ -26,9 +26,6 @@ export function regionClickListener(e) {
 
     const throttledFunction = throttleFunction(alignDialog, 200)
     if (regionsDialog.open) {
-        const value = e.target.getAttribute('value')
-        region.value = value
-        region.dispatchEvent(new Event('change'))
         regionsDialog.removeAttribute('open')
         expandMoreIcon.classList.remove('rotate180')
         window.removeEventListener('resize', throttledFunction)
@@ -48,6 +45,14 @@ export function regionClickListener(e) {
     window.addEventListener('resize', throttledFunction)
     regionsDialog.setAttribute('open', '')
     expandMoreIcon.classList.add('rotate180')
+}
+export function regionDialogListener(e) {
+    const expandMoreIcon = regionControl.querySelector(' .expand-more')
+    regionsDialog.removeAttribute('open')
+    const value = e.target.getAttribute('value')
+    region.value = value
+    region.dispatchEvent(new Event('change'))
+    expandMoreIcon.classList.remove('rotate180')
 }
 export function documentClickListener(e) {
     if (regionControl.classList.contains('retract-width') && e.target != regionControl) regionControl.style.width = ''

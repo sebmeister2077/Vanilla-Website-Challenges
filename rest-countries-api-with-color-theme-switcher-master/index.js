@@ -7,6 +7,7 @@ import {
     documentKeypressListener,
     regionChangeListener,
     regionClickListener,
+    regionDialogListener,
     searchNameChangeListener,
 } from './src/eventListeners.js'
 
@@ -29,9 +30,10 @@ getAllCountries()
     })
     .then(applyNewCountries)
 
-autoAnimate(countryContainer)
+// autoAnimate(countryContainer)
 region.addEventListener('change', regionChangeListener)
 regionControl.addEventListener('click', regionClickListener)
+regionsDialog.addEventListener('click', regionDialogListener)
 searchName.addEventListener('change', searchNameChangeListener)
 document.addEventListener('keypress', documentKeypressListener)
 mainContainer.addEventListener('scroll', containerScrollListener)

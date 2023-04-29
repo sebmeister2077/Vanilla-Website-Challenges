@@ -140,7 +140,7 @@
                 will-change: opacity;
             }
             .region.retract-width svg ~:where(svg,input,label){
-                opacity: 0;
+                opacity: 0 !important;
             }
             .region label {
                 cursor: pointer;
@@ -170,6 +170,8 @@
                 transform: translate(-22px, -10px) scale(0.6);
             }
             #region-dropdown {
+                z-index: 2;
+            cursor: pointer;
                 position: absolute;
                 width: 210px;
                 border: none;

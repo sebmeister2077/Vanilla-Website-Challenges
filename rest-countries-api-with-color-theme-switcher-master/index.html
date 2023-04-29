@@ -127,13 +127,10 @@
                 cursor: pointer;
                 user-select: none;
                 position: relative;
-                overflow: hidden;
+                overflow:hidden;
                 width:210px;
                 transition: width .8s;
                 will-change: width;
-            }
-            .region:has(:active,:focus-within){
-                background-color: red;
             }
             .region :not(input) {
                 z-index: 2;
@@ -141,6 +138,9 @@
             .region svg ~:where(svg,input,label){
                 transition: opacity .4s;
                 will-change: opacity;
+            }
+            .region.retract-width svg ~:where(svg,input,label){
+                opacity: 0;
             }
             .region label {
                 cursor: pointer;
@@ -171,11 +171,16 @@
             }
             #region-dropdown {
                 position: absolute;
-                left: 0px;
-                width: 100%;
+                width: 210px;
                 border: none;
+                display: block;
+                opacity: 0;
+                transition: opacity .4s;
                 background-color: var(--elements);
                 border-radius: var(--border-radius);
+            }
+            #region-dropdown[open]{
+                opacity: 1;
             }
             #region-dropdown ul {
                 list-style-type: none;
@@ -197,7 +202,6 @@
                 top: 0px;
                 display: flex;
                 width: 100%;
-                display: flex;
                 justify-content: space-between;
                 gap: 8px;
                 flex-wrap: wrap;
@@ -333,7 +337,7 @@
                     />
                     <datalist id="countryNamesList"> </datalist>
                 </div>
-                <div tabindex="0" aria-controls="region-dropdown" id="region-control" class="region">
+                <div tabindex="0" id="region-control" class="region">
                     <svg viewBox="0 0 24 24">
                         <path
                             d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-1.95.7-3.74 1.87-5.13L9 10v1c0 1.1.9 2 2 2v5.59c0 .27.11.52.29.71l.71.7c-4.42 0-8-3.58-8-8zm9 7.94V18l3.75-5.62c.16-.25.25-.54.25-.83V10.5c0-.55-.45-1-1-1h-1.5l-1.4-1.75c-.38-.47-.95-.75-1.56-.75H8V5.07C9.18 4.39 10.54 4 12 4c4.41 0 8 3.59 8 8 0 4.07-3.06 7.44-7 7.94z"
@@ -344,17 +348,17 @@
                         <path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
                     </svg>
                     <input disabled name="region" id="region" />
-                    <dialog style="top: 52px" aria-owns="region-control" id="region-dropdown">
-                        <ul>
-                            <li hidden value="">Global</li>
-                            <li value="africa">Africa</li>
-                            <li value="america">America</li>
-                            <li value="asia">Asia</li>
-                            <li value="europe">Europe</li>
-                            <li value="oceania">Oceania</li>
-                        </ul>
-                    </dialog>
                 </div>
+                <dialog id="region-dropdown">
+                    <ul>
+                        <li hidden value="">Global</li>
+                        <li value="africa">Africa</li>
+                        <li value="america">America</li>
+                        <li value="asia">Asia</li>
+                        <li value="europe">Europe</li>
+                        <li value="oceania">Oceania</li>
+                    </ul>
+                </dialog>
             </header>
             <section class="countries">
                 <template id="country-template">

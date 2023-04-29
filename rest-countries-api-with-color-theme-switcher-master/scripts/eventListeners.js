@@ -37,9 +37,12 @@ export function regionClickListener(e) {
 
     function alignDialog(element) {
         const el = element instanceof HTMLElement ? element : regionControl
-        const { offsetTop, offsetHeight, offsetLeft } = el
+        const { offsetTop, offsetHeight, offsetLeft, offsetWidth } = el
         regionsDialog.style.top = `${offsetHeight + offsetTop + 4}px`
-        regionsDialog.style.left = `${offsetLeft}px`
+        let offset = 0
+        const isParentRetracted = el.classList.contains('retract-width')
+        if (isParentRetracted) offset = offsetWidth - 210
+        regionsDialog.style.left = `${offsetLeft + offset}px`
     }
     alignDialog(this)
     window.addEventListener('resize', throttledFunction)
@@ -83,11 +86,10 @@ export function containerScrollListener(e) {
         faButton.classList.add('show')
         searchContainer.classList.add('retract-width')
         regionControl.classList.add('retract-width')
-        // regionControl.querySelectorAll(' svg ~ :where(svg,input,label)').forEach((el) => el.classList.add('fade'))
+        regionsDialog.removeAttribute('open')
     } else {
         searchContainer.classList.remove('retract-width')
         regionControl.classList.remove('retract-width')
-        // regionControl.querySelectorAll(' svg ~ :where(svg,input,label)').forEach((el) => el.classList.remove('fade'))
         faButton.classList.remove('show')
     }
     const isScrolledToBottom = scrollHeight - scrollTop <= clientHeight + OFFSET

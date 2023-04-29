@@ -164,8 +164,19 @@
                 border-radius: 50%;
                 aspect-ratio: 1/1;
                 padding: 12px;
-                border: none;
+                border: 1px solid var(--dark-gray);
                 cursor: pointer;
+                will-change: transform, scale, opacity;
+                transition: translate 0.8s, scale 0.4s, opacity 0.4s;
+                translate: 0px 200%;
+                opacity: 0.75;
+            }
+            .go-to-top:hover {
+                opacity: 1;
+                scale: 1.2;
+            }
+            .show {
+                translate: none;
             }
         </style>
     </head>

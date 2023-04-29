@@ -1,7 +1,6 @@
 const API_ENDPOINT = 'https://restcountries.com/v3.1/'
 const FIELDS = '?fields=name,capital,region,flags,population'
 const PAGE_SIZE = calculatePageSize()
-console.log(PAGE_SIZE)
 const COUNTRY_NAMES_LOCATION = 'country-names'
 
 let countries = []
@@ -52,7 +51,11 @@ searchName.addEventListener('change', function () {
 
 countryContainer.addEventListener('scroll', function (e) {
     const OFFSET = 300 //pixels
-    const isScrolledToBottom = this.scrollHeight - this.scrollTop <= this.clientHeight + OFFSET
+    const { scrollHeight, scrollTop, clientHeight } = this
+    if (scrollTop >= clientHeight) document.querySelector('.go-to-top').classList.add('show')
+    else document.querySelector('.go-to-top').classList.remove('show')
+
+    const isScrolledToBottom = scrollHeight - scrollTop <= clientHeight + OFFSET
     if (!isScrolledToBottom) return
 
     const noMoreCountries = countries.length / PAGE_SIZE <= currentPage + 1

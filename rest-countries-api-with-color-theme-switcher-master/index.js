@@ -48,6 +48,15 @@ searchName.addEventListener('change', function () {
         searchNameAbort = null
     }, 1000)
 })
+document.addEventListener('keypress', function (e) {
+    if (document.activeElement === searchName) return
+    if (e.code == 'Slash' || (e.code == 'KeyK' && e.ctrlKey)) {
+        setTimeout(() => {
+            searchName.focus()
+        }, 0)
+        e.stopPropagation()
+    }
+})
 
 countryContainer.addEventListener('scroll', function (e) {
     const OFFSET = 300 //pixels

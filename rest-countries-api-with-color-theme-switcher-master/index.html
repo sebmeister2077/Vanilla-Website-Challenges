@@ -92,16 +92,17 @@
                 align-items: center;
                 width: 300px;
                 will-change: width;
-                transition: width .7s;
+                transition: width .8s;
             }
-            .retract-search{
-                width: 56px;
+            .retract-width{
+                width: 56px !important;
             }
             .search:has(:focus-within,:active){
-                width:300px;
+                width:300px !important;
             }
             .search label{
                 cursor: pointer;
+                height: 24px;
             }
             .search input::placeholder {
                 color: currentColor;
@@ -126,14 +127,26 @@
                 cursor: pointer;
                 user-select: none;
                 position: relative;
+                overflow: hidden;
+                width:210px;
+                transition: width .8s;
+                will-change: width;
+            }
+            .region:has(:active,:focus-within){
+                background-color: red;
             }
             .region :not(input) {
                 z-index: 2;
             }
+            .region svg ~* {
+                transition: opacity .4s;
+                will-change: opacity;
+            }
             .region label {
                 cursor: pointer;
-                will-change: transform;
-                transition: transform 0.4s;
+                will-change: transform,opacity;
+                transition: transform 0.4s,opacity .4s;
+                white-space: nowrap;
             }
             .region .expand-more {
                 will-change: rotate;
@@ -151,7 +164,6 @@
                 transform: translateX(-50%);
                 background-color: transparent;
                 border: none;
-                transition: opacity 0.4s;
                 color: var(--input);
             }
             .region:has(input.appear) label {
@@ -187,11 +199,22 @@
                 width: 100%;
                 display: flex;
                 justify-content: space-between;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+            @media only screen and (width<=610px) {
+                .search {
+                    width: 100%;
+                }
+                .search:has(:focus-within,:active) {
+                    width:100% !important;
+                }
             }
             .countries {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
                 grid-gap: 32px;
+                padding: 12px;
             }
             .country {
                 background-color: var(--elements);
@@ -206,9 +229,20 @@
                 max-width: 300px;
                 min-width: 240px;
             }
-            @media only screen and (width < 592px) {
+            @media only screen and (width <=610px) {
                 .country {
-                    max-width: 100%;
+                    min-width: 70%;
+                    justify-self: center;
+                }
+            }
+             @media only screen and (width <=500px) {
+                .country {
+                    min-width: 85%;
+                }
+            }
+            @media only screen and (width <=400px) {
+                .country {
+                    min-width: 100%;
                 }
             }
             .country-name {
@@ -232,6 +266,7 @@
             .country .country-details {
                 font-style: normal;
                 font-size: 0.9rem;
+                padding-bottom: 24px;
             }
             .country .country-details span {
                 color: var(--input);
@@ -266,6 +301,9 @@
             }
             .appear {
                 opacity: 1 !important;
+            }
+            .fade{
+                opacity: 0 !important;
             }
             .show {
                 translate: none;

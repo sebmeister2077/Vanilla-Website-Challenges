@@ -19,7 +19,10 @@ export function regionChangeListener() {
 }
 
 export function regionClickListener(e) {
+    e.stopPropagation()
+    if (this.classList.contains('retract-width')) this.style.width = '210px'
     const expandMoreIcon = regionControl.querySelector(' .expand-more')
+
     if (regionsDialog.open) {
         const value = e.target.getAttribute('value')
         region.value = value
@@ -34,7 +37,9 @@ export function regionClickListener(e) {
     regionsDialog.setAttribute('open', '')
     expandMoreIcon.classList.add('rotate180')
 }
-
+export function documentClickListener(e) {
+    if (regionControl.classList.contains('retract-width') && e.target != regionControl) regionControl.style.width = ''
+}
 var searchNameTimeout
 var searchNameAbort
 export function searchNameChangeListener() {
@@ -67,9 +72,13 @@ export function containerScrollListener(e) {
     const faButton = document.querySelector('.go-to-top')
     if (scrollTop >= clientHeight) {
         faButton.classList.add('show')
-        searchContainer.classList.add('retract-search')
+        searchContainer.classList.add('retract-width')
+        regionControl.classList.add('retract-width')
+        regionControl.querySelectorAll(' svg ~ *').forEach((el) => el.classList.add('fade'))
     } else {
-        searchContainer.classList.remove('retract-search')
+        searchContainer.classList.remove('retract-width')
+        regionControl.classList.remove('retract-width')
+        regionControl.querySelectorAll(' svg ~ *').forEach((el) => el.classList.remove('fade'))
         faButton.classList.remove('show')
     }
     const isScrolledToBottom = scrollHeight - scrollTop <= clientHeight + OFFSET

@@ -2,6 +2,7 @@ import { getAllCountries } from './scripts/apiMethods.js'
 import { COUNTRY_NAMES_LOCATION, applyNewCountries, initializeAutocompleteList } from './scripts/domFunctions.js'
 import {
     containerScrollListener,
+    documentClickListener,
     documentKeypressListener,
     regionChangeListener,
     regionClickListener,
@@ -10,8 +11,8 @@ import {
 
 window.countries = []
 window.currentPage = 0
-window.currentSearch
-window.currentRegion
+window.currentSearch = ''
+window.currentRegion = ''
 window.countryContainer = document.getElementsByTagName('main')[0]
 window.regionControl = document.getElementById('region-control')
 window.regionsDialog = document.getElementById('region-dropdown')
@@ -31,3 +32,4 @@ regionControl.addEventListener('click', regionClickListener)
 searchName.addEventListener('change', searchNameChangeListener)
 document.addEventListener('keypress', documentKeypressListener)
 countryContainer.addEventListener('scroll', containerScrollListener)
+document.addEventListener('click', documentClickListener)

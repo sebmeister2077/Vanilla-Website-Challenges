@@ -11,10 +11,6 @@
             href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;600;800&display=swap"
             rel="stylesheet"
         />
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
-        />
         <style>
             :root {
                 --dark-blue: hsl(209, 23%, 22%);
@@ -83,8 +79,6 @@
                 min-width: 24px;
                 width: 24px;
                 height: 24px;
-            }
-            .search-icon {
                 fill: var(--input);
             }
             .search {
@@ -302,9 +296,15 @@
                     <datalist id="countryNamesList"> </datalist>
                 </div>
                 <div tabindex="0" aria-controls="region-dropdown" id="region-control" class="region">
-                    <span class="material-symbols-outlined"> south_america </span>
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-1.95.7-3.74 1.87-5.13L9 10v1c0 1.1.9 2 2 2v5.59c0 .27.11.52.29.71l.71.7c-4.42 0-8-3.58-8-8zm9 7.94V18l3.75-5.62c.16-.25.25-.54.25-.83V10.5c0-.55-.45-1-1-1h-1.5l-1.4-1.75c-.38-.47-.95-.75-1.56-.75H8V5.07C9.18 4.39 10.54 4 12 4c4.41 0 8 3.59 8 8 0 4.07-3.06 7.44-7 7.94z"
+                        ></path>
+                    </svg>
                     <label for="region">Filter by Region</label>
-                    <span class="material-symbols-outlined expand-more"> expand_more </span>
+                    <svg class="expand-more" viewBox="0 0 24 24">
+                        <path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+                    </svg>
                     <input disabled name="region" id="region" />
                     <dialog style="top: 52px" aria-owns="region-control" id="region-dropdown">
                         <ul>
@@ -345,7 +345,7 @@
                 </template>
             </section>
             <button class="material-symbols-outlined go-to-top" onclick="main.scrollTo({ top:0,behavior:'smooth'});">
-                expand_less
+                <svg viewBox="0 0 24 24"><path d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path></svg>
             </button>
         </main>
         <noscript>You need to enable javascript in order to see any country</noscript>

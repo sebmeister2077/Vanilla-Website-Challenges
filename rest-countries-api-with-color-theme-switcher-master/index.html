@@ -138,7 +138,7 @@
             .region :not(input) {
                 z-index: 2;
             }
-            .region svg ~* {
+            .region svg ~:where(svg,input,label){
                 transition: opacity .4s;
                 will-change: opacity;
             }
@@ -149,8 +149,8 @@
                 white-space: nowrap;
             }
             .region .expand-more {
-                will-change: rotate;
-                transition: rotate 0.4s;
+                will-change: rotate,opacity;
+                transition: rotate 0.4s,opacity .4s;
             }
             .rotate180 {
                 rotate: 180deg;

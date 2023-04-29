@@ -74,11 +74,11 @@ export function containerScrollListener(e) {
         faButton.classList.add('show')
         searchContainer.classList.add('retract-width')
         regionControl.classList.add('retract-width')
-        regionControl.querySelectorAll(' svg ~ *').forEach((el) => el.classList.add('fade'))
+        regionControl.querySelectorAll(' svg ~ :where(svg,input,label)').forEach((el) => el.classList.add('fade'))
     } else {
         searchContainer.classList.remove('retract-width')
         regionControl.classList.remove('retract-width')
-        regionControl.querySelectorAll(' svg ~ *').forEach((el) => el.classList.remove('fade'))
+        regionControl.querySelectorAll(' svg ~ :where(svg,input,label)').forEach((el) => el.classList.remove('fade'))
         faButton.classList.remove('show')
     }
     const isScrolledToBottom = scrollHeight - scrollTop <= clientHeight + OFFSET

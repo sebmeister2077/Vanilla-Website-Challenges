@@ -1,4 +1,5 @@
 import { PAGE_SIZE, getAllCountries, searchCountriesByName, searchCountriesByRegion } from './apiMethods.js'
+import { createTemplate } from './domFunctions.js'
 
 export function regionChangeListener() {
     const newRegion = this.value

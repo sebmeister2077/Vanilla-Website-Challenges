@@ -8,7 +8,7 @@ export function applyNewCountries(newCountries) {
     newCountries.slice(currentPage, PAGE_SIZE).forEach(createTemplate)
 }
 
-function createTemplate(country) {
+export function createTemplate(country) {
     const template = document.getElementById('country-template')
     const main = document.querySelector('.countries')
     //content is a document fragment, it is not equal to the html dom element

@@ -82,9 +82,15 @@ document.addEventListener('keypress', function (e) {
 countryContainer.addEventListener('scroll', function (e) {
     const OFFSET = 300 //pixels
     const { scrollHeight, scrollTop, clientHeight } = this
-    if (scrollTop >= clientHeight) document.querySelector('.go-to-top').classList.add('show')
-    else document.querySelector('.go-to-top').classList.remove('show')
-
+    const searchContainer = document.querySelector('.search')
+    const faButton = document.querySelector('.go-to-top')
+    if (scrollTop >= clientHeight) {
+        faButton.classList.add('show')
+        searchContainer.classList.add('retract-search')
+    } else {
+        searchContainer.classList.remove('retract-search')
+        faButton.classList.remove('show')
+    }
     const isScrolledToBottom = scrollHeight - scrollTop <= clientHeight + OFFSET
     if (!isScrolledToBottom) return
 

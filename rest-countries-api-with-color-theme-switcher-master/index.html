@@ -19,13 +19,14 @@
             :root {
                 --dark-blue: hsl(209, 23%, 22%);
                 --dark-gray: hsl(0, 0%, 52%);
-                --very-light-gray: hsl(0, 0%, 98%);
+                --very-light-gray: hsl(0, 0%, 95%);
                 --white: hsl(0, 0%, 100%);
             }
             html {
                 --elements: var(--white);
                 --background: var(--very-light-gray);
                 --input: var(--dark-gray);
+                --input-focus:hsl(0, 0%, 40%)
                 --text: hsl(200, 15%, 8%);
                 --border-radius: 6px;
             }
@@ -46,6 +47,7 @@
                     --background: hsl(207, 26%, 17%);
                     --input: var(--very-light-gray);
                     --text: var(--white);
+                    --input-focus:hsl(0, 0%, 85%)
                 }
                 main::-webkit-scrollbar-thumb {
                     background-color: hsl(210deg 32.34% 25.82%);
@@ -94,6 +96,18 @@
                 box-shadow: 0px 0px 6px 1px hsla(0, 0%, 0%, 0.2);
                 overflow: hidden;
                 align-items: center;
+                width: 300px;
+                will-change: width;
+                transition: width .7s;
+            }
+            .retract-search{
+                width: 56px;
+            }
+            .search:has(:focus-within){
+                width:300px;
+            }
+            .search label{
+                cursor: pointer;
             }
             .search input::placeholder {
                 color: currentColor;
@@ -155,7 +169,6 @@
                 width: 100%;
                 border: none;
                 background-color: var(--elements);
-                color: var(--input);
                 border-radius: var(--border-radius);
             }
             #region-dropdown ul {
@@ -164,6 +177,14 @@
                 display: flex;
                 flex-direction: column;
                 gap: 6px;
+            }
+            #region-dropdown li{
+                will-change: color;
+                transition: color .4s;
+                color: var(--input);
+            }
+            #region-dropdown li:hover{
+                color: var(--input-focus);
             }
             .appbar {
                 position: sticky;
@@ -264,11 +285,13 @@
         <main id="main">
             <header class="appbar">
                 <div class="search">
-                    <svg class="search-icon" viewBox="0 0 24 24">
-                        <path
-                            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-                        ></path>
-                    </svg>
+                    <label for="searchName">
+                        <svg class="search-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                            ></path>
+                        </svg>
+                    </label>
                     <input
                         list="countryNamesList"
                         placeholder="Search for a country..."
@@ -325,6 +348,7 @@
                 expand_less
             </button>
         </main>
+        <noscript>You need to enable javascript in order to see any country</noscript>
         <script defer src="./index.js"></script>
     </body>
 </html>

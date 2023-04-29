@@ -1,5 +1,6 @@
-import { getAllCountries } from './scripts/apiMethods.js'
-import { COUNTRY_NAMES_LOCATION, applyNewCountries, initializeAutocompleteList } from './scripts/domFunctions.js'
+import autoAnimate from './node_modules/@formkit/auto-animate/index.mjs'
+import { getAllCountries } from './src/apiMethods.js'
+import { COUNTRY_NAMES_LOCATION, applyNewCountries, initializeAutocompleteList } from './src/domFunctions.js'
 import {
     containerScrollListener,
     documentClickListener,
@@ -7,13 +8,14 @@ import {
     regionChangeListener,
     regionClickListener,
     searchNameChangeListener,
-} from './scripts/eventListeners.js'
+} from './src/eventListeners.js'
 
 window.countries = []
 window.currentPage = 0
 window.currentSearch = ''
 window.currentRegion = ''
-window.countryContainer = document.getElementsByTagName('main')[0]
+window.mainContainer = document.getElementsByTagName('main')[0]
+window.countryContainer = document.querySelector('.countries')
 window.regionControl = document.getElementById('region-control')
 window.regionsDialog = document.getElementById('region-dropdown')
 
@@ -27,9 +29,10 @@ getAllCountries()
     })
     .then(applyNewCountries)
 
+autoAnimate(countryContainer)
 region.addEventListener('change', regionChangeListener)
 regionControl.addEventListener('click', regionClickListener)
 searchName.addEventListener('change', searchNameChangeListener)
 document.addEventListener('keypress', documentKeypressListener)
-countryContainer.addEventListener('scroll', containerScrollListener)
+mainContainer.addEventListener('scroll', containerScrollListener)
 document.addEventListener('click', documentClickListener)

@@ -27,6 +27,7 @@
                 --background: var(--very-light-gray);
                 --input: var(--dark-gray);
                 --text: hsl(200, 15%, 8%);
+                --border-radius: 6px;
             }
             main::-webkit-scrollbar {
                 width: 12px;
@@ -87,11 +88,12 @@
             .search {
                 background-color: var(--elements);
                 display: flex;
-                border-radius: 6px;
+                border-radius: var(--border-radius);
                 padding: 8px 16px;
                 gap: 8px;
                 box-shadow: 0px 0px 6px 1px hsla(0, 0%, 0%, 0.2);
                 overflow: hidden;
+                align-items: center;
             }
             .search input::placeholder {
                 color: currentColor;
@@ -107,8 +109,61 @@
                 color: var(--input);
                 background-color: var(--elements);
                 border: none;
-                padding: 8px 16px;
+                padding: 12px 16px;
                 box-shadow: 0px 2px 6px #00000029;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                border-radius: var(--border-radius);
+                cursor: pointer;
+                user-select: none;
+                position: relative;
+            }
+            .region :not(input) {
+                z-index: 2;
+            }
+            .region label {
+                cursor: pointer;
+                will-change: transform;
+                transition: transform 0.4s;
+            }
+            .region .expand-more {
+                will-change: rotate;
+                transition: rotate 0.4s;
+            }
+            .rotate180 {
+                rotate: 180deg;
+            }
+            .region input {
+                position: absolute;
+                opacity: 0;
+                width: 55%;
+                left: 50%;
+                top: 45%;
+                transform: translateX(-50%);
+                background-color: transparent;
+                border: none;
+                transition: opacity 0.4s;
+                color: var(--input);
+            }
+            .region:has(input.appear) label {
+                transform: translate(-22px, -10px) scale(0.6);
+            }
+            #region-dropdown {
+                position: absolute;
+                left: 0px;
+                width: 100%;
+                border: none;
+                background-color: var(--elements);
+                color: var(--input);
+                border-radius: var(--border-radius);
+            }
+            #region-dropdown ul {
+                list-style-type: none;
+                padding: 4px 8px;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
             }
             .appbar {
                 position: sticky;
@@ -126,7 +181,7 @@
             .country {
                 background-color: var(--elements);
                 box-shadow: 0px 2px 6px #00000029;
-                border-radius: 4px;
+                border-radius: var(--border-radius);
                 overflow: hidden;
                 display: flex;
                 flex-direction: column;
@@ -163,6 +218,9 @@
                 font-style: normal;
                 font-size: 0.9rem;
             }
+            .country .country-details span {
+                color: var(--input);
+            }
             body > header {
                 background-color: var(--elements);
                 padding: 12px 32px;
@@ -191,6 +249,9 @@
                 opacity: 1;
                 scale: 1.2;
             }
+            .appear {
+                opacity: 1 !important;
+            }
             .show {
                 translate: none;
             }
@@ -217,21 +278,28 @@
                     />
                     <datalist id="countryNamesList"> </datalist>
                 </div>
-                <select class="region" name="region" id="region">
-                    <!-- This text should change once a region has been selected -->
-                    <option disabled selected value="global">Filter by Region</option>
-                    <option value="africa">Africa</option>
-                    <option value="america">America</option>
-                    <option value="asia">Asia</option>
-                    <option value="europe">Europe</option>
-                    <option value="oceania">Oceania</option>
-                </select>
+                <div tabindex="0" aria-controls="region-dropdown" id="region-control" class="region">
+                    <span class="material-symbols-outlined"> south_america </span>
+                    <label for="region">Filter by Region</label>
+                    <span class="material-symbols-outlined expand-more"> expand_more </span>
+                    <input disabled name="region" id="region" />
+                    <dialog style="top: 52px" aria-owns="region-control" id="region-dropdown">
+                        <ul>
+                            <li hidden value="">Global</li>
+                            <li value="africa">Africa</li>
+                            <li value="america">America</li>
+                            <li value="asia">Asia</li>
+                            <li value="europe">Europe</li>
+                            <li value="oceania">Oceania</li>
+                        </ul>
+                    </dialog>
+                </div>
             </header>
             <section class="countries">
                 <template id="country-template">
                     <a class="country" href="javascript:void(0)">
                         <figure>
-                            <img />
+                            <img loading="lazy" />
                             <figcaption>
                                 <h4 class="country-name"></h4>
                             </figcaption>

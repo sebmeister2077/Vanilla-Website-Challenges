@@ -5,31 +5,52 @@ const COUNTRY_NAMES_LOCATION = 'country-names'
 
 let countries = []
 let currentPage = 0
+let currentSearch
+let currentRegion
 const countryContainer = document.getElementsByTagName('main')[0]
+const regionControl = document.getElementById('region-control')
+const regionsDialog = document.getElementById('region-dropdown')
 //initial
 initializeAutocompleteList()
-const { state } = history
-if ((!state?.region || state?.region === 'global') && !state?.name)
-    getAllCountries()
-        .then((allCountries) => {
-            localStorage.setItem(COUNTRY_NAMES_LOCATION, JSON.stringify(allCountries.map((c) => c.name.common)))
-            initializeAutocompleteList()
-            return allCountries
-        })
-        .then(applyNewCountries)
-if (state?.region && state?.region !== 'global') {
-    region.value = state.region
-    searchCountriesByRegion(state.region).then(applyNewCountries)
-}
-if (state?.name) {
-    searchName.value = state.name
-    searchCountriesByName(state.name).then(applyNewCountries)
-}
+getAllCountries()
+    .then((allCountries) => {
+        localStorage.setItem(COUNTRY_NAMES_LOCATION, JSON.stringify(allCountries.map((c) => c.name.common)))
+        initializeAutocompleteList()
+        return allCountries
+    })
+    .then(applyNewCountries)
+
 region.addEventListener('change', function () {
     const newRegion = this.value
+    if (newRegion === currentRegion) return
     searchName.value = ''
-    history.replaceState({ name: null, region: newRegion }, '')
+    currentRegion = newRegion
+
+    regionsDialog.querySelector('li[hidden]').removeAttribute('hidden')
+    regionsDialog.querySelector(`li[value='${newRegion}']`).setAttribute('hidden', '')
+    if (!newRegion) {
+        this.classList.remove('appear')
+        getAllCountries().then(applyNewCountries)
+        return
+    }
+    this.classList.add('appear')
     searchCountriesByRegion(newRegion).then(applyNewCountries)
+})
+regionControl.addEventListener('click', function (e) {
+    const expandMoreIcon = regionControl.querySelector(' .expand-more')
+    if (regionsDialog.open) {
+        const value = e.target.getAttribute('value')
+        region.value = value
+        region.dispatchEvent(new Event('change'))
+        regionsDialog.removeAttribute('open')
+        expandMoreIcon.classList.remove('rotate180')
+        return
+    }
+
+    const targetRect = this.getBoundingClientRect()
+    regionsDialog.style.top = `${targetRect.height + 4}px`
+    regionsDialog.setAttribute('open', '')
+    expandMoreIcon.classList.add('rotate180')
 })
 
 var searchNameTimeout
@@ -40,14 +61,14 @@ searchName.addEventListener('change', function () {
     searchNameAbort?.abort()
     searchNameAbort = new AbortController()
     searchNameTimeout = setTimeout(() => {
-        region.value = 'global'
-        history.replaceState({ region: null, name: newName }, '')
+        region.value = ''
         if (newName) searchCountriesByName(newName, searchNameAbort.signal).then(applyNewCountries)
         else getAllCountries().then(applyNewCountries)
         searchNameTimeout = null
         searchNameAbort = null
     }, 1000)
 })
+
 document.addEventListener('keypress', function (e) {
     if (document.activeElement === searchName) return
     if (e.code == 'Slash' || (e.code == 'KeyK' && e.ctrlKey)) {
@@ -107,7 +128,6 @@ function createTemplate(country) {
     anchor.href = `#${anchor.id}`
     anchor.onclick = (e) => {
         e.preventDefault()
-        history.pushState({ searchName: searchName.value, region: region.value }, '', anchor.href)
     }
     //image
     const image = content.querySelector('img')
@@ -163,6 +183,7 @@ function normalizeText(str) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }
 
+//so that page size will be dynamic
 function calculatePageSize() {
     const { innerHeight, innerWidth } = window
     const APPROXIMATE_COUNTRY_WIDTH = 300,

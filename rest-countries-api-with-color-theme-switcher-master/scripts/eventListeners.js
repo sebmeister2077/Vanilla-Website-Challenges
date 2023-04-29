@@ -1,5 +1,6 @@
 import { PAGE_SIZE, getAllCountries, searchCountriesByName, searchCountriesByRegion } from './apiMethods.js'
 import { createTemplate } from './domFunctions.js'
+import { throttleFunction } from './helpers.js'
 
 export function regionChangeListener() {
     const newRegion = this.value
@@ -23,17 +24,25 @@ export function regionClickListener(e) {
     if (this.classList.contains('retract-width')) this.style.width = '210px'
     const expandMoreIcon = regionControl.querySelector(' .expand-more')
 
+    const throttledFunction = throttleFunction(alignDialog, 200)
     if (regionsDialog.open) {
         const value = e.target.getAttribute('value')
         region.value = value
         region.dispatchEvent(new Event('change'))
         regionsDialog.removeAttribute('open')
         expandMoreIcon.classList.remove('rotate180')
+        window.removeEventListener('resize', throttledFunction)
         return
     }
 
-    const targetRect = this.getBoundingClientRect()
-    regionsDialog.style.top = `${targetRect.height + 4}px`
+    function alignDialog(element) {
+        const el = element instanceof HTMLElement ? element : regionControl
+        const { offsetTop, offsetHeight, offsetLeft } = el
+        regionsDialog.style.top = `${offsetHeight + offsetTop + 4}px`
+        regionsDialog.style.left = `${offsetLeft}px`
+    }
+    alignDialog(this)
+    window.addEventListener('resize', throttledFunction)
     regionsDialog.setAttribute('open', '')
     expandMoreIcon.classList.add('rotate180')
 }
@@ -74,11 +83,11 @@ export function containerScrollListener(e) {
         faButton.classList.add('show')
         searchContainer.classList.add('retract-width')
         regionControl.classList.add('retract-width')
-        regionControl.querySelectorAll(' svg ~ :where(svg,input,label)').forEach((el) => el.classList.add('fade'))
+        // regionControl.querySelectorAll(' svg ~ :where(svg,input,label)').forEach((el) => el.classList.add('fade'))
     } else {
         searchContainer.classList.remove('retract-width')
         regionControl.classList.remove('retract-width')
-        regionControl.querySelectorAll(' svg ~ :where(svg,input,label)').forEach((el) => el.classList.remove('fade'))
+        // regionControl.querySelectorAll(' svg ~ :where(svg,input,label)').forEach((el) => el.classList.remove('fade'))
         faButton.classList.remove('show')
     }
     const isScrolledToBottom = scrollHeight - scrollTop <= clientHeight + OFFSET

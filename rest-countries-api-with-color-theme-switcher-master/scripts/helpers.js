@@ -9,3 +9,25 @@ export function calculatePageSize() {
         APPROXIMATE_COUNTRY_HEIGHT = 300
     return Math.round((innerWidth * innerHeight) / (APPROXIMATE_COUNTRY_WIDTH * APPROXIMATE_COUNTRY_HEIGHT) + 2)
 }
+export const throttleFunction = (cb, delay = 250) => {
+    let shouldWait = false
+    let waitingArgs
+    const timeoutFunc = () => {
+        if (waitingArgs == null) {
+            shouldWait = false
+            return
+        }
+        cb(...waitingArgs)
+        waitingArgs = null
+        setTimeout(timeoutFunc, delay)
+    }
+    return (...args) => {
+        if (shouldWait) {
+            waitingArgs = args
+            return
+        }
+        cb(...args)
+        shouldWait = true
+        setTimeout(timeoutFunc, delay)
+    }
+}

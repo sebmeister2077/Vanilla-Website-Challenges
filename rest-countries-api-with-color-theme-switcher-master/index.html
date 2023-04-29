@@ -18,8 +18,6 @@
         <style>
             :root {
                 --dark-blue: hsl(209, 23%, 22%);
-                --very-dark-blue: hsl(207, 26%, 17%);
-                --very-dark-blue: hsl(200, 15%, 8%);
                 --dark-gray: hsl(0, 0%, 52%);
                 --very-light-gray: hsl(0, 0%, 98%);
                 --white: hsl(0, 0%, 100%);
@@ -28,14 +26,31 @@
                 --elements: var(--white);
                 --background: var(--very-light-gray);
                 --input: var(--dark-gray);
-                --text: var(--very-dark-blue);
+                --text: hsl(200, 15%, 8%);
+            }
+            main::-webkit-scrollbar {
+                width: 12px;
+            }
+            main::-webkit-scrollbar-thumb {
+                border-radius: 12px;
+                background-color: hsl(0, 0%, 80%);
+            }
+            main::-webkit-scrollbar-track {
+                border-radius: 12px;
+                background-color: hsl(0, 0%, 90%);
             }
             @media (prefers-color-scheme: dark) {
                 html {
                     --elements: var(--dark-blue);
-                    --background: var(--very-dark-blue);
+                    --background: hsl(207, 26%, 17%);
                     --input: var(--very-light-gray);
                     --text: var(--white);
+                }
+                main::-webkit-scrollbar-thumb {
+                    background-color: hsl(210deg 32.34% 25.82%);
+                }
+                main::-webkit-scrollbar-track {
+                    background-color: hsl(210deg 45.27% 14.63%);
                 }
             }
             body {
@@ -60,6 +75,7 @@
                 flex-grow: 1;
                 position: relative;
             }
+
             svg {
                 min-width: 24px;
                 width: 24px;

@@ -55,7 +55,9 @@ export function regionDialogListener(e) {
     expandMoreIcon.classList.remove('rotate180')
 }
 export function documentClickListener(e) {
-    if (regionControl.classList.contains('retract-width') && e.target != regionControl) regionControl.style.width = ''
+    if (e.target === regionControl) return
+    regionsDialog.removeAttribute('open')
+    if (regionControl.classList.contains('retract-width')) regionControl.style.width = ''
 }
 var searchNameTimeout
 var searchNameAbort
@@ -89,10 +91,12 @@ export function containerScrollListener(e) {
     const faButton = document.querySelector('.go-to-top')
     if (scrollTop >= clientHeight) {
         faButton.classList.add('show')
+        appBar.style['flex-wrap'] = 'nowrap'
         searchContainer.classList.add('retract-width')
         regionControl.classList.add('retract-width')
         regionsDialog.removeAttribute('open')
     } else {
+        appBar.style['flex-wrap'] = 'wrap'
         searchContainer.classList.remove('retract-width')
         regionControl.classList.remove('retract-width')
         faButton.classList.remove('show')

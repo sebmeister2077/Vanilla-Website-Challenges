@@ -8,8 +8,6 @@ export function regionChangeListener() {
     searchName.value = ''
     currentRegion = newRegion
 
-    regionsDialog.querySelector('li[hidden]').removeAttribute('hidden')
-    regionsDialog.querySelector(`li[value='${newRegion}']`).setAttribute('hidden', '')
     if (!newRegion) {
         this.classList.remove('appear')
         getAllCountries().then(applyNewCountries)
@@ -40,7 +38,8 @@ export function regionClickListener(e) {
         window.removeEventListener('resize', throttledFunction)
         return
     }
-
+    regionsDialog.querySelector('li[hidden]').removeAttribute('hidden')
+    regionsDialog.querySelector(`li[value='${currentRegion}']`).setAttribute('hidden', '')
     alignDialog(this)
     window.addEventListener('resize', throttledFunction)
     regionsDialog.setAttribute('open', '')

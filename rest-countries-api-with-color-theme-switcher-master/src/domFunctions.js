@@ -13,6 +13,12 @@ export function createCardTemplate(country) {
     const main = document.querySelector('.countries');
     //content is a document fragment, it is not equal to the html dom element
     const content = template.content.cloneNode(true);
+    //image
+    const imageFlags = content.querySelectorAll('img');
+    imageFlags.forEach((flag) => {
+        flag.src = country.flags.png;
+        flag.alt = country.flags.alt;
+    });
 
     const anchor = content.querySelector('a');
     anchor.id = normalizeText(country.name.common);
@@ -20,14 +26,28 @@ export function createCardTemplate(country) {
     anchor.onclick = function (e) {
         e.preventDefault();
         history.pushState(null, '', this.href);
-        createSingleTemplate(country);
+        createSingleTemplate(country, true);
+        const root = document.querySelector('.single-country');
+        const cardflag = this.parentElement.querySelector('img[data-role=country-flag]');
+        const flag = root.querySelector('img');
+        const { top: smallTop, left: smallLeft, width: smallWidth, height: smallHeight } = cardflag.getBoundingClientRect();
+
+        //aprox 10-30 ms
+        flag.addEventListener('load', function () {
+            const { top: bigTop, left: bigLeft, width: bigWidth, height: bigHeight } = flag.getBoundingClientRect();
+
+            const heightRatio = smallHeight / bigHeight;
+            const widthRatio = smallWidth / bigWidth;
+            //Myea... MATH...
+            const transform = `translate(${smallLeft - (bigLeft + ((1 - widthRatio) * bigWidth) / 2)}px,${
+                smallTop - (bigTop + ((1 - heightRatio) * bigHeight) / 2)
+            }px) scale(${widthRatio},${heightRatio})`;
+
+            flag.style.transform = transform;
+            root.style.opacity = 1;
+            flag.style['animation-name'] = 'country-flag-animation';
+        });
     };
-    //image
-    const imageFlags = content.querySelectorAll('img');
-    imageFlags.forEach((flag) => {
-        flag.src = country.flags.png;
-        flag.alt = country.flags.alt;
-    });
 
     //name
     const name = content.querySelector('.country-name');
@@ -73,12 +93,12 @@ export function initializeAutocompleteList() {
     });
 }
 
-export function createSingleTemplate(country) {
+export function createSingleTemplate(country, isHidden) {
     const template = document.getElementById('single-country');
     //content is a document fragment, it is not equal to the html dom element
     const content = template.content.cloneNode(true);
 
-    console.log(country);
+    if (isHidden) content.querySelector('.single-country').style.opacity = 0;
     const anchor = content.querySelector('a');
     anchor.href = `${location.origin}${location.pathname}`;
     anchor.onclick = function (e) {

@@ -40,7 +40,7 @@ export function createCardTemplate(country) {
     setValueForLabel(content, '#region-', country.name.common, country.population);
 
     //capital
-    setValueForLabel(content, '#capital-', country.name.common, country.capital[0]);
+    if (country.capital?.length) setValueForLabel(content, '#capital-', country.name.common, country.capital.join(', '));
 
     main.append(content);
 }
@@ -78,6 +78,7 @@ export function createSingleTemplate(country) {
     //content is a document fragment, it is not equal to the html dom element
     const content = template.content.cloneNode(true);
 
+    console.log(country);
     const anchor = content.querySelector('a');
     anchor.href = `${location.origin}${location.pathname}`;
     anchor.onclick = function (e) {

@@ -1,21 +1,21 @@
-import { calculatePageSize } from './helpers.js'
+import { calculatePageSize } from './helpers.js';
 
-const API_ENDPOINT = 'https://restcountries.com/v3.1/'
-const FIELDS = '?fields=name,capital,region,flags,population'
-const PAGE_SIZE = calculatePageSize()
+const API_ENDPOINT = 'https://restcountries.com/v3.1/';
+const FIELDS = '?fields=name,capital,region,flags,population';
+const PAGE_SIZE = calculatePageSize();
 
 async function searchCountriesByName(name, signal) {
-    const EXTRA_NAME_FIELDS = ',subregion,tld,currencies,languages,borders'
-    const result = await fetch(`${API_ENDPOINT}name/${name}${FIELDS}${signal ? '' : EXTRA_NAME_FIELDS}`, { signal })
-    if (result.status === 404) return []
-    return await result.json()
+    const EXTRA_NAME_FIELDS = ',subregion,tld,currencies,languages,borders';
+    const result = await fetch(`${API_ENDPOINT}name/${name}${FIELDS}${signal ? '' : EXTRA_NAME_FIELDS}`, { signal });
+    if (result.status === 404) return [];
+    return await result.json();
 }
 
 async function searchCountriesByRegion(region) {
-    return (await fetch(`${API_ENDPOINT}region/${region}${FIELDS}`)).json()
+    return (await fetch(`${API_ENDPOINT}region/${region}${FIELDS}`)).json();
 }
 async function getAllCountries() {
-    return (await fetch(`${API_ENDPOINT}all${FIELDS}`)).json()
+    return (await fetch(`${API_ENDPOINT}all${FIELDS}`)).json();
 }
 
-export { PAGE_SIZE, getAllCountries, searchCountriesByName, searchCountriesByRegion }
+export { PAGE_SIZE, getAllCountries, searchCountriesByName, searchCountriesByRegion };

@@ -172,7 +172,6 @@
             }
             #region-dropdown {
                 z-index: 2;
-                cursor: pointer;
                 position: absolute;
                 width: 210px;
                 border: none;
@@ -183,9 +182,12 @@
                 background-color: var(--elements);
                 border-radius: var(--border-radius);
                 box-shadow: var(--box-shadow);
+                pointer-events: none;
+                cursor: none;
             }
             #region-dropdown[open] {
                 opacity: 1;
+                cursor: pointer;
             }
             #region-dropdown ul {
                 list-style-type: none;

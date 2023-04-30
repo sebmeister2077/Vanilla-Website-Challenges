@@ -16,9 +16,10 @@ export function createTemplate(country) {
 
     const anchor = content.querySelector('a')
     anchor.id = normalizeText(country.name.common)
-    anchor.href = `#${anchor.id}`
-    anchor.onclick = (e) => {
+    anchor.href = `${location.origin}${location.pathname}?country=${anchor.id}`
+    anchor.onclick = function (e) {
         e.preventDefault()
+        history.pushState(null, '', this.href)
     }
     //image
     const imageFlags = content.querySelectorAll('img')

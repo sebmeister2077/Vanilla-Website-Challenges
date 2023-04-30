@@ -31,3 +31,8 @@ export const throttleFunction = (cb, delay = 250) => {
         setTimeout(timeoutFunc, delay)
     }
 }
+
+export function getUrlParams() {
+    const urlParams = new URLSearchParams(location.search)
+    return urlParams
+}

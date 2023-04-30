@@ -25,7 +25,8 @@
                 --box-shadow: 0px 2px 6px #00000033;
             }
             main::-webkit-scrollbar {
-                width: 12px;
+                --scrollbar-width: 12px;
+                width: var(--scrollbar-width);
             }
             main::-webkit-scrollbar-thumb {
                 border-radius: 12px;
@@ -213,6 +214,17 @@
                 gap: 8px;
                 flex-wrap: wrap;
                 z-index: 2;
+                opacity: 0;
+                will-change: opacity;
+                animation: appbar-animation 0.4s 0.2s forwards;
+            }
+            @keyframes appbar-animation {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
             }
             @media only screen and (width<=610px) {
                 .search {
@@ -227,6 +239,7 @@
                 grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
                 grid-gap: 32px;
                 padding: 12px;
+                padding-right: var(--scrollbar-width);
             }
             .country {
                 background-color: var(--elements);
@@ -329,6 +342,7 @@
                 background-color: var(--elements);
                 padding: 12px 32px;
                 box-shadow: var(--box-shadow);
+                z-index: 6;
             }
             header h2 {
                 font-weight: 800;
@@ -380,16 +394,19 @@
                 width: max-content;
             }
             .single-country {
+                position: fixed;
+                z-index: 5;
+                inset: 0px;
+                background-color: var(--background);
                 display: flex;
                 flex-direction: column;
-                width: 100%;
                 gap: 56px;
-                padding-block: 32px;
+                padding: 96px 36px;
             }
             .single-country .content {
                 display: flex;
                 width: 100%;
-                height: 300px;
+                height: 360px;
                 gap: 176px;
                 align-items: stretch;
             }
@@ -435,6 +452,7 @@
                 display: flex;
                 gap: 8px;
                 align-items: center;
+                flex-wrap: wrap;
             }
         </style>
     </head>
@@ -484,6 +502,9 @@
                     </ul>
                 </dialog>
             </header>
+            <script>
+                if (new URLSearchParams(location.search).has('country')) document.querySelector('.appbar').classList.add('fade');
+            </script>
             <section class="countries">
                 <template id="single-country">
                     <section class="single-country">
@@ -511,7 +532,7 @@
                                 </address>
                                 <div class="border-countries">
                                     <span>Border Countries:</span>
-                                    <span class="card">France</span>
+                                    <!-- <span class="card">France</span> -->
                                 </div>
                             </div>
                         </article>

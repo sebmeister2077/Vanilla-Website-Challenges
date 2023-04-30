@@ -16,7 +16,7 @@ export function initializeHomePage(isHomePage) {
         localStorage.setItem(COUNTRY_NAMES_LOCATION, JSON.stringify(allCountries.map((c) => c.name.common)));
         cancelIdleCallback(autoCompleteCallback);
         requestIdleCallback(initializeAutocompleteList);
-        if (isHomePage) applyNewCountries(allCountries);
+        applyNewCountries(allCountries);
     });
 
     region.addEventListener('change', regionChangeListener);

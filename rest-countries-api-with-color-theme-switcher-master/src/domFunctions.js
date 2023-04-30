@@ -20,6 +20,7 @@ export function createCardTemplate(country) {
     anchor.onclick = function (e) {
         e.preventDefault();
         history.pushState(null, '', this.href);
+        createSingleTemplate(country);
     };
     //image
     const imageFlags = content.querySelectorAll('img');
@@ -74,7 +75,6 @@ export function initializeAutocompleteList() {
 
 export function createSingleTemplate(country) {
     const template = document.getElementById('single-country');
-    const main = document.querySelector('.countries');
     //content is a document fragment, it is not equal to the html dom element
     const content = template.content.cloneNode(true);
 
@@ -83,6 +83,8 @@ export function createSingleTemplate(country) {
     anchor.onclick = function (e) {
         e.preventDefault();
         history.pushState(null, '', this.href);
+        appBar.classList.remove('fade');
+        document.querySelector('.single-country').remove();
     };
     //image
     const imageFlags = content.querySelectorAll('img');
@@ -101,7 +103,7 @@ export function createSingleTemplate(country) {
     createSpecific(
         content,
         `single-country-${country.population}`,
-        new Intl.NumberFormat(undefined, { notation: 'compact', minimumSignificantDigits: 3 }).format(country.population),
+        new Intl.NumberFormat(undefined, { notation: 'compact' }).format(country.population),
         'Population'
     );
     createSpecific(content, `single-country-${country.region}`, country.region, 'Region');
@@ -118,6 +120,11 @@ export function createSingleTemplate(country) {
         .join(', ');
     createSpecific(content, `single-country-${languages}`, languages, 'Languages');
 
+    const bordersContainer = content.querySelector('.border-countries');
+    if (!country.borders.length) bordersContainer.append(createCard('None'));
+    country.borders.forEach((border) => {
+        bordersContainer.append(createCard(border));
+    });
     main.append(content);
 }
 function createSpecific(content, id, value, label) {
@@ -131,4 +138,11 @@ function createSpecific(content, id, value, label) {
     specifivValue.innerText = value;
     specifivValue.id = id;
     countrySpecificsContainer.append(specific);
+}
+
+function createCard(text) {
+    const span = document.createElement('span');
+    span.innerText = text;
+    span.classList.add('card');
+    return span;
 }

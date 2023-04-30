@@ -1,3 +1,5 @@
+import { searchCountriesByName } from './src/apiMethods.js'
+import { createSingleTemplate } from './src/domFunctions.js'
 import { getUrlParams } from './src/helpers.js'
 import { initializeHomePage } from './src/initializers.js'
 
@@ -20,4 +22,11 @@ if (isHomePage) {
     initializeHomePage(true)
 } else {
     requestIdleCallback(() => initializeHomePage(false))
+    searchCountriesByName(urlParams.get('country')).then((res) => {
+        if (!res.length) {
+            console.log('no country found!')
+            return
+        }
+        createSingleTemplate(res[0])
+    })
 }

@@ -1,5 +1,5 @@
 import { PAGE_SIZE } from './apiMethods.js';
-import { normalizeText } from './helpers.js';
+import { formatNumber, normalizeText } from './helpers.js';
 
 export function applyNewCountries(newCountries) {
     countries = newCountries;
@@ -54,10 +54,10 @@ export function createCardTemplate(country) {
     name.innerText = country.name.common;
 
     //population
-    setValueForLabel(content, '#population-', country.name.common, country.population);
+    setValueForLabel(content, '#population-', country.name.common, formatNumber(country.population));
 
     //region
-    setValueForLabel(content, '#region-', country.name.common, country.population);
+    setValueForLabel(content, '#region-', country.name.common, country.region);
 
     //capital
     if (country.capital?.length) setValueForLabel(content, '#capital-', country.name.common, country.capital.join(', '));
@@ -121,12 +121,7 @@ export function createSingleTemplate(country, isHidden) {
     const nativeName = country.name.nativeName[Object.keys(country.name.nativeName)[0]].common;
     createSpecific(content, `single-country-${nativeName}`, nativeName, 'Native Name');
 
-    createSpecific(
-        content,
-        `single-country-${country.population}`,
-        new Intl.NumberFormat(undefined, { notation: 'compact' }).format(country.population),
-        'Population'
-    );
+    createSpecific(content, `single-country-${country.population}`, formatNumber(country.population), 'Population');
     createSpecific(content, `single-country-${country.region}`, country.region, 'Region');
     createSpecific(content, `single-country-${country.subregion}`, country.subregion, 'Sub Region');
     createSpecific(content, `single-country-${country.capital.join(', ')}`, country.capital.join(','), 'Capital');

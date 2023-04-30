@@ -36,3 +36,9 @@ export function getUrlParams() {
     const urlParams = new URLSearchParams(location.search);
     return urlParams;
 }
+
+export function formatNumber(number) {
+    return new Intl.NumberFormat(undefined, {
+        notation: 'compact',
+    }).format(number);
+}

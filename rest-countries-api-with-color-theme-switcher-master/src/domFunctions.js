@@ -38,7 +38,7 @@ export function createCardTemplate(country) {
 
             const heightRatio = smallHeight / bigHeight;
             const widthRatio = smallWidth / bigWidth;
-            //Myea... MATH...
+            //Yea... MATH...
             const transform = `translate(${smallLeft - (bigLeft + ((1 - widthRatio) * bigWidth) / 2)}px,${
                 smallTop - (bigTop + ((1 - heightRatio) * bigHeight) / 2)
             }px) scale(${widthRatio},${heightRatio})`;
@@ -110,7 +110,7 @@ export function createSingleTemplate(country, isHidden) {
     //image
     const imageFlags = content.querySelectorAll('img');
     imageFlags.forEach((flag) => {
-        flag.src = country.flags.png;
+        flag.src = country.flags.svg;
         flag.alt = country.flags.alt;
     });
 

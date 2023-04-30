@@ -110,5 +110,5 @@ export function containerScrollListener(e) {
         return;
     }
     currentPage++;
-    countries.slice(currentPage, currentPage * PAGE_SIZE).forEach(createCardTemplate);
+    countries.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE).forEach(createCardTemplate);
 }

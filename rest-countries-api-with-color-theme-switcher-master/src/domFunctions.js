@@ -3,6 +3,7 @@ import { formatNumber, normalizeText } from './helpers.js';
 
 export function applyNewCountries(newCountries) {
     countries = newCountries;
+
     currentPage = 0;
     document.querySelectorAll('.country-card-border').forEach((el) => el.remove());
     newCountries.slice(currentPage, PAGE_SIZE).forEach(createCardTemplate);
@@ -52,6 +53,8 @@ export function createCardTemplate(country) {
     //name
     const name = content.querySelector('.country-name');
     name.innerText = country.name.common;
+
+    if (country.name.common == 'Macau') console.log('yes');
 
     //population
     setValueForLabel(content, '#population-', country.name.common, formatNumber(country.population));

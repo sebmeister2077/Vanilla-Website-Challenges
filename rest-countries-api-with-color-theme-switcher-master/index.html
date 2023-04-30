@@ -254,22 +254,7 @@
                 position: relative;
                 height: 100%;
             }
-            @media only screen and (width <=610px) {
-                .country-card-border {
-                    min-width: 70%;
-                    justify-self: center;
-                }
-            }
-            @media only screen and (width <=500px) {
-                .country-card-border {
-                    min-width: 85%;
-                }
-            }
-            @media only screen and (width <=400px) {
-                .country-card-border {
-                    min-width: 100%;
-                }
-            }
+
             .country-name {
                 font-weight: 800;
                 font-size: 1.05rem;
@@ -313,6 +298,23 @@
             .country-card-border:hover .country {
                 opacity: 1;
                 backdrop-filter: blur(1px);
+            }
+            @media only screen and (width <=610px) {
+                .country-card-border {
+                    width: 70%;
+                    justify-self: center;
+                    max-width: initial;
+                }
+            }
+            @media only screen and (width <=550px) {
+                .country-card-border {
+                    width: 90%;
+                }
+            }
+            @media only screen and (width <=480px) {
+                .country-card-border {
+                    width: 100%;
+                }
             }
             @keyframes rotate {
                 from {

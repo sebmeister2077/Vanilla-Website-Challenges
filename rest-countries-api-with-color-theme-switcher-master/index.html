@@ -344,7 +344,8 @@
                 border-radius: 50%;
                 aspect-ratio: 1/1;
                 padding: 12px;
-                border: 1px solid var(--dark-gray);
+                border: none;
+                box-shadow: var(--box-shadow);
                 cursor: pointer;
                 will-change: transform, scale, opacity;
                 transition: translate 0.8s, scale 0.4s, opacity 0.4s;
@@ -441,7 +442,7 @@
                     </span>
                 </template>
             </section>
-            <button class="material-symbols-outlined go-to-top" onclick="main.scrollTo({ top:0,behavior:'smooth'});">
+            <button class="go-to-top" onclick="main.scrollTo({ top:0,behavior:'smooth'});">
                 <svg viewBox="0 0 24 24"><path d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path></svg>
             </button>
         </main>

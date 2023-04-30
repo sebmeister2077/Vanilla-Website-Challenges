@@ -235,28 +235,27 @@
                 background-color: var(--elements);
                 box-shadow: var(--box-shadow);
                 border-radius: var(--border-radius);
-                overflow: hidden;
                 display: flex;
                 flex-direction: column;
                 gap: 6px;
                 color: unset;
                 text-decoration: none;
-                max-width: 300px;
-                min-width: 240px;
+
+                position: relative;
             }
             @media only screen and (width <=610px) {
-                .country {
+                .country-card-border {
                     min-width: 70%;
                     justify-self: center;
                 }
             }
             @media only screen and (width <=500px) {
-                .country {
+                .country-card-border {
                     min-width: 85%;
                 }
             }
             @media only screen and (width <=400px) {
-                .country {
+                .country-card-border {
                     min-width: 100%;
                 }
             }
@@ -285,6 +284,43 @@
             }
             .country .country-details span {
                 color: var(--input);
+            }
+            .country-card-border {
+                padding: 4px;
+                border-radius: var(--border-radius);
+                overflow: hidden;
+                position: relative;
+                max-width: 300px;
+                min-width: 240px;
+                will-change: padding;
+                transition: padding 0.4s;
+                background-color: transparent;
+            }
+            .country-card-border:hover .animated-border {
+                animation-play-state: running;
+                opacity: 1;
+            }
+            @keyframes rotate {
+                from {
+                    rotate: 0deg;
+                }
+                to {
+                    rotate: 360deg;
+                }
+            }
+            .animated-border {
+                position: absolute;
+                z-index: -1;
+                scale: 1.6;
+                opacity: 0;
+                border-radius: var(--border-radius);
+                inset: 0px;
+                height: 100%;
+                width: 100%;
+                transition-duration: 0.4s;
+                will-change: rotate, opacity;
+                transition: opacity 0.4s;
+                animation: rotate 4s infinite linear paused;
             }
             body > header {
                 background-color: var(--elements);
@@ -373,28 +409,31 @@
             </header>
             <section class="countries">
                 <template id="country-template">
-                    <a class="country" href="javascript:void(0)">
-                        <figure>
-                            <img loading="lazy" />
-                            <figcaption>
-                                <h4 class="country-name"></h4>
-                            </figcaption>
-                        </figure>
-                        <address class="country-details">
-                            <div>
-                                <label for="population-">Population:</label>
-                                <span id="population-"></span>
-                            </div>
-                            <div>
-                                <label for="region-">Region:</label>
-                                <span id="region-"></span>
-                            </div>
-                            <div>
-                                <label for="capital-">Capital:</label>
-                                <span id="capital-"></span>
-                            </div>
-                        </address>
-                    </a>
+                    <span class="country-card-border">
+                        <img loading="lazy" data-role="animated-border" class="animated-border" />
+                        <a class="country" href="javascript:void(0)">
+                            <figure>
+                                <img loading="lazy" data-role="country-flag" />
+                                <figcaption>
+                                    <h4 class="country-name"></h4>
+                                </figcaption>
+                            </figure>
+                            <address class="country-details">
+                                <div>
+                                    <label for="population-">Population:</label>
+                                    <span id="population-"></span>
+                                </div>
+                                <div>
+                                    <label for="region-">Region:</label>
+                                    <span id="region-"></span>
+                                </div>
+                                <div>
+                                    <label for="capital-">Capital:</label>
+                                    <span id="capital-"></span>
+                                </div>
+                            </address>
+                        </a>
+                    </span>
                 </template>
             </section>
             <button class="material-symbols-outlined go-to-top" onclick="main.scrollTo({ top:0,behavior:'smooth'});">

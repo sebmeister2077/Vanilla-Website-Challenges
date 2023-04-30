@@ -21,11 +21,11 @@ export function createTemplate(country) {
         e.preventDefault()
     }
     //image
-    const image = content.querySelector('img')
-    if (image) {
-        image.src = country.flags.png
-        image.alt = country.flags.alt
-    }
+    const imageFlags = content.querySelectorAll('img')
+    imageFlags.forEach((flag) => {
+        flag.src = country.flags.png
+        flag.alt = country.flags.alt
+    })
 
     //name
     const name = content.querySelector('.country-name')

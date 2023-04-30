@@ -1,7 +1,7 @@
 import { calculatePageSize } from './helpers.js';
 
 const API_ENDPOINT = 'https://restcountries.com/v3.1/';
-const FIELDS = '?fields=name,capital,region,flags,population,subregion,tld,currencies,languages,borders,maps';
+const FIELDS = '?fields=name,capital,region,flags,population,subregion,tld,currencies,languages,borders';
 const PAGE_SIZE = calculatePageSize();
 
 async function searchCountriesByName(name, signal) {

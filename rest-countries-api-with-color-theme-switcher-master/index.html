@@ -456,6 +456,10 @@
                 align-items: center;
                 flex-wrap: wrap;
             }
+            .single-country .country-map {
+                flex-grow: 1;
+                border-radius: var(--border-radius);
+            }
         </style>
     </head>
     <body>
@@ -538,6 +542,14 @@
                                 </div>
                             </div>
                         </article>
+                        <iframe
+                            class="country-map"
+                            style="border: 0"
+                            loading="lazy"
+                            allowfullscreen
+                            referrerpolicy="no-referrer-when-downgrade"
+                        >
+                        </iframe>
                     </section>
                 </template>
                 <template id="country-template">

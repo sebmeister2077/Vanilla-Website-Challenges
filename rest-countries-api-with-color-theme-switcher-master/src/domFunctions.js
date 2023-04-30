@@ -126,6 +126,11 @@ export function createSingleTemplate(country) {
     country.borders.forEach((border) => {
         bordersContainer.append(createCard(border));
     });
+    const MAP_MODE = 'place';
+    const API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro';
+    content.querySelector(
+        'iframe'
+    ).src = `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${API_KEY}&q=${country.name.common}`;
     main.append(content);
 }
 function createSpecific(content, id, value, label) {

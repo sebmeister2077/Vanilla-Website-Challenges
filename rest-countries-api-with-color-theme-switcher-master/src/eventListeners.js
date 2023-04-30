@@ -68,6 +68,7 @@ export function searchNameChangeListener() {
     searchNameAbort = new AbortController()
     searchNameTimeout = setTimeout(() => {
         region.value = ''
+        region.dispatchEvent(new Event('change'))
         if (newName) searchCountriesByName(newName, searchNameAbort.signal).then(applyNewCountries)
         else getAllCountries().then(applyNewCountries)
         searchNameTimeout = null

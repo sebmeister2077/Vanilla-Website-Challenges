@@ -54,8 +54,6 @@ export function createCardTemplate(country) {
     const name = content.querySelector('.country-name');
     name.innerText = country.name.common;
 
-    if (country.name.common == 'Macau') console.log('yes');
-
     //population
     setValueForLabel(content, '#population-', country.name.common, formatNumber(country.population));
 

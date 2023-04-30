@@ -303,8 +303,6 @@
                 position: relative;
                 max-width: 300px;
                 min-width: 240px;
-                will-change: padding;
-                transition: padding 0.4s;
                 background-color: transparent;
             }
             .country-card-border:hover .animated-border {
@@ -424,6 +422,11 @@
                 will-change: transform;
                 animation-duration: 1s;
                 animation-fill-mode: forwards;
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .single-country .country-flag img {
+                    animation: none !important;
+                }
             }
             @keyframes country-flag-animation {
                 to {

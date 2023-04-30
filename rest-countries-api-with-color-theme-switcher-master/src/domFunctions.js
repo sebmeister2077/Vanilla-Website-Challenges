@@ -5,10 +5,10 @@ export function applyNewCountries(newCountries) {
     countries = newCountries
     currentPage = 0
     document.querySelectorAll('.country-card-border').forEach((el) => el.remove())
-    newCountries.slice(currentPage, PAGE_SIZE).forEach(createTemplate)
+    newCountries.slice(currentPage, PAGE_SIZE).forEach(createCardTemplate)
 }
 
-export function createTemplate(country) {
+export function createCardTemplate(country) {
     const template = document.getElementById('country-template')
     const main = document.querySelector('.countries')
     //content is a document fragment, it is not equal to the html dom element

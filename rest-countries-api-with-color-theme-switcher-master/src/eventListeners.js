@@ -1,5 +1,5 @@
 import { PAGE_SIZE, getAllCountries, searchCountriesByName, searchCountriesByRegion } from './apiMethods.js'
-import { applyNewCountries, createTemplate } from './domFunctions.js'
+import { applyNewCountries, createCardTemplate } from './domFunctions.js'
 import { throttleFunction } from './helpers.js'
 
 export function regionChangeListener() {
@@ -110,5 +110,5 @@ export function containerScrollListener(e) {
         return
     }
     currentPage++
-    countries.slice(currentPage, currentPage * PAGE_SIZE).forEach(createTemplate)
+    countries.slice(currentPage, currentPage * PAGE_SIZE).forEach(createCardTemplate)
 }

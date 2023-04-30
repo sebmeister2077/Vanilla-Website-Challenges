@@ -371,13 +371,14 @@
                 color: var(--input);
                 background-color: var(--elements);
                 box-shadow: var(--box-shadow);
+                padding: 4px 24px;
             }
             .back-button {
                 display: flex;
                 align-items: center;
                 border: none;
                 gap: 8px;
-                padding: 4px 24px;
+                cursor: pointer;
             }
             .single-country {
                 display: flex;
@@ -391,7 +392,7 @@
                 width: 100%;
                 height: 300px;
                 gap: 176px;
-                align-items: center;
+                align-items: stretch;
             }
             .single-country .country-flag {
                 height: 100%;
@@ -402,6 +403,32 @@
                 height: 100%;
             }
             .single-country .country-details {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                overflow: hidden;
+                flex-grow: 1;
+                padding-block: 16px;
+            }
+            .single-country .country-specifics {
+                display: flex;
+                flex-wrap: wrap;
+                flex-direction: column;
+                max-height: 70%;
+                font-style: normal;
+            }
+            .single-country .country-specific {
+                display: flex;
+                gap: 6px;
+            }
+            .single-country .country-specific label {
+                color: var(--text);
+            }
+            .single-country .country-specific label + span {
+                color: var(--input);
+            }
+            .single-country .country-name {
+                font-size: 24px;
             }
         </style>
     </head>
@@ -468,12 +495,14 @@
                         <div class="country-details">
                             <h2 class="country-name">Belgium</h2>
                             <address class="country-specifics">
-                                <label for="single-native-name-">Native Name</label>
-                                <span id="single-native-name-">Belgie</span>
+                                <div class="country-specific">
+                                    <label for="single-native-name-">Native Name:</label>
+                                    <span id="single-native-name-">Belgie</span>
+                                </div>
                             </address>
                             <div class="border-countries">
                                 <span>Border Countries:</span>
-                                <span class="input-element"></span>
+                                <span class="card">France</span>
                             </div>
                         </div>
                     </article>

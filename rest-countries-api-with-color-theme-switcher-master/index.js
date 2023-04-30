@@ -14,7 +14,7 @@ window.regionsDialog = document.getElementById('region-dropdown')
 //initial
 
 const urlParams = getUrlParams()
-const isHomePage = urlParams.has('country')
+const isHomePage = !urlParams.has('country')
 
 if (isHomePage) {
     initializeHomePage(true)

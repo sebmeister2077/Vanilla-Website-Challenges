@@ -1,4 +1,3 @@
-import autoAnimate from './node_modules/@formkit/auto-animate/index.mjs'
 import { getAllCountries } from './src/apiMethods.js'
 import { COUNTRY_NAMES_LOCATION, applyNewCountries, initializeAutocompleteList } from './src/domFunctions.js'
 import {

@@ -5,7 +5,8 @@ const FIELDS = '?fields=name,capital,region,flags,population'
 const PAGE_SIZE = calculatePageSize()
 
 async function searchCountriesByName(name, signal) {
-    const result = await fetch(`${API_ENDPOINT}name/${name}${FIELDS}`, { signal })
+    const EXTRA_NAME_FIELDS = ',subregion,tld,currencies,languages,borders'
+    const result = await fetch(`${API_ENDPOINT}name/${name}${FIELDS}${signal ? '' : EXTRA_NAME_FIELDS}`, { signal })
     if (result.status === 404) return []
     return await result.json()
 }

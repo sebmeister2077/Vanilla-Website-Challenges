@@ -19,12 +19,21 @@ export function regionChangeListener() {
     searchCountriesByRegion(newRegion).then(applyNewCountries)
 }
 
+const throttledFunction = throttleFunction(alignDialog, 200)
+function alignDialog(element) {
+    const el = element instanceof HTMLElement ? element : regionControl
+    const { offsetTop, offsetHeight, offsetLeft, offsetWidth } = el
+    regionsDialog.style.top = `${offsetHeight + offsetTop + 4}px`
+    let offset = 0
+    const isParentRetracted = el.classList.contains('retract-width')
+    if (isParentRetracted) offset = offsetWidth - 210
+    regionsDialog.style.left = `${offsetLeft + offset}px`
+}
 export function regionClickListener(e) {
     e.stopPropagation()
     if (this.classList.contains('retract-width')) this.style.width = '210px'
     const expandMoreIcon = regionControl.querySelector(' .expand-more')
 
-    const throttledFunction = throttleFunction(alignDialog, 200)
     if (regionsDialog.open) {
         regionsDialog.removeAttribute('open')
         expandMoreIcon.classList.remove('rotate180')
@@ -32,15 +41,6 @@ export function regionClickListener(e) {
         return
     }
 
-    function alignDialog(element) {
-        const el = element instanceof HTMLElement ? element : regionControl
-        const { offsetTop, offsetHeight, offsetLeft, offsetWidth } = el
-        regionsDialog.style.top = `${offsetHeight + offsetTop + 4}px`
-        let offset = 0
-        const isParentRetracted = el.classList.contains('retract-width')
-        if (isParentRetracted) offset = offsetWidth - 210
-        regionsDialog.style.left = `${offsetLeft + offset}px`
-    }
     alignDialog(this)
     window.addEventListener('resize', throttledFunction)
     regionsDialog.setAttribute('open', '')

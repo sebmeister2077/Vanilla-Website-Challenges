@@ -15,6 +15,7 @@ window.countries = []
 window.currentPage = 0
 window.currentSearch = ''
 window.currentRegion = ''
+window.appBar = document.querySelector('.appbar')
 window.mainContainer = document.getElementsByTagName('main')[0]
 window.countryContainer = document.querySelector('.countries')
 window.regionControl = document.getElementById('region-control')
@@ -30,7 +31,6 @@ getAllCountries()
     })
     .then(applyNewCountries)
 
-// autoAnimate(countryContainer)
 region.addEventListener('change', regionChangeListener)
 regionControl.addEventListener('click', regionClickListener)
 regionsDialog.addEventListener('click', regionDialogListener)

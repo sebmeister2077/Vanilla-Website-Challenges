@@ -22,9 +22,10 @@
                 --elements: var(--white);
                 --background: var(--very-light-gray);
                 --input: var(--dark-gray);
-                --input-focus:hsl(0, 0%, 40%)
+                --input-focus: hsl(0, 0%, 95%);
                 --text: hsl(200, 15%, 8%);
                 --border-radius: 6px;
+                --box-shadow: 0px 2px 6px #00000033;
             }
             main::-webkit-scrollbar {
                 width: 12px;
@@ -43,7 +44,7 @@
                     --background: hsl(207, 26%, 17%);
                     --input: var(--very-light-gray);
                     --text: var(--white);
-                    --input-focus:hsl(0, 0%, 85%)
+                    --input-focus: hsl(209, 23%, 27%);
                 }
                 main::-webkit-scrollbar-thumb {
                     background-color: hsl(210deg 32.34% 25.82%);
@@ -87,20 +88,20 @@
                 border-radius: var(--border-radius);
                 padding: 8px 16px;
                 gap: 8px;
-                box-shadow: 0px 0px 6px 1px hsla(0, 0%, 0%, 0.2);
+                box-shadow: var(--box-shadow);
                 overflow: hidden;
                 align-items: center;
                 width: 300px;
                 will-change: width;
-                transition: width .8s;
+                transition: width 0.8s;
             }
-            .retract-width{
+            .retract-width {
                 width: 56px !important;
             }
-            .search:has(:focus-within,:active){
-                width:300px !important;
+            .search:has(:focus-within, :active) {
+                width: 300px !important;
             }
-            .search label{
+            .search label {
                 cursor: pointer;
                 height: 24px;
             }
@@ -119,7 +120,7 @@
                 background-color: var(--elements);
                 border: none;
                 padding: 12px 16px;
-                box-shadow: 0px 2px 6px #00000029;
+                box-shadow: var(--box-shadow);
                 display: flex;
                 align-items: center;
                 gap: 8px;
@@ -127,30 +128,30 @@
                 cursor: pointer;
                 user-select: none;
                 position: relative;
-                overflow:hidden;
-                width:210px;
-                transition: width .8s;
+                overflow: hidden;
+                width: 210px;
+                transition: width 0.8s;
                 will-change: width;
             }
             .region :not(input) {
                 z-index: 2;
             }
-            .region svg ~:where(svg,input,label){
-                transition: opacity .4s;
+            .region svg ~ :where(svg, input, label) {
+                transition: opacity 0.4s;
                 will-change: opacity;
             }
-            .region.retract-width svg ~:where(svg,input,label){
+            .region.retract-width svg ~ :where(svg, input, label) {
                 opacity: 0 !important;
             }
             .region label {
                 cursor: pointer;
-                will-change: transform,opacity;
-                transition: transform 0.4s,opacity .4s;
+                will-change: transform, opacity;
+                transition: transform 0.4s, opacity 0.4s;
                 white-space: nowrap;
             }
             .region .expand-more {
-                will-change: rotate,opacity;
-                transition: rotate 0.4s,opacity .4s;
+                will-change: rotate, opacity;
+                transition: rotate 0.4s, opacity 0.4s;
             }
             .rotate180 {
                 rotate: 180deg;
@@ -171,33 +172,36 @@
             }
             #region-dropdown {
                 z-index: 2;
-            cursor: pointer;
+                cursor: pointer;
                 position: absolute;
                 width: 210px;
                 border: none;
                 display: block;
                 opacity: 0;
-                transition: opacity .4s;
+                padding-inline: 0px;
+                transition: opacity 0.4s;
                 background-color: var(--elements);
                 border-radius: var(--border-radius);
+                box-shadow: var(--box-shadow);
             }
-            #region-dropdown[open]{
+            #region-dropdown[open] {
                 opacity: 1;
             }
             #region-dropdown ul {
                 list-style-type: none;
-                padding: 4px 8px;
+                padding: 4px 0px;
                 display: flex;
                 flex-direction: column;
-                gap: 6px;
+                gap: 4px;
             }
-            #region-dropdown li{
-                will-change: color;
-                transition: color .4s;
+            #region-dropdown li {
+                will-change: background-color;
+                transition: background-color 0.4s;
+                padding: 6px 24px;
                 color: var(--input);
             }
-            #region-dropdown li:hover{
-                color: var(--input-focus);
+            #region-dropdown li:hover {
+                background-color: var(--input-focus);
             }
             .appbar {
                 position: sticky;
@@ -213,8 +217,8 @@
                 .search {
                     width: 100%;
                 }
-                .search:has(:focus-within,:active) {
-                    width:100% !important;
+                .search:has(:focus-within, :active) {
+                    width: 100% !important;
                 }
             }
             .countries {
@@ -225,7 +229,7 @@
             }
             .country {
                 background-color: var(--elements);
-                box-shadow: 0px 2px 6px #00000029;
+                box-shadow: var(--box-shadow);
                 border-radius: var(--border-radius);
                 overflow: hidden;
                 display: flex;
@@ -242,7 +246,7 @@
                     justify-self: center;
                 }
             }
-             @media only screen and (width <=500px) {
+            @media only screen and (width <=500px) {
                 .country {
                     min-width: 85%;
                 }
@@ -281,7 +285,7 @@
             body > header {
                 background-color: var(--elements);
                 padding: 12px 32px;
-                box-shadow: 0px 2px 6px #00000029;
+                box-shadow: var(--box-shadow);
             }
             header h2 {
                 font-weight: 800;
@@ -309,7 +313,7 @@
             .appear {
                 opacity: 1 !important;
             }
-            .fade{
+            .fade {
                 opacity: 0 !important;
             }
             .show {

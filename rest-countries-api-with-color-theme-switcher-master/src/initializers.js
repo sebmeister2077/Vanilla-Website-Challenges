@@ -10,7 +10,7 @@ import {
     searchNameChangeListener,
 } from './eventListeners.js'
 
-export function initializeHomePage() {
+export function initializeHomePage(isHomePage) {
     const autoCompleteCallback = requestIdleCallback(initializeAutocompleteList)
     getAllCountries().then((allCountries) => {
         localStorage.setItem(COUNTRY_NAMES_LOCATION, JSON.stringify(allCountries.map((c) => c.name.common)))

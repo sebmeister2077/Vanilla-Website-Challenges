@@ -17,8 +17,7 @@ const urlParams = getUrlParams()
 const isHomePage = urlParams.has('country')
 
 if (isHomePage) {
-    initializeHomePage()
-    return
+    initializeHomePage(true)
+} else {
+    requestIdleCallback(() => initializeHomePage(false))
 }
-
-requestIdleCallback(initializeHomePage)

@@ -550,6 +550,7 @@
                         type="search"
                         name="country"
                         id="searchName"
+                        data-shortcut="Slash/KeyK&ctrlKey=focus"
                     />
                     <datalist id="countryNamesList"> </datalist>
                 </div>
@@ -649,7 +650,7 @@
                     </span>
                 </template>
             </section>
-            <button class="go-to-top" onclick="main.scrollTo({ top:0,behavior:'smooth'});">
+            <button data-shortcut="shiftKey&KeyH=click" class="go-to-top" onclick="main.scrollTo({ top:0});">
                 <svg viewBox="0 0 24 24"><path d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path></svg>
             </button>
         </main>

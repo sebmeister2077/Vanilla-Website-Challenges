@@ -242,6 +242,9 @@
                 grid-gap: 32px;
                 padding-right: var(--scrollbar-width);
             }
+            .country:focus {
+                outline: none;
+            }
             .country {
                 background-color: var(--elements);
                 box-shadow: var(--box-shadow);
@@ -291,7 +294,7 @@
                 min-width: 240px;
                 background-color: transparent;
             }
-            .country-card-border:hover .animated-border {
+            .country-card-border:has(:hover, :focus) .animated-border {
                 animation-play-state: running;
                 opacity: 1;
             }
@@ -514,7 +517,10 @@
                     will-change: transform;
                     transition: transform 0.4s;
                 }
-                .country-card-border:hover .animated-border {
+                .country:focus {
+                    outline: initial;
+                }
+                .country-card-border:has(:hover, :focus) .animated-border {
                     animation: none;
                     opacity: 0;
                 }
@@ -544,10 +550,11 @@
                         type="search"
                         name="country"
                         id="searchName"
+                        data-shortcut="Slash/KeyK&ctrlKey=focus"
                     />
                     <datalist id="countryNamesList"> </datalist>
                 </div>
-                <div tabindex="0" id="region-control" class="region">
+                <div data-shortcut="KeyR=focus" tabindex="0" id="region-control" class="region">
                     <svg viewBox="0 0 24 24">
                         <path
                             d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-1.95.7-3.74 1.87-5.13L9 10v1c0 1.1.9 2 2 2v5.59c0 .27.11.52.29.71l.71.7c-4.42 0-8-3.58-8-8zm9 7.94V18l3.75-5.62c.16-.25.25-.54.25-.83V10.5c0-.55-.45-1-1-1h-1.5l-1.4-1.75c-.38-.47-.95-.75-1.56-.75H8V5.07C9.18 4.39 10.54 4 12 4c4.41 0 8 3.59 8 8 0 4.07-3.06 7.44-7 7.94z"
@@ -562,11 +569,11 @@
                 <dialog id="region-dropdown">
                     <ul>
                         <li hidden value="">Global</li>
-                        <li value="africa">Africa</li>
-                        <li value="america">America</li>
-                        <li value="asia">Asia</li>
-                        <li value="europe">Europe</li>
-                        <li value="oceania">Oceania</li>
+                        <li tabindex="-1" value="africa">Africa</li>
+                        <li tabindex="-1" value="america">America</li>
+                        <li tabindex="-1" value="asia">Asia</li>
+                        <li tabindex="-1" value="europe">Europe</li>
+                        <li tabindex="-1" value="oceania">Oceania</li>
                     </ul>
                 </dialog>
             </header>
@@ -642,10 +649,10 @@
                         </a>
                     </span>
                 </template>
+                <button data-shortcut="KeyH=click" class="go-to-top" onclick="main.scrollTo({ top:0});">
+                    <svg viewBox="0 0 24 24"><path d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path></svg>
+                </button>
             </section>
-            <button class="go-to-top" onclick="main.scrollTo({ top:0,behavior:'smooth'});">
-                <svg viewBox="0 0 24 24"><path d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path></svg>
-            </button>
         </main>
         <noscript>You need to enable javascript in order to see any country</noscript>
         <script defer src="./index.js" type="module"></script>

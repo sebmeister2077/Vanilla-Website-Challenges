@@ -1,5 +1,5 @@
 import { PAGE_SIZE, getAllCountries, searchCountriesByName, searchCountriesByRegion } from './apiMethods.js';
-import { applyNewCountries, createCardTemplate } from './domFunctions.js';
+import { applyNewCountries, closeRegionDialog, createCardTemplate, openRegionDialog } from './domFunctions.js';
 import { throttleFunction } from './helpers.js';
 
 export function regionChangeListener() {
@@ -17,33 +17,19 @@ export function regionChangeListener() {
     searchCountriesByRegion(newRegion).then(applyNewCountries);
 }
 
-const throttledFunction = throttleFunction(alignDialog, 200);
-function alignDialog(element) {
-    const el = element instanceof HTMLElement ? element : regionControl;
-    const { offsetTop, offsetHeight, offsetLeft, offsetWidth } = el;
-    regionsDialog.style.top = `${offsetHeight + offsetTop + 4}px`;
-    let offset = 0;
-    const isParentRetracted = el.classList.contains('retract-width');
-    if (isParentRetracted) offset = offsetWidth - 210;
-    regionsDialog.style.left = `${offsetLeft + offset}px`;
+export function regionKeyboardOpenListener(e) {
+    if (e.code === 'Enter') openRegionDialog();
 }
 export function regionClickListener(e) {
     e.stopPropagation();
     if (this.classList.contains('retract-width')) this.style.width = '210px';
-    const expandMoreIcon = regionControl.querySelector(' .expand-more');
 
     if (regionsDialog.open) {
-        regionsDialog.removeAttribute('open');
-        expandMoreIcon.classList.remove('rotate180');
-        window.removeEventListener('resize', throttledFunction);
+        closeRegionDialog();
         return;
     }
-    regionsDialog.querySelector('li[hidden]').removeAttribute('hidden');
-    regionsDialog.querySelector(`li[value='${currentRegion}']`).setAttribute('hidden', '');
-    alignDialog(this);
-    window.addEventListener('resize', throttledFunction);
-    regionsDialog.setAttribute('open', '');
-    expandMoreIcon.classList.add('rotate180');
+
+    openRegionDialog();
 }
 export function regionDialogListener(e) {
     const expandMoreIcon = regionControl.querySelector(' .expand-more');
@@ -60,7 +46,8 @@ export function documentClickListener(e) {
 }
 var searchNameTimeout;
 var searchNameAbort;
-export function searchNameChangeListener() {
+export function searchNameChangeListener(e) {
+    e.stopPropagation();
     const newName = this.value.trim();
     if (searchNameTimeout) clearTimeout(searchNameTimeout);
     searchNameAbort?.abort();
@@ -76,13 +63,33 @@ export function searchNameChangeListener() {
 }
 
 export function documentKeypressListener(e) {
-    if (document.activeElement === searchName) return;
-    if (e.code == 'Slash' || (e.code == 'KeyK' && e.ctrlKey)) {
-        setTimeout(() => {
-            searchName.focus();
-        }, 0);
-        e.stopPropagation();
-    }
+    console.log(e);
+    const allShortcutElements = document.querySelectorAll('[data-shortcut]');
+    allShortcutElements.forEach((el) => {
+        if (e.target === el) return;
+        const operationRegex = /=[\w]+$/;
+        const codes = el.getAttribute('data-shortcut');
+        const allElementShortcuts = codes.replace(operationRegex, '').split('/');
+        let doesShortcutApply = false;
+        const specialKeys = ['altKey', 'ctrlKey', 'shiftKey'];
+        allElementShortcuts.forEach((s) => {
+            const groupedShortcuts = s.split('&');
+            let localCondition = true;
+            groupedShortcuts.forEach((gs) => {
+                if (specialKeys.includes(gs)) localCondition = localCondition && e[gs];
+                else localCondition = localCondition && e.code === gs;
+            });
+            doesShortcutApply = doesShortcutApply || localCondition;
+        });
+        if (doesShortcutApply) {
+            const operation = operationRegex.exec(codes)?.[0]?.replace('=', '');
+            if (!operation) throw new Error('This shortcut operation is invalid');
+            setTimeout(() => {
+                el[operation]();
+            }, 0);
+            e.stopPropagation();
+        }
+    });
 }
 export function containerScrollListener(e) {
     const OFFSET = 300; //pixels
@@ -116,4 +123,31 @@ export function containerScrollListener(e) {
 export function beforeDocumentUnload() {
     localStorage.setItem('currentSearch', currentSearch);
     localStorage.setItem('currentRegion', currentRegion);
+}
+
+//navigation for the li element
+export function keydownRegionDialogLiElement(e, index) {
+    const listItems = regionsDialog.querySelectorAll('li');
+    if (e.key === 'ArrowUp' && index > 0) {
+        if (!listItems[index - 1].hasAttribute('hidden')) {
+            listItems[index - 1].focus();
+            return;
+        }
+        if (index > 1) listItems[index - 2].focus();
+
+        return;
+    }
+    if (e.key === 'ArrowDown' && index < listItems.length - 1) {
+        if (!listItems[index + 1].hasAttribute('hidden')) {
+            listItems[index + 1].focus();
+            return;
+        }
+        if (index < listItems.length - 2) listItems[index + 2].focus();
+        return;
+    }
+    if (e.code === 'Enter' && index >= 0) {
+        region.value = listItems[index].getAttribute('value');
+        region.dispatchEvent(new Event('change'));
+        closeRegionDialog();
+    }
 }

@@ -14,7 +14,6 @@ window.regionControl = document.getElementById('region-control');
 window.regionsDialog = document.getElementById('region-dropdown');
 
 //initial
-
 const urlParams = getUrlParams();
 const isHomePage = !urlParams.has('country');
 

@@ -1,5 +1,5 @@
 import { PAGE_SIZE } from './apiMethods.js';
-import { formatNumber, normalizeText } from './helpers.js';
+import { formatNumber, normalizeText, throttleFunction } from './helpers.js';
 
 export function applyNewCountries(newCountries) {
     countries = newCountries;
@@ -25,6 +25,7 @@ export function createCardTemplate(country) {
     anchor.id = normalizeText(country.name.common);
     anchor.href = `${location.origin}${location.pathname}?country=${anchor.id}`;
     anchor.onclick = function (e) {
+        this.blur();
         e.preventDefault();
         history.pushState(null, '', this.href);
         createSingleTemplate(country, true);
@@ -63,7 +64,7 @@ export function createCardTemplate(country) {
     //capital
     if (country.capital?.length) setValueForLabel(content, '#capital-', country.name.common, country.capital.join(', '));
 
-    main.append(content);
+    main.prepend(content);
 }
 
 function setValueForLabel(content, id, idSuffix, givenValue) {
@@ -98,6 +99,11 @@ export function createSingleTemplate(country, isHidden) {
     const template = document.getElementById('single-country');
     //content is a document fragment, it is not equal to the html dom element
     const content = template.content.cloneNode(true);
+    const allCurrentFocuableElements = ' :where(header :where(input,#region-control),.countries :where(a,button))';
+
+    requestIdleCallback(() => {
+        main.querySelectorAll(allCurrentFocuableElements).forEach((el) => el.setAttribute('tabindex', '-1'));
+    });
     requestIdleCallback(scrollToCard);
     function scrollToCard() {
         const cardElement = document.getElementById(country.name.common);
@@ -115,8 +121,11 @@ export function createSingleTemplate(country, isHidden) {
     anchor.href = `${location.origin}${location.pathname}`;
     anchor.onclick = function (e) {
         e.preventDefault();
+        main.querySelectorAll(allCurrentFocuableElements).forEach((el) => el.setAttribute('tabindex', '0'));
         history.pushState(null, '', this.href);
         appBar.classList.remove('fade');
+        const cardElement = document.getElementById(country.name.common);
+        cardElement.focus();
 
         const thisCountry = document.querySelector('.single-country');
         thisCountry.style.opacity = 0;
@@ -182,4 +191,36 @@ function createCard(text) {
     span.innerText = text;
     span.classList.add('card');
     return span;
+}
+
+const throttledFunction = throttleFunction(alignDialog, 200);
+function alignDialog(element) {
+    const el = element instanceof HTMLElement ? element : regionControl;
+    const { offsetTop, offsetHeight, offsetLeft, offsetWidth } = el;
+    regionsDialog.style.top = `${offsetHeight + offsetTop + 4}px`;
+    let offset = 0;
+    const isParentRetracted = el.classList.contains('retract-width');
+    if (isParentRetracted) offset = offsetWidth - 210;
+    regionsDialog.style.left = `${offsetLeft + offset}px`;
+}
+
+export function openRegionDialog() {
+    const expandMoreIcon = regionControl.querySelector(' .expand-more');
+    const currentHidden = regionsDialog.querySelector('li[hidden]');
+    currentHidden.removeAttribute('hidden');
+    currentHidden.setAttribute('tabindex', '-1');
+    const newHidden = regionsDialog.querySelector(`li[value='${currentRegion}']`);
+    newHidden.setAttribute('hidden', '');
+    newHidden.removeAttribute('tabindex');
+    alignDialog(this);
+    window.addEventListener('resize', throttledFunction);
+    regionsDialog.setAttribute('open', '');
+    expandMoreIcon.classList.add('rotate180');
+}
+
+export function closeRegionDialog() {
+    const expandMoreIcon = regionControl.querySelector(' .expand-more');
+    regionsDialog.removeAttribute('open');
+    expandMoreIcon.classList.remove('rotate180');
+    window.removeEventListener('resize', throttledFunction);
 }

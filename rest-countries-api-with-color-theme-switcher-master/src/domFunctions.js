@@ -1,72 +1,185 @@
-import { PAGE_SIZE } from './apiMethods.js'
-import { normalizeText } from './helpers.js'
+import { PAGE_SIZE } from './apiMethods.js';
+import { formatNumber, normalizeText } from './helpers.js';
 
 export function applyNewCountries(newCountries) {
-    countries = newCountries
-    currentPage = 0
-    document.querySelectorAll('.country-card-border').forEach((el) => el.remove())
-    newCountries.slice(currentPage, PAGE_SIZE).forEach(createTemplate)
+    countries = newCountries;
+
+    currentPage = 0;
+    document.querySelectorAll('.country-card-border').forEach((el) => el.remove());
+    newCountries.slice(currentPage, PAGE_SIZE).forEach(createCardTemplate);
 }
 
-export function createTemplate(country) {
-    const template = document.getElementById('country-template')
-    const main = document.querySelector('.countries')
+export function createCardTemplate(country) {
+    const template = document.getElementById('country-template');
+    const main = document.querySelector('.countries');
     //content is a document fragment, it is not equal to the html dom element
-    const content = template.content.cloneNode(true)
-
-    const anchor = content.querySelector('a')
-    anchor.id = normalizeText(country.name.common)
-    anchor.href = `#${anchor.id}`
-    anchor.onclick = (e) => {
-        e.preventDefault()
-    }
+    const content = template.content.cloneNode(true);
     //image
-    const imageFlags = content.querySelectorAll('img')
+    const imageFlags = content.querySelectorAll('img');
     imageFlags.forEach((flag) => {
-        flag.src = country.flags.png
-        flag.alt = country.flags.alt
-    })
+        flag.src = country.flags.png;
+        flag.alt = country.flags.alt;
+    });
+
+    const anchor = content.querySelector('a');
+    anchor.id = normalizeText(country.name.common);
+    anchor.href = `${location.origin}${location.pathname}?country=${anchor.id}`;
+    anchor.onclick = function (e) {
+        e.preventDefault();
+        history.pushState(null, '', this.href);
+        createSingleTemplate(country, true);
+        const root = document.querySelector('.single-country');
+        const cardflag = this.parentElement.querySelector('img[data-role=country-flag]');
+        const flag = root.querySelector('img');
+        const { top: smallTop, left: smallLeft, width: smallWidth, height: smallHeight } = cardflag.getBoundingClientRect();
+
+        //aprox 10-30 ms
+        flag.addEventListener('load', function () {
+            const { top: bigTop, left: bigLeft, width: bigWidth, height: bigHeight } = flag.getBoundingClientRect();
+
+            const heightRatio = smallHeight / bigHeight;
+            const widthRatio = smallWidth / bigWidth;
+            //Yea... MATH...
+            const transform = `translate(${smallLeft - (bigLeft + ((1 - widthRatio) * bigWidth) / 2)}px,${
+                smallTop - (bigTop + ((1 - heightRatio) * bigHeight) / 2)
+            }px) scale(${widthRatio},${heightRatio})`;
+
+            flag.style.transform = transform;
+            root.style.opacity = 1;
+            flag.style['animation-name'] = 'country-flag-animation';
+        });
+    };
 
     //name
-    const name = content.querySelector('.country-name')
-    name.innerText = country.name.common
+    const name = content.querySelector('.country-name');
+    name.innerText = country.name.common;
 
     //population
-    setValueForLabel(content, '#population-', country.name.common, country.population)
+    setValueForLabel(content, '#population-', country.name.common, formatNumber(country.population));
 
     //region
-    setValueForLabel(content, '#region-', country.name.common, country.population)
+    setValueForLabel(content, '#region-', country.name.common, country.region);
 
     //capital
-    setValueForLabel(content, '#capital-', country.name.common, country.capital[0])
+    if (country.capital?.length) setValueForLabel(content, '#capital-', country.name.common, country.capital.join(', '));
 
-    main.append(content)
+    main.append(content);
 }
 
 function setValueForLabel(content, id, idSuffix, givenValue) {
-    const value = content.querySelector(id)
-    const label = value.previousElementSibling
-    const newId = value.id + idSuffix
-    label.htmlFor = newId
-    value.id = newId
-    value.innerText = givenValue
+    const value = content.querySelector(id);
+    const label = value.previousElementSibling;
+    const newId = value.id + idSuffix;
+    label.htmlFor = newId;
+    value.id = newId;
+    value.innerText = givenValue;
 }
 
-export const COUNTRY_NAMES_LOCATION = 'country-names'
+export const COUNTRY_NAMES_LOCATION = 'country-names';
 export function initializeAutocompleteList() {
-    if (countryNamesList.children.length) return
-    const countryNames = localStorage.getItem(COUNTRY_NAMES_LOCATION)
-    if (!countryNames) return
-    let parsedNames
+    if (countryNamesList.children.length) return;
+    const countryNames = localStorage.getItem(COUNTRY_NAMES_LOCATION);
+    if (!countryNames) return;
+    let parsedNames;
     try {
-        parsedNames = JSON.parse(countryNames)
+        parsedNames = JSON.parse(countryNames);
     } catch {
-        return
+        return;
     }
     parsedNames.forEach((name) => {
-        const option = document.createElement('option')
+        const option = document.createElement('option');
         //copied from chatgpt but works
-        option.value = normalizeText(name)
-        countryNamesList.append(option)
-    })
+        option.value = normalizeText(name);
+        countryNamesList.append(option);
+    });
+}
+
+export function createSingleTemplate(country, isHidden) {
+    const template = document.getElementById('single-country');
+    //content is a document fragment, it is not equal to the html dom element
+    const content = template.content.cloneNode(true);
+    requestIdleCallback(scrollToCard);
+    function scrollToCard() {
+        const cardElement = document.getElementById(country.name.common);
+        if (!cardElement) {
+            currentPage++;
+            countries.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE).forEach(createCardTemplate);
+            requestIdleCallback(scrollToCard);
+            return;
+        }
+        cardElement.scrollIntoViewIfNeeded({ block: 'center' });
+    }
+
+    if (isHidden) content.querySelector('.single-country').style.opacity = 0;
+    const anchor = content.querySelector('a');
+    anchor.href = `${location.origin}${location.pathname}`;
+    anchor.onclick = function (e) {
+        e.preventDefault();
+        history.pushState(null, '', this.href);
+        appBar.classList.remove('fade');
+
+        const thisCountry = document.querySelector('.single-country');
+        thisCountry.style.opacity = 0;
+        thisCountry.style['transition-duration'] = '.6s';
+        setTimeout(() => thisCountry.remove(), 800);
+    };
+    //image
+    const imageFlags = content.querySelectorAll('img');
+    imageFlags.forEach((flag) => {
+        flag.src = country.flags.svg;
+        flag.alt = country.flags.alt;
+    });
+
+    //name
+    const name = content.querySelector('.country-name');
+    name.innerText = country.name.common;
+
+    const nativeName = country.name.nativeName[Object.keys(country.name.nativeName)[0]].common;
+    createSpecific(content, `single-country-${nativeName}`, nativeName, 'Native Name');
+
+    createSpecific(content, `single-country-${country.population}`, formatNumber(country.population), 'Population');
+    createSpecific(content, `single-country-${country.region}`, country.region, 'Region');
+    createSpecific(content, `single-country-${country.subregion}`, country.subregion, 'Sub Region');
+    createSpecific(content, `single-country-${country.capital.join(', ')}`, country.capital.join(','), 'Capital');
+    createSpecific(content, `single-country-${country.tld.join(', ')}`, country.tld.join(','), 'Top Level Domain');
+
+    const currencies = Object.keys(country.currencies)
+        .map((k) => country.currencies[k].name)
+        .join(', ');
+    createSpecific(content, `single-country-${currencies}`, currencies, 'Currencies');
+    const languages = Object.keys(country.languages)
+        .map((k) => country.languages[k])
+        .join(', ');
+    createSpecific(content, `single-country-${languages}`, languages, 'Languages');
+
+    const bordersContainer = content.querySelector('.border-countries');
+    if (!country.borders.length) bordersContainer.append(createCard('None'));
+    country.borders.forEach((border) => {
+        bordersContainer.append(createCard(border));
+    });
+    const MAP_MODE = 'place';
+    const API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro';
+    content.querySelector(
+        'iframe'
+    ).src = `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${API_KEY}&q=${country.name.common}`;
+    main.append(content);
+}
+function createSpecific(content, id, value, label) {
+    const countrySpecificsContainer = content.querySelector('.country-specifics');
+    const countrySpecificTemplate = content.getElementById('country-specific');
+    const specific = countrySpecificTemplate.content.cloneNode(true);
+    const specificLabel = specific.querySelector('label');
+    specificLabel.for = id;
+    specificLabel.innerText = label + ':';
+    const specifivValue = specific.querySelector('span');
+    specifivValue.innerText = value;
+    specifivValue.id = id;
+    countrySpecificsContainer.append(specific);
+}
+
+function createCard(text) {
+    const span = document.createElement('span');
+    span.innerText = text;
+    span.classList.add('card');
+    return span;
 }

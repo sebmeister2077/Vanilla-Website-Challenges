@@ -19,9 +19,9 @@ const urlParams = getUrlParams();
 const isHomePage = !urlParams.has('country');
 
 if (isHomePage) {
-    initializeHomePage(true);
+    initializeHomePage();
 } else {
-    requestIdleCallback(() => initializeHomePage(false));
+    requestIdleCallback(initializeHomePage);
     searchCountriesByName(urlParams.get('country')).then((res) => {
         if (!res.length) {
             console.log('no country found!');

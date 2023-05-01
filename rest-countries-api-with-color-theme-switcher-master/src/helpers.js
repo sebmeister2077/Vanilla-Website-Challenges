@@ -42,3 +42,9 @@ export function formatNumber(number) {
         notation: 'compact',
     }).format(number);
 }
+
+export function getPreviousSessionData() {
+    const searchName = localStorage.getItem('currentSearch') ?? '';
+    const region = localStorage.getItem('currentRegion') ?? '';
+    return { searchName, region };
+}

@@ -112,3 +112,8 @@ export function containerScrollListener(e) {
     currentPage++;
     countries.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE).forEach(createCardTemplate);
 }
+
+export function beforeDocumentUnload() {
+    localStorage.setItem('currentSearch', currentSearch);
+    localStorage.setItem('currentRegion', currentRegion);
+}

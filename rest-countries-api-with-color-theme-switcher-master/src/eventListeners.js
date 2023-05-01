@@ -1,10 +1,11 @@
 import { PAGE_SIZE, getAllCountries, searchCountriesByName, searchCountriesByRegion } from './apiMethods.js';
 import { applyNewCountries, closeRegionDialog, createCardTemplate, openRegionDialog } from './domFunctions.js';
-import { throttleFunction } from './helpers.js';
+import { debounceFunction, throttleFunction } from './helpers.js';
 
 export function regionChangeListener() {
     const newRegion = this.value;
     if (newRegion === currentRegion) return;
+    main.scrollTo({ top: 0 });
     searchName.value = '';
     currentRegion = newRegion;
 
@@ -46,20 +47,23 @@ export function documentClickListener(e) {
 }
 var searchNameTimeout;
 var searchNameAbort;
+const debouncedApiCall = debounceFunction((newName, searchNameAbort) => {
+    region.value = '';
+    region.dispatchEvent(new Event('change'));
+    if (newName) searchCountriesByName(newName, searchNameAbort.signal).then(applyNewCountries);
+    else getAllCountries().then(applyNewCountries);
+    searchNameTimeout = null;
+    searchNameAbort = null;
+}, 1500);
+const debouncedScroll = debounceFunction(() => main.scrollTo({ top: 0 }), 1000);
 export function searchNameChangeListener(e) {
     e.stopPropagation();
     const newName = this.value.trim();
     if (searchNameTimeout) clearTimeout(searchNameTimeout);
     searchNameAbort?.abort();
     searchNameAbort = new AbortController();
-    searchNameTimeout = setTimeout(() => {
-        region.value = '';
-        region.dispatchEvent(new Event('change'));
-        if (newName) searchCountriesByName(newName, searchNameAbort.signal).then(applyNewCountries);
-        else getAllCountries().then(applyNewCountries);
-        searchNameTimeout = null;
-        searchNameAbort = null;
-    }, 1000);
+    debouncedScroll();
+    debouncedApiCall(newName, searchNameAbort);
 }
 
 export function documentKeypressListener(e) {

@@ -9,6 +9,17 @@ export function calculatePageSize() {
         APPROXIMATE_COUNTRY_HEIGHT = 300;
     return Math.round((innerWidth * innerHeight) / (APPROXIMATE_COUNTRY_WIDTH * APPROXIMATE_COUNTRY_HEIGHT) + 2);
 }
+
+export const debounceFunction = (cb, delay) => {
+    let timeout;
+
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            cb(...args);
+        }, delay);
+    };
+};
 export const throttleFunction = (cb, delay = 250) => {
     let shouldWait = false;
     let waitingArgs;

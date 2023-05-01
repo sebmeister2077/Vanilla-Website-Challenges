@@ -98,6 +98,17 @@ export function createSingleTemplate(country, isHidden) {
     const template = document.getElementById('single-country');
     //content is a document fragment, it is not equal to the html dom element
     const content = template.content.cloneNode(true);
+    requestIdleCallback(scrollToCard);
+    function scrollToCard() {
+        const cardElement = document.getElementById(country.name.common);
+        if (!cardElement) {
+            currentPage++;
+            countries.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE).forEach(createCardTemplate);
+            requestIdleCallback(scrollToCard);
+            return;
+        }
+        cardElement.scrollIntoViewIfNeeded({ block: 'center' });
+    }
 
     if (isHidden) content.querySelector('.single-country').style.opacity = 0;
     const anchor = content.querySelector('a');
@@ -105,19 +116,12 @@ export function createSingleTemplate(country, isHidden) {
     anchor.onclick = function (e) {
         e.preventDefault();
         history.pushState(null, '', this.href);
-
-        function scrollToCard() {
-            const cardElement = document.getElementById(country.name.common);
-            if (!cardElement) {
-                currentPage++;
-                countries.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE).forEach(createCardTemplate);
-                scrollToCard();
-            }
-            cardElement.scrollIntoViewIfNeeded({ block: 'center' });
-        }
         appBar.classList.remove('fade');
-        document.querySelector('.single-country').remove();
-        scrollToCard();
+
+        const thisCountry = document.querySelector('.single-country');
+        thisCountry.style.opacity = 0;
+        thisCountry.style['transition-duration'] = '.6s';
+        setTimeout(() => thisCountry.remove(), 800);
     };
     //image
     const imageFlags = content.querySelectorAll('img');

@@ -5,9 +5,11 @@ import {
     containerScrollListener,
     documentClickListener,
     documentKeypressListener,
+    keydownRegionDialogLiElement,
     regionChangeListener,
     regionClickListener,
     regionDialogListener,
+    regionKeyboardOpenListener,
     searchNameChangeListener,
 } from './eventListeners.js';
 import { getPreviousSessionData } from './helpers.js';
@@ -32,7 +34,12 @@ export function initializeHomePage() {
 
     region.addEventListener('change', regionChangeListener);
     regionControl.addEventListener('click', regionClickListener);
+    regionControl.addEventListener('keypress', regionKeyboardOpenListener);
     regionsDialog.addEventListener('click', regionDialogListener);
+    regionControl.addEventListener('keydown', (e) => keydownRegionDialogLiElement(e, -1));
+    regionsDialog
+        .querySelectorAll('li')
+        .forEach((el, index) => el.addEventListener('keydown', (e) => keydownRegionDialogLiElement(e, index)));
     searchName.addEventListener('change', searchNameChangeListener);
     document.addEventListener('keypress', documentKeypressListener);
     mainContainer.addEventListener('scroll', containerScrollListener);

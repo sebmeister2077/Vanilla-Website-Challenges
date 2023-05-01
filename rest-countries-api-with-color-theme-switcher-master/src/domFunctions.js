@@ -1,5 +1,5 @@
 import { PAGE_SIZE } from './apiMethods.js';
-import { formatNumber, normalizeText } from './helpers.js';
+import { formatNumber, normalizeText, throttleFunction } from './helpers.js';
 
 export function applyNewCountries(newCountries) {
     countries = newCountries;
@@ -182,4 +182,36 @@ function createCard(text) {
     span.innerText = text;
     span.classList.add('card');
     return span;
+}
+
+const throttledFunction = throttleFunction(alignDialog, 200);
+function alignDialog(element) {
+    const el = element instanceof HTMLElement ? element : regionControl;
+    const { offsetTop, offsetHeight, offsetLeft, offsetWidth } = el;
+    regionsDialog.style.top = `${offsetHeight + offsetTop + 4}px`;
+    let offset = 0;
+    const isParentRetracted = el.classList.contains('retract-width');
+    if (isParentRetracted) offset = offsetWidth - 210;
+    regionsDialog.style.left = `${offsetLeft + offset}px`;
+}
+
+export function openRegionDialog() {
+    const expandMoreIcon = regionControl.querySelector(' .expand-more');
+    const currentHidden = regionsDialog.querySelector('li[hidden]');
+    currentHidden.removeAttribute('hidden');
+    currentHidden.setAttribute('tabindex', '-1');
+    const newHidden = regionsDialog.querySelector(`li[value='${currentRegion}']`);
+    newHidden.setAttribute('hidden', '');
+    newHidden.removeAttribute('tabindex');
+    alignDialog(this);
+    window.addEventListener('resize', throttledFunction);
+    regionsDialog.setAttribute('open', '');
+    expandMoreIcon.classList.add('rotate180');
+}
+
+export function closeRegionDialog() {
+    const expandMoreIcon = regionControl.querySelector(' .expand-more');
+    regionsDialog.removeAttribute('open');
+    expandMoreIcon.classList.remove('rotate180');
+    window.removeEventListener('resize', throttledFunction);
 }

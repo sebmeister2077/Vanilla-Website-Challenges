@@ -1,5 +1,5 @@
 import { PAGE_SIZE, getAllCountries, searchCountriesByName, searchCountriesByRegion } from './apiMethods.js';
-import { applyNewCountries, createCardTemplate } from './domFunctions.js';
+import { applyNewCountries, closeRegionDialog, createCardTemplate, openRegionDialog } from './domFunctions.js';
 import { throttleFunction } from './helpers.js';
 
 export function regionChangeListener() {
@@ -17,33 +17,19 @@ export function regionChangeListener() {
     searchCountriesByRegion(newRegion).then(applyNewCountries);
 }
 
-const throttledFunction = throttleFunction(alignDialog, 200);
-function alignDialog(element) {
-    const el = element instanceof HTMLElement ? element : regionControl;
-    const { offsetTop, offsetHeight, offsetLeft, offsetWidth } = el;
-    regionsDialog.style.top = `${offsetHeight + offsetTop + 4}px`;
-    let offset = 0;
-    const isParentRetracted = el.classList.contains('retract-width');
-    if (isParentRetracted) offset = offsetWidth - 210;
-    regionsDialog.style.left = `${offsetLeft + offset}px`;
+export function regionKeyboardOpenListener(e) {
+    if (e.code === 'Enter') openRegionDialog();
 }
 export function regionClickListener(e) {
     e.stopPropagation();
     if (this.classList.contains('retract-width')) this.style.width = '210px';
-    const expandMoreIcon = regionControl.querySelector(' .expand-more');
 
     if (regionsDialog.open) {
-        regionsDialog.removeAttribute('open');
-        expandMoreIcon.classList.remove('rotate180');
-        window.removeEventListener('resize', throttledFunction);
+        closeRegionDialog();
         return;
     }
-    regionsDialog.querySelector('li[hidden]').removeAttribute('hidden');
-    regionsDialog.querySelector(`li[value='${currentRegion}']`).setAttribute('hidden', '');
-    alignDialog(this);
-    window.addEventListener('resize', throttledFunction);
-    regionsDialog.setAttribute('open', '');
-    expandMoreIcon.classList.add('rotate180');
+
+    openRegionDialog();
 }
 export function regionDialogListener(e) {
     const expandMoreIcon = regionControl.querySelector(' .expand-more');
@@ -116,4 +102,31 @@ export function containerScrollListener(e) {
 export function beforeDocumentUnload() {
     localStorage.setItem('currentSearch', currentSearch);
     localStorage.setItem('currentRegion', currentRegion);
+}
+
+//navigation for the li element
+export function keydownRegionDialogLiElement(e, index) {
+    const listItems = regionsDialog.querySelectorAll('li');
+    if (e.key === 'ArrowUp' && index > 0) {
+        if (!listItems[index - 1].hasAttribute('hidden')) {
+            listItems[index - 1].focus();
+            return;
+        }
+        if (index > 1) listItems[index - 2].focus();
+
+        return;
+    }
+    if (e.key === 'ArrowDown' && index < listItems.length - 1) {
+        if (!listItems[index + 1].hasAttribute('hidden')) {
+            listItems[index + 1].focus();
+            return;
+        }
+        if (index < listItems.length - 2) listItems[index + 2].focus();
+        return;
+    }
+    if (e.code === 'Enter' && index >= 0) {
+        region.value = listItems[index].getAttribute('value');
+        region.dispatchEvent(new Event('change'));
+        closeRegionDialog();
+    }
 }

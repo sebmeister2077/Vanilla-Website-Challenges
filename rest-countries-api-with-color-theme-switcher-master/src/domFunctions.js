@@ -174,8 +174,9 @@ export function createSingleTemplate(country, isHidden) {
                 window.borders = resCountries;
                 main.querySelectorAll('.single-country .border-countries a').forEach((el) => {
                     const elCode = el.getAttribute('data-border-code');
-                    const correspondingCountry = resCountries.find((c) => c.fifa === elCode);
+                    const correspondingCountry = resCountries.find((c) => [c.fifa, c.cca2, c.cca3, c.cioc].includes(elCode));
                     if (!correspondingCountry) return;
+                    el.title = correspondingCountry.name.common;
                     el.href = `${location.origin}${location.pathname}?country=${correspondingCountry.name.common}`;
                     el.onclick = (e) => {
                         e.preventDefault();
@@ -189,9 +190,10 @@ export function createSingleTemplate(country, isHidden) {
     }
     const MAP_MODE = 'place';
     const API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro';
-    content.querySelector('iframe').src = `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${API_KEY}&q=${
-        country.name.common
-    }&region=${country.fifa.slice(0, 2)}`;
+    console.log(country.cca2);
+    content.querySelector(
+        'iframe'
+    ).src = `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${API_KEY}&q=${country.name.common}&region=${country.cca2}`;
     main.append(content);
 }
 function createSpecific(content, id, value, label) {

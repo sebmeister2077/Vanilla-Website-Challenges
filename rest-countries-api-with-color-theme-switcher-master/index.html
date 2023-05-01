@@ -242,6 +242,9 @@
                 grid-gap: 32px;
                 padding-right: var(--scrollbar-width);
             }
+            .country:focus {
+                outline: none;
+            }
             .country {
                 background-color: var(--elements);
                 box-shadow: var(--box-shadow);
@@ -291,7 +294,7 @@
                 min-width: 240px;
                 background-color: transparent;
             }
-            .country-card-border:hover .animated-border {
+            .country-card-border:has(:hover, :focus) .animated-border {
                 animation-play-state: running;
                 opacity: 1;
             }
@@ -514,7 +517,10 @@
                     will-change: transform;
                     transition: transform 0.4s;
                 }
-                .country-card-border:hover .animated-border {
+                .country:focus {
+                    outline: initial;
+                }
+                .country-card-border:has(:hover, :focus) .animated-border {
                     animation: none;
                     opacity: 0;
                 }

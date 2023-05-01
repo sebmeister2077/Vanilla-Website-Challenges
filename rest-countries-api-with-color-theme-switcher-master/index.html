@@ -507,6 +507,20 @@
                 .single-country .country-flag img {
                     animation: none !important;
                 }
+                .country-card-border {
+                    overflow: visible;
+                }
+                .country-card-border .country {
+                    will-change: transform;
+                    transition: transform 0.4s;
+                }
+                .country-card-border:hover .animated-border {
+                    animation: none;
+                    opacity: 0;
+                }
+                .country-card-border:hover .country {
+                    transform: scale(1.1);
+                }
             }
         </style>
     </head>

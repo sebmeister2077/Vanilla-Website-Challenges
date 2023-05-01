@@ -1,4 +1,4 @@
-import { PAGE_SIZE } from './apiMethods.js';
+import { PAGE_SIZE, searchCountriesByCodes } from './apiMethods.js';
 import { formatNumber, normalizeText, throttleFunction } from './helpers.js';
 
 export function applyNewCountries(newCountries) {
@@ -165,12 +165,30 @@ export function createSingleTemplate(country, isHidden) {
 
     const bordersContainer = content.querySelector('.border-countries');
     if (!country.borders.length) bordersContainer.append(createCard('None'));
-    country.borders.forEach((border) => {
-        bordersContainer.append(createCard(border));
-    });
+    else {
+        country.borders.forEach((border) => {
+            bordersContainer.append(createCard(border, border));
+        });
+        requestIdleCallback(() => {
+            searchCountriesByCodes(country.borders).then((resCountries) => {
+                window.borders = resCountries;
+                main.querySelectorAll('.single-country .border-countries a').forEach((el) => {
+                    const elCode = el.getAttribute('data-border-code');
+                    const correspondingCountry = resCountries.find((c) => c.fifa === elCode);
+                    if (!correspondingCountry) return;
+                    el.href = `${location.origin}${location.pathname}?country=${correspondingCountry.name.common}`;
+                    el.onclick = (e) => {
+                        e.preventDefault();
+                        history.pushState(undefined, '', el.href);
+                        main.querySelector('.single-country').remove();
+                        createSingleTemplate(correspondingCountry);
+                    };
+                });
+            });
+        });
+    }
     const MAP_MODE = 'place';
     const API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro';
-    console.log(country);
     content.querySelector('iframe').src = `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${API_KEY}&q=${
         country.name.common
     }&region=${country.fifa.slice(0, 2)}`;
@@ -189,11 +207,13 @@ function createSpecific(content, id, value, label) {
     countrySpecificsContainer.append(specific);
 }
 
-function createCard(text) {
-    const span = document.createElement('span');
-    span.innerText = text;
-    span.classList.add('card');
-    return span;
+function createCard(text, code) {
+    const card = document.createElement('a');
+    card.innerText = text;
+    card.classList.add('card', 'border-country');
+    if (code) card.setAttribute('data-border-code', code);
+    else card.setAttribute('disabled', '');
+    return card;
 }
 
 const throttledFunction = throttleFunction(alignDialog, 200);

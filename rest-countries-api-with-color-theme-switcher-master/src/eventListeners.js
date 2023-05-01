@@ -95,13 +95,15 @@ export function containerScrollListener(e) {
     const { scrollHeight, scrollTop, clientHeight } = this;
     const searchContainer = document.querySelector('.search');
     const faButton = document.querySelector('.go-to-top');
-    if (scrollTop >= clientHeight) {
+    if (scrollTop >= clientHeight + 50) {
         faButton.classList.add('show');
         appBar.style['flex-wrap'] = 'nowrap';
         searchContainer.classList.add('retract-width');
         regionControl.classList.add('retract-width');
         regionsDialog.removeAttribute('open');
-    } else {
+    }
+
+    if (scrollTop < clientHeight - 50) {
         appBar.style['flex-wrap'] = 'wrap';
         searchContainer.classList.remove('retract-width');
         regionControl.classList.remove('retract-width');

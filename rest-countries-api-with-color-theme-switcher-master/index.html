@@ -367,6 +367,7 @@
                 transition: translate 0.8s, scale 0.4s, opacity 0.4s;
                 translate: 0px 200%;
                 opacity: 0.75;
+                z-index: 5;
             }
             .go-to-top:hover {
                 opacity: 1;
@@ -649,7 +650,13 @@
                         </a>
                     </span>
                 </template>
-                <button data-shortcut="KeyH=click" class="go-to-top" onclick="main.scrollTo({ top:0});">
+                <button
+                    data-shortcut="KeyH=click"
+                    data-tabindex="1"
+                    tabindex="1"
+                    class="go-to-top"
+                    onclick="main.scrollTo({ top:0});"
+                >
                     <svg viewBox="0 0 24 24"><path d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path></svg>
                 </button>
             </section>

@@ -64,7 +64,7 @@ export function createCardTemplate(country) {
     //capital
     if (country.capital?.length) setValueForLabel(content, '#capital-', country.name.common, country.capital.join(', '));
 
-    main.prepend(content);
+    main.append(content);
 }
 
 function setValueForLabel(content, id, idSuffix, givenValue) {
@@ -121,7 +121,9 @@ export function createSingleTemplate(country, isHidden) {
     anchor.href = `${location.origin}${location.pathname}`;
     anchor.onclick = function (e) {
         e.preventDefault();
-        main.querySelectorAll(allCurrentFocuableElements).forEach((el) => el.setAttribute('tabindex', '0'));
+        main.querySelectorAll(allCurrentFocuableElements).forEach((el) => {
+            el.setAttribute('tabindex', el.getAttribute('data-tabindex') ?? '0');
+        });
         history.pushState(null, '', this.href);
         appBar.classList.remove('fade');
         const cardElement = document.getElementById(country.name.common);

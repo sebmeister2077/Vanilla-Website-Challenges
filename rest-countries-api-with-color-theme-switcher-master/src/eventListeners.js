@@ -46,7 +46,8 @@ export function documentClickListener(e) {
 }
 var searchNameTimeout;
 var searchNameAbort;
-export function searchNameChangeListener() {
+export function searchNameChangeListener(e) {
+    e.stopPropagation();
     const newName = this.value.trim();
     if (searchNameTimeout) clearTimeout(searchNameTimeout);
     searchNameAbort?.abort();
@@ -62,13 +63,33 @@ export function searchNameChangeListener() {
 }
 
 export function documentKeypressListener(e) {
-    if (document.activeElement === searchName) return;
-    if (e.code == 'Slash' || (e.code == 'KeyK' && e.ctrlKey)) {
-        setTimeout(() => {
-            searchName.focus();
-        }, 0);
-        e.stopPropagation();
-    }
+    console.log(e);
+    const allShortcutElements = document.querySelectorAll('[data-shortcut]');
+    allShortcutElements.forEach((el) => {
+        if (e.target === el) return;
+        const operationRegex = /=[\w]+$/;
+        const codes = el.getAttribute('data-shortcut');
+        const allElementShortcuts = codes.replace(operationRegex, '').split('/');
+        let doesShortcutApply = false;
+        const specialKeys = ['altKey', 'ctrlKey', 'shiftKey'];
+        allElementShortcuts.forEach((s) => {
+            const groupedShortcuts = s.split('&');
+            let localCondition = true;
+            groupedShortcuts.forEach((gs) => {
+                if (specialKeys.includes(gs)) localCondition = localCondition && e[gs];
+                else localCondition = localCondition && e.code === gs;
+            });
+            doesShortcutApply = doesShortcutApply || localCondition;
+        });
+        if (doesShortcutApply) {
+            const operation = operationRegex.exec(codes)?.[0]?.replace('=', '');
+            if (!operation) throw new Error('This shortcut operation is invalid');
+            setTimeout(() => {
+                el[operation]();
+            }, 0);
+            e.stopPropagation();
+        }
+    });
 }
 export function containerScrollListener(e) {
     const OFFSET = 300; //pixels

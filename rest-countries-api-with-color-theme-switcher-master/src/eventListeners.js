@@ -63,7 +63,6 @@ export function searchNameChangeListener(e) {
 }
 
 export function documentKeypressListener(e) {
-    console.log(e);
     const allShortcutElements = document.querySelectorAll('[data-shortcut]');
     allShortcutElements.forEach((el) => {
         if (e.target === el) return;

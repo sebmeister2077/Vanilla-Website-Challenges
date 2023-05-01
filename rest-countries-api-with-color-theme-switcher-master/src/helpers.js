@@ -48,3 +48,11 @@ export function getPreviousSessionData() {
     const region = localStorage.getItem('currentRegion') ?? '';
     return { searchName, region };
 }
+
+export function getCurrentQueryCountry() {
+    return new URLSearchParams(location.search).get('country');
+}
+
+export function sleep(delay) {
+    return new Promise((res, rej) => setTimeout(res, delay));
+}

@@ -105,8 +105,19 @@ export function createSingleTemplate(country, isHidden) {
     anchor.onclick = function (e) {
         e.preventDefault();
         history.pushState(null, '', this.href);
+
+        function scrollToCard() {
+            const cardElement = document.getElementById(country.name.common);
+            if (!cardElement) {
+                currentPage++;
+                countries.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE).forEach(createCardTemplate);
+                scrollToCard();
+            }
+            cardElement.scrollIntoViewIfNeeded({ block: 'center' });
+        }
         appBar.classList.remove('fade');
         document.querySelector('.single-country').remove();
+        scrollToCard();
     };
     //image
     const imageFlags = content.querySelectorAll('img');

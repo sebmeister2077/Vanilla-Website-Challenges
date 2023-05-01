@@ -20,6 +20,9 @@ export function initializeHomePage() {
 
     window.currentSearch = previous.searchName;
     window.currentRegion = previous.region;
+    region.value = currentRegion;
+    if (region.value) region.classList.add('appear');
+    searchName.value = currentSearch;
 
     (() => {
         if (currentRegion) return searchCountriesByRegion(currentRegion);

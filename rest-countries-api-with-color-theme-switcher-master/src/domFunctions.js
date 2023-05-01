@@ -170,9 +170,10 @@ export function createSingleTemplate(country, isHidden) {
     });
     const MAP_MODE = 'place';
     const API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro';
-    content.querySelector(
-        'iframe'
-    ).src = `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${API_KEY}&q=${country.name.common}`;
+    console.log(country);
+    content.querySelector('iframe').src = `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${API_KEY}&q=${
+        country.name.common
+    }&region=${country.fifa.slice(0, 2)}`;
     main.append(content);
 }
 function createSpecific(content, id, value, label) {

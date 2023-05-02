@@ -19,7 +19,9 @@ export function regionChangeListener() {
 }
 
 export function regionKeyboardOpenListener(e) {
-    if (e.code === 'Enter') openRegionDialog();
+    const isOpen = regionsDialog.open;
+    if (e.code === 'Enter' && !isOpen) openRegionDialog();
+    if (e.code === 'Enter' && isOpen) closeRegionDialog();
 }
 export function regionClickListener(e) {
     e.stopPropagation();

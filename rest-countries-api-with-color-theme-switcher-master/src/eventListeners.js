@@ -97,11 +97,12 @@ export function documentKeypressListener(e) {
     });
 }
 export function containerScrollListener(e) {
-    const OFFSET = 300; //pixels
+    const PAGE_OFFSET = 300; //pixels
+    const HEADER_OFFSET = 50; //pixels
     const { scrollHeight, scrollTop, clientHeight } = this;
     const searchContainer = document.querySelector('.search');
     const faButton = document.querySelector('.go-to-top');
-    if (scrollTop >= clientHeight + 50) {
+    if (scrollTop >= clientHeight + HEADER_OFFSET) {
         faButton.classList.add('show');
         appBar.style['flex-wrap'] = 'nowrap';
         searchContainer.classList.add('retract-width');
@@ -109,13 +110,13 @@ export function containerScrollListener(e) {
         regionsDialog.removeAttribute('open');
     }
 
-    if (scrollTop < clientHeight - 50) {
+    if (scrollTop < clientHeight - HEADER_OFFSET) {
         appBar.style['flex-wrap'] = 'wrap';
         searchContainer.classList.remove('retract-width');
         regionControl.classList.remove('retract-width');
         faButton.classList.remove('show');
     }
-    const isScrolledToBottom = scrollHeight - scrollTop <= clientHeight + OFFSET;
+    const isScrolledToBottom = scrollHeight - scrollTop <= clientHeight + PAGE_OFFSET;
     if (!isScrolledToBottom) return;
 
     const noMoreCountries = countries.length / PAGE_SIZE <= currentPage + 1;

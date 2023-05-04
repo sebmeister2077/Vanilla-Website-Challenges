@@ -20,7 +20,7 @@
             :root {
                 --dark-gray: hsl(0, 0%, 59%);
                 --very-dark-gray: hsl(0, 0%, 10%);
-                --white: hsl(0, 0%, 95%);
+                --white: hsl(0, 0%, 98%);
             }
             html {
                 --background-height: 280px;
@@ -43,16 +43,16 @@
                 padding: 24px 12px;
                 display: flex;
                 flex-direction: column;
-                gap: 16px;
+                gap: 32px;
                 position: fixed;
                 inset-inline: 0px;
                 top: 0px;
+                align-items: center;
             }
             header h2 {
                 color: var(--white);
                 display: flex;
                 flex-direction: column;
-                align-items: center;
             }
             .search-bar {
                 display: flex;
@@ -67,6 +67,7 @@
                 padding-inline: 12px;
                 min-width: 20rem;
                 color: var(--dark-gray);
+                background-color: var(--white);
                 outline: none;
             }
             .search-button {
@@ -75,15 +76,46 @@
                 border: none;
                 aspect-ratio: 1;
                 fill: var(--white);
+                cursor: pointer;
             }
             .background {
                 width: 100%;
+            }
+            .information-card {
+                border-radius: var(--border-radius);
+                background-color: var(--white);
+                display: grid;
+                grid-template-columns: 1fr 1px 1fr 1px 1fr 1px 1fr;
+                padding: 24px;
+                gap: 24px;
+                width: fit-content;
+            }
+            .information {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            .information label {
+                text-transform: uppercase;
+                font-size: 0.7rem;
+                font-weight: 700;
+                color: var(--dark-gray);
+            }
+            .information-value {
+                color: var(--very-dark-gray);
+                font-weight: 500;
+                font-size: 1.1rem;
+            }
+            .vertical-line {
+                width: 1px;
+                background-color: var(--dark-gray);
+                opacity: 0.56;
             }
         </style>
     </head>
     <body>
         <header>
-            <h2>IP Address Tsracker</h2>
+            <h2>IP Address Tracker</h2>
             <form class="search-bar">
                 <input class="search-input" type="search" placeholder="Search for any IP address or domain" />
                 <button class="search-button">
@@ -92,6 +124,27 @@
                     </svg>
                 </button>
             </form>
+            <section class="information-card">
+                <div class="information">
+                    <label>ip address</label>
+                    <div class="information-value">192.221.174.101</div>
+                </div>
+                <div class="vertical-line"></div>
+                <div class="information">
+                    <label>location</label>
+                    <div class="information-value">Brooklyn</div>
+                </div>
+                <div class="vertical-line"></div>
+                <div class="information">
+                    <label>timezone</label>
+                    <div class="information-value">UTC-05:00</div>
+                </div>
+                <div class="vertical-line"></div>
+                <div class="information">
+                    <label>isp</label>
+                    <div class="information-value">SpaceX Starlink</div>
+                </div>
+            </section>
         </header>
         <img class="background" src="./images/pattern-bg-desktop.png" />
         <script>

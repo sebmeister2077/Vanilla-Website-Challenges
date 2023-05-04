@@ -1,34 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- displays site properly based on user's device -->
 
-  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
-  
-  <title>Frontend Mentor | IP Address Tracker</title>
+        <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet" />
+        <title>IP Address Tracker</title>
+        <script
+            src="https://code.jquery.com/jquery-3.6.4.slim.min.js"
+            integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw="
+            crossorigin="anonymous"
+        ></script>
+        <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+        <style>
+            :root {
+                --dark-gray: hsl(0, 0%, 59%);
+                --very-dark-gray: hsl(0, 0%, 10%);
+                --white: hsl(0, 0%, 95%);
+            }
+            html {
+                --background-height: 280px;
+                --border-radius: 12px;
+            }
+            * {
+                font-family: Rubik;
+                box-sizing: border-box;
+                margin: 0px;
+            }
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: 100vh;
+                gap: 24px;
+                background-repeat: no-repeat;
+                background-image: url('images/pattern-bg-desktop.png');
+            }
+            header {
+                padding: 24px 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+            header h2 {
+                color: var(--white);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .search-bar {
+                display: flex;
+                border-radius: var(--border-radius);
+                overflow: hidden;
+                height: 42px;
+            }
+            .search-input {
+                height: 100%;
+                border: none;
+                padding-inline: 12px;
+                min-width: 20rem;
+                color: var(--dark-gray);
+            }
+            .search-button {
+                height: 100%;
+                background-color: var(--very-dark-gray);
+                border: none;
+                aspect-ratio: 1;
+                fill: var(--white);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h2>IP Address Tracker</h2>
+            <form class="search-bar">
+                <input class="search-input" type="search" placeholder="Search for any IP address or domain" />
+                <button class="search-button">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path>
+                    </svg>
+                </button>
+            </form>
+        </header>
+        <script>
+            $(function () {
+                const example = {
+                    ip: '77.111.245.12',
+                    location: {
+                        country: 'SE',
+                        region: 'Östergötland County',
+                        timezone: '+02:00',
+                    },
+                    as: {
+                        asn: 205016,
+                        name: 'HERNLABS',
+                        route: '77.111.245.0/24',
+                        domain: '',
+                        type: 'Not Disclosed',
+                    },
+                    isp: 'HERN Labs AB',
+                }
+                function getCurrentIp() {
+                    const API_KEY = 'at_aZBISroXZwa1igtSZ2gNr6jhPaf07'
 
-  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
-  <style>
-    .attribution { font-size: 11px; text-align: center; }
-    .attribution a { color: hsl(228, 45%, 44%); }
-  </style>
-</head>
-<body>
-
-  IP Address Tracker
-
-  Search for any IP address or domain
-
-  IP Address
-  Location
-  Timezone
-    UTC <!-- add offset value dynamically using the API -->
-  ISP
-  
-  <div class="attribution">
-    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
-    Coded by <a href="#">Your Name Here</a>.
-  </div>
-</body>
+                    return fetch(`https://geo.ipify.org/api/v2/country?apiKey=${API_KEY}`, {
+                        mode: 'cors',
+                        headers: {
+                            'Content-Type': 'text/plain',
+                        },
+                    }).then((res) => res.json())
+                }
+            })
+        </script>
+    </body>
 </html>

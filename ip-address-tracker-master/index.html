@@ -80,6 +80,11 @@
             .background {
                 user-select: none;
                 width: 100%;
+                /* No clue why there is a gap if you use <picture> */
+                margin-bottom: -5px;
+            }
+            .background img {
+                width: 100%;
             }
             .information-card {
                 border-radius: var(--border-radius);
@@ -151,7 +156,11 @@
                 </div>
             </section>
         </header>
-        <img class="background" src="./images/pattern-bg-desktop.png" />
+        <picture class="background">
+            <source srcset="./images/pattern-bg-desktop.png" media="(min-width: 601px)" />
+            <source srcset="./images/pattern-bg-mobile.png" media="(max-width: 600px)" />
+            <img src="./images/pattern-bg-desktop.png" alt="Background image" />
+        </picture>
         <iframe
             class="ip-map"
             style="border: 0"

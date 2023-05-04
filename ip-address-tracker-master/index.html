@@ -37,7 +37,6 @@
                 align-items: center;
                 height: 100vh;
                 width: 100vw;
-                gap: 24px;
             }
             header {
                 padding: 24px 12px;
@@ -112,6 +111,8 @@
                 opacity: 0.56;
             }
             .ip-map {
+                flex-grow: 1;
+                width: 100%;
             }
         </style>
     </head>
@@ -188,7 +189,7 @@
                         `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${MAPS_API_KEY}&q=${data.location.region}&region=${data.location.country}`
                     )
                 }
-
+                applyDataToUI(example)
                 return
 
                 const GEOIPIFY_API_KEY = 'at_aZBISroXZwa1igtSZ2gNr6jhPaf07'

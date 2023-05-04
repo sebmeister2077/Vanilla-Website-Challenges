@@ -130,22 +130,22 @@
             <section class="information-card">
                 <div class="information">
                     <label for="ip">ip address</label>
-                    <div class="information-value" id="ip">192.221.174.101</div>
+                    <div class="information-value" id="ip"></div>
                 </div>
                 <div class="vertical-line"></div>
                 <div class="information">
                     <label for="location">location</label>
-                    <div class="information-value" id="location">Brooklyn</div>
+                    <div class="information-value" id="location"></div>
                 </div>
                 <div class="vertical-line"></div>
                 <div class="information">
                     <label for="timezome">timezone</label>
-                    <div class="information-value" id="timezone">UTC-05:00</div>
+                    <div class="information-value" id="timezone"></div>
                 </div>
                 <div class="vertical-line"></div>
                 <div class="information">
                     <label for="isp">isp</label>
-                    <div class="information-value" id="isp">SpaceX Starlink</div>
+                    <div class="information-value" id="isp"></div>
                 </div>
             </section>
         </header>
@@ -160,23 +160,12 @@
         </iframe>
         <script>
             $(function () {
-                const example = {
-                    ip: '77.111.245.12',
-                    location: {
-                        country: 'SE',
-                        region: 'Östergötland County',
-                        timezone: '+02:00',
-                    },
-                    as: {
-                        asn: 205016,
-                        name: 'HERNLABS',
-                        route: '77.111.245.0/24',
-                        domain: '',
-                        type: 'Not Disclosed',
-                    },
-                    isp: 'HERN Labs AB',
-                }
-
+                searchIp()
+                $('.search-bar').on('submit', function (e) {
+                    e.preventDefault()
+                    const searchValue = $('input').val()
+                    searchIp(searchValue)
+                })
                 function applyDataToUI(data) {
                     const MAPS_API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro'
                     const MAP_MODE = 'place'
@@ -189,20 +178,22 @@
                         `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${MAPS_API_KEY}&q=${data.location.region}&region=${data.location.country}`
                     )
                 }
-                applyDataToUI(example)
-                return
-
-                const GEOIPIFY_API_KEY = 'at_aZBISroXZwa1igtSZ2gNr6jhPaf07'
-                $.ajax({
-                    url: `https://geo.ipify.org/api/v2/country?apiKey=${GEOIPIFY_API_KEY}`,
-                    method: 'GET',
-                    crossDomain: true,
-                    headers: {
-                        'Content-Type': 'text/plain',
-                    },
-                    success: applyDataToUI,
-                    error: console.dir,
-                })
+                function searchIp(ip = undefined) {
+                    const GEOIPIFY_API_KEY = 'at_aZBISroXZwa1igtSZ2gNr6jhPaf07'
+                    const url = new URL('https://geo.ipify.org/api/v2/country')
+                    url.searchParams.append('apiKey', GEOIPIFY_API_KEY)
+                    if (ip) url.searchParams.append('ipAddress', ip) //will default to my ip
+                    $.ajax({
+                        url,
+                        method: 'GET',
+                        crossDomain: true,
+                        headers: {
+                            'Content-Type': 'text/plain',
+                        },
+                        success: applyDataToUI,
+                        error: console.dir,
+                    })
+                }
             })
         </script>
     </body>

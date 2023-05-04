@@ -11,8 +11,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet" />
         <title>IP Address Tracker</title>
         <script
-            src="https://code.jquery.com/jquery-3.6.4.slim.min.js"
-            integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw="
+            src="https://code.jquery.com/jquery-3.6.4.min.js"
+            integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
             crossorigin="anonymous"
         ></script>
         <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
@@ -111,6 +111,8 @@
                 background-color: var(--dark-gray);
                 opacity: 0.56;
             }
+            .ip-map {
+            }
         </style>
     </head>
     <body>
@@ -126,27 +128,35 @@
             </form>
             <section class="information-card">
                 <div class="information">
-                    <label>ip address</label>
-                    <div class="information-value">192.221.174.101</div>
+                    <label for="ip">ip address</label>
+                    <div class="information-value" id="ip">192.221.174.101</div>
                 </div>
                 <div class="vertical-line"></div>
                 <div class="information">
-                    <label>location</label>
-                    <div class="information-value">Brooklyn</div>
+                    <label for="location">location</label>
+                    <div class="information-value" id="location">Brooklyn</div>
                 </div>
                 <div class="vertical-line"></div>
                 <div class="information">
-                    <label>timezone</label>
-                    <div class="information-value">UTC-05:00</div>
+                    <label for="timezome">timezone</label>
+                    <div class="information-value" id="timezone">UTC-05:00</div>
                 </div>
                 <div class="vertical-line"></div>
                 <div class="information">
-                    <label>isp</label>
-                    <div class="information-value">SpaceX Starlink</div>
+                    <label for="isp">isp</label>
+                    <div class="information-value" id="isp">SpaceX Starlink</div>
                 </div>
             </section>
         </header>
         <img class="background" src="./images/pattern-bg-desktop.png" />
+        <iframe
+            class="ip-map"
+            style="border: 0"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+        >
+        </iframe>
         <script>
             $(function () {
                 const example = {
@@ -165,16 +175,33 @@
                     },
                     isp: 'HERN Labs AB',
                 }
-                function getCurrentIp() {
-                    const API_KEY = 'at_aZBISroXZwa1igtSZ2gNr6jhPaf07'
 
-                    return fetch(`https://geo.ipify.org/api/v2/country?apiKey=${API_KEY}`, {
-                        mode: 'cors',
-                        headers: {
-                            'Content-Type': 'text/plain',
-                        },
-                    }).then((res) => res.json())
+                function applyDataToUI(data) {
+                    const MAPS_API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro'
+                    const MAP_MODE = 'place'
+                    $('#isp').text(data.isp)
+                    $('#ip').text(data.ip)
+                    $('#location').text(data.location.region)
+                    $('#timezone').text(data.location.timezone)
+                    $('.ip-map').attr(
+                        'src',
+                        `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${MAPS_API_KEY}&q=${data.location.region}&region=${data.location.country}`
+                    )
                 }
+
+                return
+
+                const GEOIPIFY_API_KEY = 'at_aZBISroXZwa1igtSZ2gNr6jhPaf07'
+                $.ajax({
+                    url: `https://geo.ipify.org/api/v2/country?apiKey=${GEOIPIFY_API_KEY}`,
+                    method: 'GET',
+                    crossDomain: true,
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    success: applyDataToUI,
+                    error: console.dir,
+                })
             })
         </script>
     </body>

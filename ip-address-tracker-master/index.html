@@ -97,6 +97,8 @@
                 padding: 24px;
                 gap: 24px;
                 width: fit-content;
+                will-change: opacity;
+                transition: opacity 0.4s;
             }
             @media only screen and (max-width: 600px) {
                 header {
@@ -113,7 +115,6 @@
                     grid-template-columns: none;
                     grid-template-rows: 1fr 1fr 1fr 1fr;
                     width: 100%;
-                    align-items: ce;
                 }
                 .information {
                     align-items: center;
@@ -203,6 +204,12 @@
                     e.preventDefault()
                     const searchValue = $('input').val()
                     searchIp(searchValue)
+                })
+                $('iframe').on('touchstart', function (e) {
+                    $('.information-card').css('opacity', 0)
+                })
+                $('iframe').on('touchend', function (e) {
+                    $('.information-card').css('opacity', 1)
                 })
                 function applyDataToUI(data) {
                     const MAPS_API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro'

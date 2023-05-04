@@ -36,15 +36,17 @@
                 flex-direction: column;
                 align-items: center;
                 height: 100vh;
+                width: 100vw;
                 gap: 24px;
-                background-repeat: no-repeat;
-                background-image: url('images/pattern-bg-desktop.png');
             }
             header {
                 padding: 24px 12px;
                 display: flex;
                 flex-direction: column;
                 gap: 16px;
+                position: fixed;
+                inset-inline: 0px;
+                top: 0px;
             }
             header h2 {
                 color: var(--white);
@@ -57,6 +59,7 @@
                 border-radius: var(--border-radius);
                 overflow: hidden;
                 height: 42px;
+                align-self: center;
             }
             .search-input {
                 height: 100%;
@@ -64,6 +67,7 @@
                 padding-inline: 12px;
                 min-width: 20rem;
                 color: var(--dark-gray);
+                outline: none;
             }
             .search-button {
                 height: 100%;
@@ -72,11 +76,14 @@
                 aspect-ratio: 1;
                 fill: var(--white);
             }
+            .background {
+                width: 100%;
+            }
         </style>
     </head>
     <body>
         <header>
-            <h2>IP Address Tracker</h2>
+            <h2>IP Address Tsracker</h2>
             <form class="search-bar">
                 <input class="search-input" type="search" placeholder="Search for any IP address or domain" />
                 <button class="search-button">
@@ -86,6 +93,7 @@
                 </button>
             </form>
         </header>
+        <img class="background" src="./images/pattern-bg-desktop.png" />
         <script>
             $(function () {
                 const example = {

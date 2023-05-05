@@ -42,7 +42,7 @@
                 padding: 24px 12px;
                 display: flex;
                 flex-direction: column;
-                gap: 32px;
+                gap: min(32px, 2vh);
                 position: fixed;
                 inset-inline: 0px;
                 top: 0px;
@@ -83,6 +83,7 @@
             .background {
                 user-select: none;
                 width: 100%;
+                max-height: 30vh;
                 /* No clue why there is a gap if you use <picture> */
                 margin-bottom: -5px;
             }
@@ -95,10 +96,32 @@
                 display: grid;
                 grid-template-columns: 1fr 1px 1fr 1px 1fr 1px 1fr;
                 padding: 24px;
-                gap: 24px;
+                gap: min(24px, 2vh);
                 width: fit-content;
                 will-change: opacity;
                 transition: opacity 0.4s;
+            }
+            .information {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                font-size: min(1rem, 2vw);
+            }
+            .information label {
+                text-transform: uppercase;
+                font-size: 0.7em;
+                font-weight: 700;
+                color: var(--dark-gray);
+            }
+            .information-value {
+                color: var(--very-dark-gray);
+                font-weight: 500;
+                font-size: 1.1em;
+            }
+            .vertical-line {
+                width: 1px;
+                background-color: var(--dark-gray);
+                opacity: 0.56;
             }
             @media only screen and (max-width: 600px) {
                 header {
@@ -112,37 +135,9 @@
                     min-width: initial;
                 }
                 .information-card {
-                    grid-template-columns: none;
-                    grid-template-rows: 1fr 1fr 1fr 1fr;
                     width: 100%;
+                    padding: 12px;
                 }
-                .information {
-                    align-items: center;
-                }
-                .vertical-line {
-                    display: none;
-                }
-            }
-            .information {
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-            }
-            .information label {
-                text-transform: uppercase;
-                font-size: 0.7rem;
-                font-weight: 700;
-                color: var(--dark-gray);
-            }
-            .information-value {
-                color: var(--very-dark-gray);
-                font-weight: 500;
-                font-size: 1.1rem;
-            }
-            .vertical-line {
-                width: 1px;
-                background-color: var(--dark-gray);
-                opacity: 0.56;
             }
             .ip-map {
                 flex-grow: 1;
@@ -199,6 +194,23 @@
         </iframe>
         <script>
             $(function () {
+                //In case you want a placeholder while debugging
+                // applyDataToUI({
+                //     ip: '82.76.219.83',
+                //     location: {
+                //         country: 'RO',
+                //         region: 'Bihor',
+                //         timezone: '+03:00',
+                //     },
+                //     as: {
+                //         asn: 8708,
+                //         name: 'RCS-RDS',
+                //         route: '82.76.0.0/14',
+                //         domain: 'rcs-rds.ro',
+                //         type: 'Cable/DSL/ISP',
+                //     },
+                //     isp: 'RCS & RDS SA',
+                // })
                 searchIp()
                 $('.search-bar').on('submit', function (e) {
                     e.preventDefault()

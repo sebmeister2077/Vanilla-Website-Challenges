@@ -23,6 +23,8 @@
                 --white: hsl(0, 0%, 98%);
             }
             html {
+                --error: rgb(250, 97, 97);
+                --warning: rgb(234, 158, 59);
                 --background-height: 280px;
                 --border-radius: 12px;
             }
@@ -144,6 +146,36 @@
                 width: 100%;
                 user-select: none;
             }
+            .toast {
+                position: fixed;
+                bottom: 0px;
+                left: 50%;
+                padding: 12px 16px;
+                border-radius: var(--border-radius);
+                transform: translate(-50%, 100%);
+                z-index: 10;
+                animation-duration: 3s;
+                animation-timing-function: cubic-bezier(0.42, 0, 0.49, 1.18);
+                animation-fill-mode: forwards;
+                animation-iteration-count: 1;
+            }
+            noscript {
+                animation-name: toast-pop;
+            }
+            @keyframes toast-pop {
+                0% {
+                    transform: translate(-50%, 100%);
+                }
+                30% {
+                    transform: translate(-50%, -20%);
+                }
+                70% {
+                    transform: translate(-50%, -20%);
+                }
+                100% {
+                    transform: translate(-50%, 100%);
+                }
+            }
         </style>
     </head>
     <body>
@@ -192,9 +224,13 @@
             referrerpolicy="no-referrer-when-downgrade"
         >
         </iframe>
+        <div class="toast"></div>
+        <noscript class="toast" style="background-color: var(--warning)">
+            You need to enable javascript to search for ip addresses
+        </noscript>
         <script>
             $(function () {
-                //In case you want a placeholder while debugging
+                // In case you want a placeholder while debugging
                 // applyDataToUI({
                 //     ip: '82.76.219.83',
                 //     location: {
@@ -211,7 +247,7 @@
                 //     },
                 //     isp: 'RCS & RDS SA',
                 // })
-                searchIp()
+                // searchIp()
                 $('.search-bar').on('submit', function (e) {
                     e.preventDefault()
                     const searchValue = $('input').val()
@@ -248,8 +284,21 @@
                             'Content-Type': 'text/plain',
                         },
                         success: applyDataToUI,
-                        error: console.dir,
+                        error: (e) => {
+                            showToast(e.responseJSON.messages, 'error')
+                        },
                     })
+                }
+                function showToast(message, type) {
+                    $('.toast:not(noscript)')
+                        .text(message)
+                        .css({
+                            'background-color': `var(--${type})`,
+                            'animation-name': 'toast-pop',
+                        })
+                        .on('animationend', function () {
+                            $(this).css({ 'animation-name': 'none' })
+                        })
                 }
             })
         </script>

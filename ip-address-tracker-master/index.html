@@ -263,9 +263,12 @@
                 function applyDataToUI(data) {
                     const MAPS_API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro'
                     const MAP_MODE = 'place'
-                    $('#isp')
-                        .text(data.isp)
-                        .attr('href', data?.as?.domain ? `https://${data.as.domain}` : '')
+
+                    const ispUrl = getIspUrl(data)
+                    const isp = $('#isp')
+                    isp.text(data.isp)
+                    if (Boolean(ispUrl)) isp.attr('href', ispUrl)
+                    else isp.removeAttr('href')
                     $('#ip').text(data.ip)
                     $('#location').text(data.location.region)
                     $('#timezone').text('UTC' + data.location.timezone)
@@ -313,6 +316,12 @@
                         .on('animationend', function () {
                             $(this).css({ 'animation-name': 'none' })
                         })
+                }
+                function getIspUrl(data) {
+                    if (!data?.as?.domain) return ''
+                    const { domain } = data.as
+                    if (domain.startsWith('http')) return domain
+                    return 'https://' + domain
                 }
             })
         </script>

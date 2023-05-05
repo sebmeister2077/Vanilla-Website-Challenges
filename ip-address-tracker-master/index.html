@@ -119,6 +119,7 @@
                 color: var(--very-dark-gray);
                 font-weight: 500;
                 font-size: 1.1em;
+                text-decoration: none;
             }
             .vertical-line {
                 width: 1px;
@@ -207,7 +208,7 @@
                 <div class="vertical-line"></div>
                 <div class="information">
                     <label for="isp">isp</label>
-                    <div class="information-value" id="isp"></div>
+                    <a target="_blank" class="information-value" id="isp"></a>
                 </div>
             </section>
         </header>
@@ -262,7 +263,9 @@
                 function applyDataToUI(data) {
                     const MAPS_API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro'
                     const MAP_MODE = 'place'
-                    $('#isp').text(data.isp)
+                    $('#isp')
+                        .text(data.isp)
+                        .attr('href', data?.as?.domain ? `https://${data.as.domain}` : '')
                     $('#ip').text(data.ip)
                     $('#location').text(data.location.region)
                     $('#timezone').text('UTC' + data.location.timezone)

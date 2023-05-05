@@ -182,7 +182,7 @@
         <header>
             <h2>IP Address Tracker</h2>
             <form class="search-bar">
-                <input class="search-input" type="search" placeholder="Search for any IP address or domain" />
+                <input class="search-input" type="search" placeholder="Search for any IP address" />
                 <button class="search-button">
                     <svg viewBox="0 0 24 24">
                         <path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path>
@@ -247,10 +247,10 @@
                 //     },
                 //     isp: 'RCS & RDS SA',
                 // })
-                // searchIp()
+                searchIp()
                 $('.search-bar').on('submit', function (e) {
                     e.preventDefault()
-                    const searchValue = $('input').val()
+                    const searchValue = $('input').val().trim()
                     searchIp(searchValue)
                 })
                 $('iframe').on('touchstart', function (e) {

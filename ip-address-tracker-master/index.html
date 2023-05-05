@@ -182,7 +182,7 @@
         <header>
             <h2>IP Address Tracker</h2>
             <form class="search-bar">
-                <input class="search-input" type="search" placeholder="Search for any IP address" />
+                <input class="search-input" type="search" placeholder="Search for any IP address, domain or email" />
                 <button class="search-button">
                     <svg viewBox="0 0 24 24">
                         <path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path>
@@ -271,11 +271,22 @@
                         `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${MAPS_API_KEY}&q=${data.location.region}&region=${data.location.country}`
                     )
                 }
-                function searchIp(ip = undefined) {
+                function searchIp(searchText = undefined) {
+                    const ipv4Regex =
+                        /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+                    const domainRegex = /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/
+                    const emailRegex = /^[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
+
                     const GEOIPIFY_API_KEY = 'at_aZBISroXZwa1igtSZ2gNr6jhPaf07'
                     const url = new URL('https://geo.ipify.org/api/v2/country')
                     url.searchParams.append('apiKey', GEOIPIFY_API_KEY)
-                    if (ip) url.searchParams.append('ipAddress', ip) //will default to my ip
+
+                    //will default to the user's ip
+                    if (searchText) {
+                        if (ipv4Regex.test(searchText)) url.searchParams.append('ipAddress', searchText)
+                        if (domainRegex.test(searchText)) url.searchParams.append('domain', searchText)
+                        if (emailRegex.test(searchText)) url.searchParams.append('email', searchText)
+                    }
                     $.ajax({
                         url,
                         method: 'GET',

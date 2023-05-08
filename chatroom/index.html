@@ -147,7 +147,7 @@
                 onValue(listRef, (snapshot) => {
                     const data = snapshot.val()
                     const NOW = Date.now()
-                    const OFFSET = 300_000
+                    const OFFSET = 60_000
                     Object.keys(data).forEach((key,idx,keys) => {
                         if (!data[key].lastActiveAt + OFFSET > NOW) {
                             if (currentValueKeys.includes(key)) $(`[key=${key}]`).remove()

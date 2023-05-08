@@ -118,8 +118,15 @@
                 }
             }
             $(function () {
+                var authTimeout=null;
                 auth.onAuthStateChanged((user) => {
-                    if (!user) return
+                    if (!user) {
+                        authTimeout = setTimeout(() => {
+                            signInAnonymously(auth)
+                        }, 1300);
+                        return;
+                    }
+                    clearTimeout(authTimeout)
                     setUserData({
                         uid: user.uid,
                         name: user.displayName ?? 'Anonym',

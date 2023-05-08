@@ -27,9 +27,12 @@
                 z-index: 2;
             }
             .background{
-                z-index: 1;
                 position: fixed;
                 inset: 0px;
+            }
+            header{
+                z-index: 1;
+                position: relative;
             }
         </style>
     </head>
@@ -37,6 +40,9 @@
         <script type="text/javascript">
             document.body.style.cursor = 'none'
         </script>
+        <header>
+            <div class="info">Online friends:...</div>
+        </header>
         <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background"></i>
         <template id="cursor">
             <svg
@@ -142,11 +148,12 @@
                     const data = snapshot.val()
                     const NOW = Date.now()
                     const OFFSET = 300_000
-                    Object.keys(data).forEach((key) => {
+                    Object.keys(data).forEach((key,idx,keys) => {
                         if (!data[key].lastActiveAt + OFFSET > NOW) {
                             if (currentValueKeys.includes(key)) $(`[key=${key}]`).remove()
                             return
                         }
+                        $(".info").text("Online friends:" + keys.length)
                         if (currentValueKeys.includes(key)) {
                             $(`[key=${key}]`).css({
                                 translate: `${data[key].coords.x}px ${data[key].coords.y}px`,

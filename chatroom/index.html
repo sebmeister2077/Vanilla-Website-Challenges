@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script
+            src="https://code.jquery.com/jquery-3.6.4.slim.js"
+            integrity="sha256-dWvV84T6BhzO4vG6gWhsWVKVoa4lVmLnpBOZh/CAHU4="
+            crossorigin="anonymous"
+        ></script>
+        <title>Chat Room</title>
+        <style>
+            .body {
+                cursor: help;
+                height: 100vh;
+                margin: 0px;
+            }
+            .bubble {
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                will-change: translate, opacity;
+                transition: opacity 0.9s 0.2s, translate 0.6s cubic-bezier(0, 0, 0, 1.16);
+                translate: -100px -100px;
+                opacity: 0;
+                z-index: 2;
+            }
+            .background{
+                z-index: 1;
+                position: fixed;
+                inset: 0px;
+            }
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            document.body.style.cursor = 'none'
+        </script>
+        <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background"></i>
+        <template id="cursor">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="bubble"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                fill="none"
+            >
+                <g clip-path="url(#clip0_429_11096)">
+                    <path
+                        d="M11 20.9999L4 3.99994L21 10.9999L14.7353 13.6848C14.2633 13.8871 13.8872 14.2632 13.6849 14.7353L11 20.9999Z"
+                        stroke="#292929"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                </g>
+                <defs>
+                    <clipPath id="clip0_429_11096">
+                        <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                </defs>
+            </svg>
+        </template>
+        <script type="module" defer>
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js'
+            import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-analytics.js'
+            import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js'
+            import { getPerformance } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-performance.js'
+            import {
+                getDatabase,
+                ref,
+                set,
+                onValue,
+                push,
+                child,
+                update,
+            } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js'
+
+            const firebaseConfig = {
+                apiKey: 'AIzaSyBbn4bnhT_c3j2gwaOWUoMI7iSo3qvFYu0',
+                authDomain: 'chatroom-000.firebaseapp.com',
+                projectId: 'chatroom-000',
+                storageBucket: 'chatroom-000.appspot.com',
+                messagingSenderId: '55067342796',
+                appId: '1:55067342796:web:9488295327025826df8f69',
+                measurementId: 'G-DS9YNWPK0C',
+            }
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig)
+            const auth = getAuth(app)
+            const analytics = getAnalytics(app)
+            const performance = getPerformance(app)
+            const db = getDatabase(app, 'https://chatroom-000-default-rtdb.europe-west1.firebasedatabase.app/')
+
+            export const throttleFunction = (cb, delay = 250) => {
+                let shouldWait = false
+                let waitingArgs
+                const timeoutFunc = () => {
+                    if (waitingArgs == null) {
+                        shouldWait = false
+                        return
+                    }
+                    cb(...waitingArgs)
+                    waitingArgs = null
+                    setTimeout(timeoutFunc, delay)
+                }
+                return (...args) => {
+                    if (shouldWait) {
+                        waitingArgs = args
+                        return
+                    }
+                    cb(...args)
+                    shouldWait = true
+                    setTimeout(timeoutFunc, delay)
+                }
+            }
+            $(function () {
+                auth.onAuthStateChanged((user) => {
+                    if (!user) return
+                    setUserData({
+                        uid: user.uid,
+                        name: user.displayName ?? 'Anonym',
+                        coords: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+                        lastActiveAt: Date.now(),
+                        color: getRandomColor(),
+                    })
+                })
+
+                const currentValueKeys = []
+                const listRef = ref(db, 'users')
+                onValue(listRef, (snapshot) => {
+                    const data = snapshot.val()
+                    const NOW = Date.now()
+                    const OFFSET = 300_000
+                    Object.keys(data).forEach((key) => {
+                        if (!data[key].lastActiveAt + OFFSET > NOW) {
+                            if (currentValueKeys.includes(key)) $(`[key=${key}]`).remove()
+                            return
+                        }
+                        if (currentValueKeys.includes(key)) {
+                            $(`[key=${key}]`).css({
+                                translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
+                            })
+                            return
+                        }
+                        currentValueKeys.push(key)
+                        const newNode = document.getElementById('cursor').content.cloneNode(true).querySelector('svg')
+                        const newItem = $(newNode).attr('key', key).css({ opacity: 1 })
+                        $(newItem).children('g').children('path').attr('stroke', data[key].color)
+                        $(document.body).append(newItem)
+                    })
+                })
+
+                const throttled = throttleFunction(function (e) {
+                    e.stopPropagation()
+                    if (!auth.currentUser) return
+                    setUserData({
+                        coords: { x: e.clientX, y: e.clientY },
+                        lastActiveAt: Date.now(),
+                    })
+                }, 70)
+                $(document).on('mousemove', throttled)
+            })
+            var currentUserData = {}
+            function setUserData(data) {
+                Object.assign(currentUserData, data)
+                if (!currentUserData.uid) return
+                update(ref(db), { ['/users/' + currentUserData.uid]: currentUserData })
+            }
+            function getRandomColor() {
+                const hue = Math.floor(Math.random() * 361)
+                const saturation = 100
+                const lightness = Math.floor(Math.random() * 41) + 15
+                return `hsl(${hue},${saturation}%,${lightness}%)`
+            }
+        </script>
+    </body>
+</html>

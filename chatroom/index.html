@@ -153,7 +153,10 @@
                             if (currentValueKeys.includes(key)) $(`[key=${key}]`).remove()
                             return
                         }
-                        $(".info").text("Online friends:" + keys.length)
+                        const newText = "Online friends:" + keys.length
+                        const info =$(".info")
+                        if(info.text() !== newText)
+                            info.text(newText)
                         if (currentValueKeys.includes(key)) {
                             $(`[key=${key}]`).css({
                                 translate: `${data[key].coords.x}px ${data[key].coords.y}px`,

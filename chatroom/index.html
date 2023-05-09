@@ -16,6 +16,7 @@
                 height: 100vh;
                 margin: 0px;
             }
+
             .bubble {
                 position: fixed;
                 top: 0px;
@@ -25,17 +26,29 @@
                 translate: -100px -100px;
                 opacity: 0;
                 z-index: 2;
+                stroke-dasharray: 210;
+                stroke-dashoffset: 210;
+                animation: draw 2s forwards;
             }
-            .background{
+
+            @keyframes draw {
+                to {
+                    stroke-dashoffset: 0;
+                }
+            }
+
+            .background {
                 position: fixed;
                 inset: 0px;
             }
-            header{
+
+            header {
                 z-index: 1;
                 position: relative;
             }
         </style>
     </head>
+
     <body>
         <script type="text/javascript">
             document.body.style.cursor = 'none'
@@ -43,7 +56,7 @@
         <header>
             <div class="info">Online friends:...</div>
         </header>
-        <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background"></i>
+        <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background" />
         <template id="cursor">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -124,13 +137,13 @@
                 }
             }
             $(function () {
-                var authTimeout=null;
+                var authTimeout = null
                 auth.onAuthStateChanged((user) => {
                     if (!user) {
                         authTimeout = setTimeout(() => {
                             signInAnonymously(auth)
-                        }, 1300);
-                        return;
+                        }, 1300)
+                        return
                     }
                     clearTimeout(authTimeout)
                     setUserData({
@@ -139,7 +152,7 @@
                         coords: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
                         lastActiveAt: Date.now(),
                         color: getRandomColor(),
-                        environment:location.origin
+                        environment: location.origin,
                     })
                 })
 
@@ -149,30 +162,37 @@
                     const data = snapshot.val()
                     const NOW = Date.now()
                     const OFFSET = 60_000
-                    const {origin}=location;
-                    Object.keys(data).filter(k => data[k].environment === origin).forEach((key,idx,keys) => {
-                        if (data[key].lastActiveAt < NOW - OFFSET) {
-                            if (currentValueKeys.includes(key)) $(`[key=${key}]`).remove()
-                            return
-                        }
-                        const newText = "Online friends:" + keys.length
-                        const info = $(".info")
-                        if(info.text() !== newText)
-                            info.text(newText)
-                        if (currentValueKeys.includes(key)) {
-                            $(`[key=${key}]`).css({
-                                translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
-                            })
-                            return
-                        }
-                        currentValueKeys.push(key)
-                        const newNode = document.getElementById('cursor').content.cloneNode(true).querySelector('svg')
-                        const newItem = $(newNode).attr('key', key).css({ opacity: 1 })
-                        if(key === currentUserData.uid)
-                        newItem.css({transition: "translate 0.2s cubic-bezier(0, 0, 0, 1.1)"})
-                        $(newItem).children('g').children('path').attr('stroke', data[key].color)
-                        $(document.body).append(newItem)
-                    })
+                    const { origin } = location
+                    Object.keys(data)
+                        .filter((k) => data[k].environment === origin)
+                        .forEach((key, idx, keys) => {
+                            if (data[key].lastActiveAt < NOW - OFFSET) {
+                                if (currentValueKeys.includes(key)) $(`[key=${key}]`).remove()
+                                return
+                            }
+                            const newText = 'Online friends:' + keys.length
+                            const info = $('.info')
+                            if (info.text() !== newText) info.text(newText)
+                            if (currentValueKeys.includes(key)) {
+                                $(`[key=${key}]`).css({
+                                    translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
+                                })
+                                return
+                            }
+                            currentValueKeys.push(key)
+                            const newNode = document
+                                .getElementById('cursor')
+                                .content.cloneNode(true)
+                                .querySelector('svg')
+                            const newItem = $(newNode).attr('key', key).css({ opacity: 1 })
+                            if (key === currentUserData.uid)
+                                newItem.css({
+                                    translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
+                                    transition: 'translate 0.2s cubic-bezier(0, 0, 0, 1.1)',
+                                })
+                            $(newItem).children('g').children('path').attr('stroke', data[key].color)
+                            $(document.body).append(newItem)
+                        })
                 })
 
                 const throttled = throttleFunction(function (e) {

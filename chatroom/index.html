@@ -114,28 +114,6 @@
             const performance = getPerformance(app)
             const db = getDatabase(app, 'https://chatroom-000-default-rtdb.europe-west1.firebasedatabase.app/')
 
-            export const throttleFunction = (cb, delay = 250) => {
-                let shouldWait = false
-                let waitingArgs
-                const timeoutFunc = () => {
-                    if (waitingArgs == null) {
-                        shouldWait = false
-                        return
-                    }
-                    cb(...waitingArgs)
-                    waitingArgs = null
-                    setTimeout(timeoutFunc, delay)
-                }
-                return (...args) => {
-                    if (shouldWait) {
-                        waitingArgs = args
-                        return
-                    }
-                    cb(...args)
-                    shouldWait = true
-                    setTimeout(timeoutFunc, delay)
-                }
-            }
             $(function () {
                 var authTimeout = null
                 auth.onAuthStateChanged((user) => {
@@ -216,6 +194,28 @@
                 const saturation = 100
                 const lightness = Math.floor(Math.random() * 41) + 15
                 return `hsl(${hue},${saturation}%,${lightness}%)`
+            }
+            const throttleFunction = (cb, delay = 250) => {
+                let shouldWait = false
+                let waitingArgs
+                const timeoutFunc = () => {
+                    if (waitingArgs == null) {
+                        shouldWait = false
+                        return
+                    }
+                    cb(...waitingArgs)
+                    waitingArgs = null
+                    setTimeout(timeoutFunc, delay)
+                }
+                return (...args) => {
+                    if (shouldWait) {
+                        waitingArgs = args
+                        return
+                    }
+                    cb(...args)
+                    shouldWait = true
+                    setTimeout(timeoutFunc, delay)
+                }
             }
         </script>
     </body>

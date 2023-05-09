@@ -113,11 +113,13 @@
                 --cube-vertice: 100px;
             }
             .cube {
+                transform: scale(0);
                 transform-style: preserve-3d;
                 --transform-amount: calc(0.5 * var(--cube-vertice));
                 width: var(--cube-vertice);
                 position: relative;
-                animation: spincube 7s linear infinite;
+                transition: transform 1.4s cubic-bezier(0, 0, 0, 1);
+                will-change: transform;
             }
             .cube-glass {
                 position: absolute;
@@ -330,8 +332,8 @@
                     const currentRotation = currentCubeData.rotation
                     const deltaX = startPosition.x - clientX
                     const deltaY = startPosition.y - clientY
-                    currentRotation.x = ((parseFloat(currentRotation.x) + deltaY * SENSITIVITY) % 360).toFixed(2)
-                    currentRotation.y = ((parseFloat(currentRotation.y) + deltaX * SENSITIVITY) % 360).toFixed(2)
+                    currentRotation.x = (parseFloat(currentRotation.x) + deltaY * SENSITIVITY).toFixed(2)
+                    currentRotation.y = (parseFloat(currentRotation.y) + deltaX * SENSITIVITY).toFixed(2)
                     setCubeData({
                         rotation: currentRotation,
                     })

@@ -26,12 +26,17 @@
                 translate: -100px -100px;
                 opacity: 0;
                 z-index: 2;
-                stroke-dasharray: 210;
                 stroke-dashoffset: 210;
-                animation: draw 2s forwards;
+                stroke-dasharray: 210;
+                animation: draw 2s 1s 1 forwards;
             }
-
+            .show-cursor {
+                stroke-dashoffset: 0;
+            }
             @keyframes draw {
+                from {
+                    stroke-dashoffset: 210;
+                }
                 to {
                     stroke-dashoffset: 0;
                 }
@@ -152,7 +157,7 @@
                             const info = $('.info')
                             if (info.text() !== newText) info.text(newText)
                             if (currentValueKeys.includes(key)) {
-                                $(`[key=${key}]`).css({
+                                $(`svg[key=${key}]`).css({
                                     translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
                                 })
                                 return
@@ -164,10 +169,13 @@
                                 .querySelector('svg')
                             const newItem = $(newNode).attr('key', key).css({ opacity: 1 })
                             if (key === currentUserData.uid)
-                                newItem.css({
-                                    translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
-                                    transition: 'translate 0.2s cubic-bezier(0, 0, 0, 1.1)',
-                                })
+                                newItem
+                                    .css({
+                                        translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
+                                        transition: 'translate 0.2s cubic-bezier(0, 0, 0, 1.1)',
+                                        animation: 'none',
+                                    })
+                                    .addClass('show-cursor')
                             $(newItem).children('g').children('path').attr('stroke', data[key].color)
                             $(document.body).append(newItem)
                         })
@@ -176,6 +184,9 @@
                 const throttled = throttleFunction(function (e) {
                     e.stopPropagation()
                     if (!auth.currentUser) return
+                    $(`svg[key=${currentUserData.uid}]`).css({
+                        translate: `${e.clientX}px ${e.clientY}px`,
+                    })
                     setUserData({
                         coords: { x: e.clientX, y: e.clientY },
                         lastActiveAt: Date.now(),

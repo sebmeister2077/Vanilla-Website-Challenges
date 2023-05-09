@@ -50,6 +50,17 @@
             header {
                 z-index: 1;
                 position: relative;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            fieldset {
+                z-index: 4;
+                position: fixed;
+                margin: 0px;
+                top: 0px;
+                left: 0px;
+                padding: 0px;
             }
         </style>
     </head>
@@ -61,6 +72,9 @@
         <header>
             <div class="info">Online friends:...</div>
         </header>
+        <fieldset>
+            <legend>Min user screen size</legend>
+        </fieldset>
         <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background" />
         <template id="cursor">
             <svg
@@ -136,6 +150,7 @@
                         lastActiveAt: Date.now(),
                         color: getRandomColor(),
                         environment: location.origin,
+                        window: { height: window.innerHeight, width: window.innerWidth },
                     })
                 })
 
@@ -146,39 +161,41 @@
                     const NOW = Date.now()
                     const OFFSET = 60_000
                     const { origin } = location
-                    Object.keys(data)
-                        .filter((k) => data[k].environment === origin)
-                        .forEach((key, idx, keys) => {
-                            if (data[key].lastActiveAt < NOW - OFFSET) {
-                                if (currentValueKeys.includes(key)) $(`[key=${key}]`).remove()
-                                return
-                            }
-                            const newText = 'Online friends:' + keys.length
-                            const info = $('.info')
-                            if (info.text() !== newText) info.text(newText)
-                            if (currentValueKeys.includes(key)) {
-                                $(`svg[key=${key}]`).css({
+
+                    const keys = Object.keys(data).filter((k) => data[k].environment === origin)
+                    const minWindow = getMinWindow(keys, data)
+                    $('fieldset').css({
+                        height: `${minWindow.height - 6}px`,
+                        width: `${minWindow.width - 6}px`,
+                    })
+                    keys.forEach((key) => {
+                        if (data[key].lastActiveAt < NOW - OFFSET) {
+                            if (currentValueKeys.includes(key)) $(`[key=${key}]`).remove()
+                            return
+                        }
+                        const newText = 'Online friends:' + keys.length
+                        const info = $('.info')
+                        if (info.text() !== newText) info.text(newText)
+                        if (currentValueKeys.includes(key)) {
+                            $(`svg[key=${key}]`).css({
+                                translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
+                            })
+                            return
+                        }
+                        currentValueKeys.push(key)
+                        const newNode = document.getElementById('cursor').content.cloneNode(true).querySelector('svg')
+                        const newItem = $(newNode).attr('key', key).css({ opacity: 1 })
+                        if (key === currentUserData.uid)
+                            newItem
+                                .css({
                                     translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
+                                    transition: 'translate 0.2s cubic-bezier(0, 0, 0, 1.1)',
+                                    animation: 'none',
                                 })
-                                return
-                            }
-                            currentValueKeys.push(key)
-                            const newNode = document
-                                .getElementById('cursor')
-                                .content.cloneNode(true)
-                                .querySelector('svg')
-                            const newItem = $(newNode).attr('key', key).css({ opacity: 1 })
-                            if (key === currentUserData.uid)
-                                newItem
-                                    .css({
-                                        translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
-                                        transition: 'translate 0.2s cubic-bezier(0, 0, 0, 1.1)',
-                                        animation: 'none',
-                                    })
-                                    .addClass('show-cursor')
-                            $(newItem).children('g').children('path').attr('stroke', data[key].color)
-                            $(document.body).append(newItem)
-                        })
+                                .addClass('show-cursor')
+                        $(newItem).children('g').children('path').attr('stroke', data[key].color)
+                        $(document.body).append(newItem)
+                    })
                 })
 
                 const throttled = throttleFunction(function (e) {
@@ -200,6 +217,14 @@
                 }, 70)
                 $(document).on('mousemove', throttled)
                 $(document).on('touchmove', throttled)
+                $(window).on(
+                    'resize',
+                    throttleFunction(function (e) {
+                        setUserData({
+                            window: { height: window.innerHeight, width: window.innerWidth },
+                        })
+                    }, 200)
+                )
             })
             var currentUserData = {}
             function setUserData(data) {
@@ -234,6 +259,14 @@
                     shouldWait = true
                     setTimeout(timeoutFunc, delay)
                 }
+            }
+            function getMinWindow(keys, data) {
+                const minWindow = data[keys[0]].window
+                keys.slice(1).forEach((k) => {
+                    if (data[k].window.height < minWindow.height) minWindow.height = data[k].window.height
+                    if (data[k].window.width < minWindow.width) minWindow.width = data[k].window.width
+                })
+                return minWindow
             }
         </script>
     </body>

@@ -11,10 +11,13 @@
         ></script>
         <title>Chat Room</title>
         <style>
-            .body {
-                cursor: help;
+            body {
+                cursor: none;
                 height: 100vh;
                 margin: 0px;
+                display: flex;
+                flex-direction: column;
+                width: 100%;
             }
 
             .bubble {
@@ -25,7 +28,6 @@
                 transition: opacity 0.9s 0.2s, translate 0.6s cubic-bezier(0, 0, 0, 1.1);
                 translate: -100px -100px;
                 opacity: 0;
-                z-index: 2;
                 stroke-dashoffset: 210;
                 stroke-dasharray: 210;
                 animation: draw 2s 1s 1 forwards;
@@ -45,17 +47,16 @@
             .background {
                 position: fixed;
                 inset: 0px;
+                z-index: -1;
             }
 
             header {
-                z-index: 1;
                 position: relative;
                 display: flex;
                 justify-content: flex-end;
             }
 
             fieldset {
-                z-index: 4;
                 position: fixed;
                 margin: 0px;
                 top: 0px;
@@ -66,9 +67,6 @@
     </head>
 
     <body>
-        <script type="text/javascript">
-            document.body.style.cursor = 'none'
-        </script>
         <header>
             <div class="info">Online friends:...</div>
         </header>
@@ -101,6 +99,46 @@
                 </defs>
             </svg>
         </template>
+        <style>
+            main {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                flex-grow: 1;
+                width: 100%;
+                perspective: 200px;
+                perspective-origin: center;
+            }
+            .cube {
+                transform-style: preserve-3d;
+                --vertice: 100px;
+                --transform-amount: calc(0.5 * var(--vertice));
+                width: var(--vertice);
+                position: relative;
+                animation: spincube 7s linear infinite;
+            }
+            .cube > * {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                width: 100%;
+                border: 1px solid #ccc;
+                background: rgba(255, 255, 255, 0.8);
+                aspect-ratio: 1;
+                opacity: 0.56;
+            }
+        </style>
+        <main>
+            <div class="cube">
+                <div style="transform: translateZ(var(--transform-amount))"></div>
+                <div style="transform: rotateY(90deg) translateZ(var(--transform-amount))"></div>
+                <div style="transform: rotateY(90deg) rotateX(90deg) translateZ(var(--transform-amount))"></div>
+                <div style="transform: rotateY(180deg) rotateZ(90deg) translateZ(var(--transform-amount))"></div>
+                <div style="transform: rotateY(-90deg) rotateZ(90deg) translateZ(var(--transform-amount))"></div>
+                <div style="transform: rotateX(-90deg) translateZ(var(--transform-amount))"></div>
+            </div>
+        </main>
         <script type="module" defer>
             import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js'
             import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-analytics.js'

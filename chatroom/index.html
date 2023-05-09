@@ -21,7 +21,7 @@
                 top: 0px;
                 left: 0px;
                 will-change: translate, opacity;
-                transition: opacity 0.9s 0.2s, translate 0.6s cubic-bezier(0, 0, 0, 1.16);
+                transition: opacity 0.9s 0.2s, translate 0.6s cubic-bezier(0, 0, 0, 1.1);
                 translate: -100px -100px;
                 opacity: 0;
                 z-index: 2;
@@ -139,6 +139,7 @@
                         coords: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
                         lastActiveAt: Date.now(),
                         color: getRandomColor(),
+                        environment:location.origin
                     })
                 })
 
@@ -148,13 +149,14 @@
                     const data = snapshot.val()
                     const NOW = Date.now()
                     const OFFSET = 60_000
-                    Object.keys(data).forEach((key,idx,keys) => {
-                        if (!data[key].lastActiveAt + OFFSET > NOW) {
+                    const {origin}=location;
+                    Object.keys(data).filter(k => data[k].environment === origin).forEach((key,idx,keys) => {
+                        if (data[key].lastActiveAt < NOW - OFFSET) {
                             if (currentValueKeys.includes(key)) $(`[key=${key}]`).remove()
                             return
                         }
                         const newText = "Online friends:" + keys.length
-                        const info =$(".info")
+                        const info = $(".info")
                         if(info.text() !== newText)
                             info.text(newText)
                         if (currentValueKeys.includes(key)) {
@@ -166,6 +168,8 @@
                         currentValueKeys.push(key)
                         const newNode = document.getElementById('cursor').content.cloneNode(true).querySelector('svg')
                         const newItem = $(newNode).attr('key', key).css({ opacity: 1 })
+                        if(key === currentUserData.uid)
+                        newItem.css({transition: "translate 0.2s cubic-bezier(0, 0, 0, 1.1)"})
                         $(newItem).children('g').children('path').attr('stroke', data[key].color)
                         $(document.body).append(newItem)
                     })

@@ -219,17 +219,17 @@
                     const OFFSET = 60_000
                     const { origin } = location
 
-                    const keys = Object.keys(data).filter((k) => data[k].environment === origin)
+                    const keys = Object.keys(data).filter(
+                        (k) => data[k].environment === origin && data[k].lastActiveAt > NOW - OFFSET
+                    )
                     const minWindow = getMinWindow(keys, data)
                     $('fieldset').css({
                         height: `${minWindow.height - 6}px`,
                         width: `${minWindow.width - 6}px`,
                     })
+
+                    currentValueKeys.filter((ck) => !keys.includes(ck)).forEach((key) => $(`[key=${key}]`).remove())
                     keys.forEach((key) => {
-                        if (data[key].lastActiveAt < NOW - OFFSET) {
-                            if (currentValueKeys.includes(key)) $(`[key=${key}]`).remove()
-                            return
-                        }
                         const newText = 'Online friends:' + keys.length
                         const info = $('.info')
                         if (info.text() !== newText) info.text(newText)

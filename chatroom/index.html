@@ -125,6 +125,9 @@
                 z-index: 3;
             }
             .cube > * {
+                user-select: none;
+                display: grid;
+                place-items: center;
                 position: absolute;
                 top: 0px;
                 left: 0px;
@@ -143,7 +146,7 @@
                 <div style="transform: rotateY(90deg) rotateX(90deg) translateZ(var(--transform-amount))"></div>
                 <div style="transform: rotateY(180deg) rotateZ(90deg) translateZ(var(--transform-amount))"></div>
                 <div style="transform: rotateY(-90deg) rotateZ(90deg) translateZ(var(--transform-amount))"></div>
-                <div style="transform: rotateX(-90deg) translateZ(var(--transform-amount))"></div>
+                <div style="transform: rotateX(-90deg) translateZ(var(--transform-amount))">Top</div>
             </div>
         </main>
         <script type="module" defer>

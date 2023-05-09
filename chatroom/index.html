@@ -187,12 +187,19 @@
                     $(`svg[key=${currentUserData.uid}]`).css({
                         translate: `${e.clientX}px ${e.clientY}px`,
                     })
+                    const coords = { x: e.clientX, y: e.clientY }
+                    if (!coords.x && !coords.y) {
+                        const touch = e.touches[0]
+                        coords.x = touch.clientX
+                        coords.y = touch.clientY
+                    }
                     setUserData({
-                        coords: { x: e.clientX, y: e.clientY },
+                        coords,
                         lastActiveAt: Date.now(),
                     })
                 }, 70)
                 $(document).on('mousemove', throttled)
+                $(document).on('touchmove', throttled)
             })
             var currentUserData = {}
             function setUserData(data) {

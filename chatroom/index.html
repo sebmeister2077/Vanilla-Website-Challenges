@@ -153,7 +153,7 @@
                             if (currentValueKeys.includes(key)) $(`[key=${key}]`).remove()
                             return
                         }
-                        const newText = "Online friends:" + keys.length
+                        const newText = "Online friends:" + keys.filter(k => data[k].lastActive + OFFSET < NOW).length
                         const info =$(".info")
                         if(info.text() !== newText)
                             info.text(newText)

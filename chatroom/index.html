@@ -216,9 +216,11 @@
 
                 const cubeRef = ref(db, DATABASE_ROUTES.Cube)
                 onValue(cubeRef, (snapshot) => {
-                    if (!snapshot.exists()) currentCubeData = { rotation: { x: 0, y: 0 } }
-                    else currentCubeData = snapshot.val()
-
+                    if (!snapshot.exists()) {
+                        setCubeData({ movingUserId: '', rotation: { x: 0, y: 0 } })
+                        return
+                    }
+                    currentCubeData = snapshot.val()
                     rotateCube(currentCubeData.rotation)
                 })
 
@@ -352,8 +354,9 @@
             var currentUserData = {}
             var currentCubeData = {}
             function setCubeData(data) {
+                Object.assign(currentCubeData, data)
                 if (Object.keys(currentCubeData).length === 0) return
-                update(ref(db), { [DATABASE_ROUTES.CUBE]: { ...currentCubeData, ...data } })
+                update(ref(db), { [DATABASE_ROUTES.Cube]: { ...currentCubeData, ...data } })
             }
             function setUserData(data) {
                 Object.assign(currentUserData, data)
@@ -361,7 +364,7 @@
                 update(ref(db), { [DATABASE_ROUTES.OneUser(currentUserData.uid)]: currentUserData })
             }
             function rotateCube({ x, y }) {
-                console.log({ x, y })
+                // console.log({ x, y })
                 $('.cube').css({ transform: `rotateX(${x}deg) rotateY(${y}deg)` })
             }
             function getRandomColor() {

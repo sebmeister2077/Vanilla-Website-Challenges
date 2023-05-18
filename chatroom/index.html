@@ -18,6 +18,7 @@
                 display: flex;
                 flex-direction: column;
                 width: 100%;
+                user-select: none;
             }
 
             .bubble {
@@ -145,21 +146,39 @@
         <main>
             <div class="cube-glass"></div>
             <div class="cube">
-                <div class="cube-face" style="transform: translateZ(var(--transform-amount))"></div>
-                <div class="cube-face" style="transform: rotateY(90deg) translateZ(var(--transform-amount))"></div>
                 <div
                     class="cube-face"
-                    style="transform: rotateY(90deg) rotateX(90deg) translateZ(var(--transform-amount))"
+                    style="transform: translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"
                 ></div>
                 <div
                     class="cube-face"
-                    style="transform: rotateY(180deg) rotateZ(90deg) translateZ(var(--transform-amount))"
+                    style="
+                        transform: rotateY(90deg)
+                            translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount));
+                    "
                 ></div>
                 <div
                     class="cube-face"
-                    style="transform: rotateY(-90deg) rotateZ(90deg) translateZ(var(--transform-amount))"
+                    style="
+                        transform: rotateY(90deg) rotateX(90deg)
+                            translate3d(0px, 0px, calc(2 * var(--transform-amount)));
+                    "
                 ></div>
-                <div class="cube-face" style="transform: rotateX(-90deg) translateZ(var(--transform-amount))">Top</div>
+                <div
+                    class="cube-face"
+                    style="
+                        transform: rotateY(180deg) rotateZ(90deg)
+                            translate3d(calc(-1 * var(--transform-amount)), 0px, var(--transform-amount));
+                    "
+                ></div>
+                <div
+                    class="cube-face"
+                    style="
+                        transform: rotateY(-90deg) rotateZ(90deg)
+                            translate3d(calc(-1 * var(--transform-amount)), 0px, var(--transform-amount));
+                    "
+                ></div>
+                <div class="cube-face" style="transform: rotateX(-90deg) translateZ(0px)">Top</div>
             </div>
         </main>
         <script type="module" defer>
@@ -347,7 +366,10 @@
 
                     if (e.buttons === 0) {
                         if (currentCubeData.movingUserId === currentUserData.uid)
-                            setCubeData({ movingUserId: '', color: '' })
+                            setCubeData({
+                                movingUserId: '',
+                                color: '',
+                            })
                         return
                     }
                     const SENSITIVITY = 0.05
@@ -377,10 +399,15 @@
                 if (!currentUserData.uid) return
                 update(ref(db), { [DATABASE_ROUTES.OneUser(currentUserData.uid)]: currentUserData })
             }
+            const cubeWidth = parseInt(
+                getComputedStyle($('main')[0]).getPropertyValue('--cube-vertice').replace('px', '')
+            )
             function rotateCube({ x, y }, color) {
-                // console.log({ x, y })
+                const translateY = (cubeWidth * 0.5 * Math.cos((Math.PI * x) / 180)).toFixed(1)
+                const translateZ = (cubeWidth * 0.5 * Math.sin((Math.PI * x) / 180)).toFixed(1)
+                console.log({ x, y, translateY, translateZ })
                 $('.cube').css({
-                    transform: `rotateX(${x}deg) rotateY(${y}deg)`,
+                    transform: `rotateX(${x}deg) rotateY(${y}deg)`, // translateY(${translateY}px) translateZ(${translateZ}px)`,
                 })
                 $('.cube-face').css({
                     backgroundColor: addAlphaToHsl(color, 0.8),

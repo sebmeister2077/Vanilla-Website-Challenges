@@ -185,13 +185,21 @@
             const performance = getPerformance(app)
             const db = getDatabase(app, 'https://chatroom-000-default-rtdb.europe-west1.firebasedatabase.app/')
 
+            const DATABASE_ROUTES = new (class {
+                #BASE_ROUTE = 'env/' + 'test'
+                Cube = this.#BASE_ROUTE + '/cube'
+                AllUsers = this.#BASE_ROUTE + '/users'
+                OneUser(uid) {
+                    if (!uid) throw Error('Uid is not defined')
+                    return this.AllUsers + '/' + uid
+                }
+            })()
+
             $(function () {
                 var authTimeout = null
                 auth.onAuthStateChanged((user) => {
                     if (!user) {
-                        authTimeout = setTimeout(() => {
-                            signInAnonymously(auth)
-                        }, 1300)
+                        signInAnonymously(auth)
                         return
                     }
                     clearTimeout(authTimeout)
@@ -206,7 +214,7 @@
                     })
                 })
 
-                const cubeRef = ref(db, '/cube')
+                const cubeRef = ref(db, DATABASE_ROUTES.Cube)
                 onValue(cubeRef, (snapshot) => {
                     if (!snapshot.exists()) currentCubeData = { rotation: { x: 0, y: 0 } }
                     else currentCubeData = snapshot.val()
@@ -215,7 +223,7 @@
                 })
 
                 const currentValueKeys = []
-                const listRef = ref(db, 'users')
+                const listRef = ref(db, DATABASE_ROUTES.AllUsers)
                 onValue(listRef, (snapshot) => {
                     const data = snapshot.val()
                     const NOW = Date.now()
@@ -345,12 +353,12 @@
             var currentCubeData = {}
             function setCubeData(data) {
                 if (Object.keys(currentCubeData).length === 0) return
-                update(ref(db), { ['/cube']: { ...currentCubeData, ...data } })
+                update(ref(db), { [DATABASE_ROUTES.CUBE]: { ...currentCubeData, ...data } })
             }
             function setUserData(data) {
                 Object.assign(currentUserData, data)
                 if (!currentUserData.uid) return
-                update(ref(db), { ['/users/' + currentUserData.uid]: currentUserData })
+                update(ref(db), { [DATABASE_ROUTES.OneUser(currentUserData.uid)]: currentUserData })
             }
             function rotateCube({ x, y }) {
                 console.log({ x, y })

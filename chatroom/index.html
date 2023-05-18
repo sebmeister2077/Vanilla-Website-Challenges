@@ -126,7 +126,7 @@
                 inset: 0px;
                 z-index: 3;
             }
-            .cube > * {
+            .cube-face {
                 box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
                 user-select: none;
                 display: grid;
@@ -136,20 +136,30 @@
                 left: 0px;
                 width: 100%;
                 border: 1px solid #ccc;
-                background: rgba(255, 255, 255, 0.8);
+                background-color: hsla(0, 0%, 100%, 0.8);
                 aspect-ratio: 1;
                 opacity: 0.56;
+                transition: background-color 0.8s ease-in-out;
             }
         </style>
         <main>
             <div class="cube-glass"></div>
             <div class="cube">
-                <div style="transform: translateZ(var(--transform-amount))"></div>
-                <div style="transform: rotateY(90deg) translateZ(var(--transform-amount))"></div>
-                <div style="transform: rotateY(90deg) rotateX(90deg) translateZ(var(--transform-amount))"></div>
-                <div style="transform: rotateY(180deg) rotateZ(90deg) translateZ(var(--transform-amount))"></div>
-                <div style="transform: rotateY(-90deg) rotateZ(90deg) translateZ(var(--transform-amount))"></div>
-                <div style="transform: rotateX(-90deg) translateZ(var(--transform-amount))">Top</div>
+                <div class="cube-face" style="transform: translateZ(var(--transform-amount))"></div>
+                <div class="cube-face" style="transform: rotateY(90deg) translateZ(var(--transform-amount))"></div>
+                <div
+                    class="cube-face"
+                    style="transform: rotateY(90deg) rotateX(90deg) translateZ(var(--transform-amount))"
+                ></div>
+                <div
+                    class="cube-face"
+                    style="transform: rotateY(180deg) rotateZ(90deg) translateZ(var(--transform-amount))"
+                ></div>
+                <div
+                    class="cube-face"
+                    style="transform: rotateY(-90deg) rotateZ(90deg) translateZ(var(--transform-amount))"
+                ></div>
+                <div class="cube-face" style="transform: rotateX(-90deg) translateZ(var(--transform-amount))">Top</div>
             </div>
         </main>
         <script type="module" defer>
@@ -216,12 +226,13 @@
 
                 const cubeRef = ref(db, DATABASE_ROUTES.Cube)
                 onValue(cubeRef, (snapshot) => {
+                    const DEFAULT_COLOR = 'hsl(0, 0%, 100%)'
                     if (!snapshot.exists()) {
-                        setCubeData({ movingUserId: '', rotation: { x: 0, y: 0 } })
+                        setCubeData({ movingUserId: '', rotation: { x: 0, y: 0 }, color: DEFAULT_COLOR })
                         return
                     }
                     currentCubeData = snapshot.val()
-                    rotateCube(currentCubeData.rotation)
+                    rotateCube(currentCubeData.rotation, currentCubeData.color || DEFAULT_COLOR)
                 })
 
                 const currentValueKeys = []
@@ -312,13 +323,14 @@
                             startPosition.y = e.clientY
                             setCubeData({
                                 movingUserId: currentUserData.uid,
+                                color: currentUserData.color,
                             })
                         },
                         true
                     )
                 $('.cube-glass').on('mouseup', function (e) {
                     if (currentCubeData.movingUserId === currentUserData.uid && currentUserData.uid) return
-                    setCubeData({ movingUserId: '' })
+                    setCubeData({ movingUserId: '', color: '' })
                 })
                 const throttleMove = throttleFunction((e) => {
                     if (e.buttons !== 0 && !currentCubeData.movingUserId && auth.currentUser) {
@@ -334,7 +346,8 @@
                         return
 
                     if (e.buttons === 0) {
-                        if (currentCubeData.movingUserId === currentUserData.uid) setCubeData({ movingUserId: '' })
+                        if (currentCubeData.movingUserId === currentUserData.uid)
+                            setCubeData({ movingUserId: '', color: '' })
                         return
                     }
                     const SENSITIVITY = 0.05
@@ -346,6 +359,7 @@
                     currentRotation.y = (parseFloat(currentRotation.y) + deltaX * SENSITIVITY).toFixed(2)
                     setCubeData({
                         rotation: currentRotation,
+                        color: currentUserData.color,
                     })
                 }, 80)
 
@@ -363,15 +377,26 @@
                 if (!currentUserData.uid) return
                 update(ref(db), { [DATABASE_ROUTES.OneUser(currentUserData.uid)]: currentUserData })
             }
-            function rotateCube({ x, y }) {
+            function rotateCube({ x, y }, color) {
                 // console.log({ x, y })
-                $('.cube').css({ transform: `rotateX(${x}deg) rotateY(${y}deg)` })
+                $('.cube').css({
+                    transform: `rotateX(${x}deg) rotateY(${y}deg)`,
+                })
+                $('.cube-face').css({
+                    backgroundColor: addAlphaToHsl(color, 0.8),
+                })
             }
             function getRandomColor() {
                 const hue = Math.floor(Math.random() * 361)
                 const saturation = 100
                 const lightness = Math.floor(Math.random() * 41) + 15
                 return `hsl(${hue},${saturation}%,${lightness}%)`
+            }
+            function addAlphaToHsl(hsl, alpha) {
+                return hsl
+                    .split('%)')
+                    .join(`%, ${Math.max(Math.min(alpha, 1), 0)})`)
+                    .replace('hsl', 'hsla')
             }
             const throttleFunction = (cb, delay = 250) => {
                 let shouldWait = false

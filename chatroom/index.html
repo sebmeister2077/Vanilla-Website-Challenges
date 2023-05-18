@@ -4,6 +4,9 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;600&display=swap" rel="stylesheet" />
         <script
             src="https://code.jquery.com/jquery-3.6.4.slim.js"
             integrity="sha256-dWvV84T6BhzO4vG6gWhsWVKVoa4lVmLnpBOZh/CAHU4="
@@ -19,6 +22,7 @@
                 flex-direction: column;
                 width: 100%;
                 user-select: none;
+                font-family: Roboto Slab;
             }
 
             .bubble {
@@ -65,43 +69,6 @@
                 left: 0px;
                 padding: 0px;
             }
-        </style>
-    </head>
-
-    <body>
-        <header>
-            <div class="info">Online friends:...</div>
-        </header>
-        <fieldset>
-            <legend>Min user screen size</legend>
-        </fieldset>
-        <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background" />
-        <template id="cursor">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="bubble"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                fill="none"
-            >
-                <g clip-path="url(#clip0_429_11096)">
-                    <path
-                        d="M11 20.9999L4 3.99994L21 10.9999L14.7353 13.6848C14.2633 13.8871 13.8872 14.2632 13.6849 14.7353L11 20.9999Z"
-                        stroke="#292929"
-                        stroke-width="2.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                </g>
-                <defs>
-                    <clipPath id="clip0_429_11096">
-                        <rect width="24" height="24" fill="white" />
-                    </clipPath>
-                </defs>
-            </svg>
-        </template>
-        <style>
             main {
                 display: flex;
                 align-items: center;
@@ -142,7 +109,49 @@
                 opacity: 0.56;
                 transition: background-color 0.8s ease-in-out;
             }
+            .shortcuts {
+                position: absolute;
+                bottom: 0px;
+                right: 0px;
+                padding: 20px;
+                color: white;
+            }
         </style>
+    </head>
+
+    <body>
+        <header>
+            <div class="info">Online friends:...</div>
+        </header>
+        <fieldset>
+            <legend>Min user screen size</legend>
+        </fieldset>
+        <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background" />
+        <template id="cursor">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="bubble"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                fill="none"
+            >
+                <g clip-path="url(#clip0_429_11096)">
+                    <path
+                        d="M11 20.9999L4 3.99994L21 10.9999L14.7353 13.6848C14.2633 13.8871 13.8872 14.2632 13.6849 14.7353L11 20.9999Z"
+                        stroke="#292929"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                </g>
+                <defs>
+                    <clipPath id="clip0_429_11096">
+                        <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                </defs>
+            </svg>
+        </template>
         <main>
             <div class="cube-glass"></div>
             <div class="cube">
@@ -180,6 +189,7 @@
                 ></div>
                 <div class="cube-face" style="transform: rotateX(-90deg) translateZ(0px)">Top</div>
             </div>
+            <aside class="shortcuts">Shortcuts</aside>
         </main>
         <script type="module" defer>
             import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js'

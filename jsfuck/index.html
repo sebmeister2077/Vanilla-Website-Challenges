@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>JS Fuck</title>
+        <link rel="stylesheet" href="./spinner.css" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script defer src="https://jsfuck.com/jsfuck.js" onload="document.body.setAttribute('script-loadded')"></script>
+        <style>
+            body[script-loadded] .lds-roller {
+                opacity: 0;
+            }
+        </style>
+    </head>
+    <body class="flex items-center justify-center w-screen h-screen m-0">
+        <div class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <script>
+            // const scr = document.createElement('script')
+            // scr.innerHTML = 'eval(' + JSFuck.encode('console.log("hello")') + ');'
+            // document.body.appendChild(scr)
+        </script>
+
+        <!-- <iframe src="https://jsfuck.com"></iframe> -->
+    </body>
+</html>

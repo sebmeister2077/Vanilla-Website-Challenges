@@ -21,10 +21,7 @@
 
             let config
             const response = await fetch('./firebaseConfig.json')
-            if (response.status === 404) {
-                console.error('Firebase config is missing')
-                return
-            }
+            if (response.status === 404) throw new Error('Firebase config is missing')
             config = await response.json()
             const app = initializeApp(config)
             const analytics = getAnalytics(app)

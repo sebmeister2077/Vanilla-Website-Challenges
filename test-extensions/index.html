@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Test extensions</title>
+        <script
+            src="https://code.jquery.com/jquery-3.6.4.slim.js"
+            integrity="sha256-dWvV84T6BhzO4vG6gWhsWVKVoa4lVmLnpBOZh/CAHU4="
+            crossorigin="anonymous"
+        ></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-zinc-950 text-zinc-100 flex items-center justify-center w-screen h-screen m-0">
+        <script type="module" defer>
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js'
+            import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-analytics.js'
+            import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js'
+            import { getPerformance } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-performance.js'
+
+            let config
+            const response = await fetch('./firebaseConfig.json')
+            if (response.status === 404) {
+                console.error('Firebase config is missing')
+                return
+            }
+            config = await response.json()
+            const app = initializeApp(config)
+            const analytics = getAnalytics(app)
+            const perf = getPerformance(app)
+
+            const operations = [
+                {
+                    operation: 'input',
+                    type: 'url',
+                    url: 'https://scontent.fomr1-1.fna.fbcdn.net/v/t39.30808-1/241848615_4314627311986461_149729372780450747_n.jpg?stp=dst-jpg_p160x160&_nc_cat=104&ccb=1-7&_nc_sid=7206a8&_nc_ohc=urj91UmzmjoAX-29vjv&_nc_ht=scontent.fomr1-1.fna&oh=00_AfBqtBTTKEj2bP5elqb1VYw0DuUr2Vux0Dij_XnEfa14rw&oe=64A914FF',
+                },
+                {
+                    operation: 'grayscale',
+                },
+                {
+                    operation: 'output',
+                    format: 'webp',
+                },
+            ]
+            const url = new URL(
+                'https://us-central1-testproject-5d339.cloudfunctions.net/ext-image-processing-api-handler/process'
+            )
+            url.searchParams.append('operations', encodeURIComponent(JSON.stringify(operations)))
+
+            console.log(url)
+            //this doesn't work
+            fetch(url, {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    // 'X-CUSTOM-HEADER': 'foo',
+                },
+            })
+                .catch(console.dir)
+                .then((r) => {
+                    if (r?.ok) return r.json()
+                })
+                .then(console.dir)
+        </script>
+        Hello
+    </body>
+</html>

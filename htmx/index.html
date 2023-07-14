@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Learn htmx</title>
         <link rel="stylesheet" href="./index.css" />
+        <base href="http://localhost:3000" />
         <script
             src="https://unpkg.com/htmx.org@1.9.2"
             integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h"
@@ -33,9 +34,9 @@
         </script>
     </head>
     <body class="bg-gunmetal text-lavender">
-        <!-- <div hx-confirm="Are you sure?" class="flex flex-col gap-4">
-            <button hx-delete="/account">Delete My Account</button>
-            <button hx-put="/account">Update My Account</button>
+        <div class="flex flex-col gap-4">
+            <button hx-get="/counter" hx-swap="outerHTML" class="h-20">Test</button>
+            <!-- <button hx-put="/account">Update My Account</button> -->
         </div>
 
         <form action="/search" method="POST">
@@ -51,6 +52,6 @@
             />
         </form>
         <div id="search-results"></div>
-        <div class="htmx-indicator">Indicator</div> -->
+        <div class="htmx-indicator">Indicator</div>
     </body>
 </html>

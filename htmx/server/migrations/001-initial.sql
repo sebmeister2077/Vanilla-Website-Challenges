@@ -2,7 +2,7 @@
 -- Up
 --------------------------------------------------------------------------------
 
-CREATE TABLE Todo (
+CREATE TABLE Todos (
   id INT  AUTO_INCREMENT PRIMARY KEY,
   "text"  varchar(2000) NOT NULL,
   completed bool DEFAULT 0
@@ -11,10 +11,10 @@ CREATE TABLE Todo (
 
 
 
-INSERT INTO Todo (id, "text") VALUES (1, 'Test');
+INSERT INTO Todos (id, "text") VALUES (1, 'Test');
 
 --------------------------------------------------------------------------------
 -- Down
 --------------------------------------------------------------------------------
 
-DROP TABLE Todo;
+DROP TABLE Todos;

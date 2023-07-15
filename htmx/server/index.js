@@ -17,8 +17,14 @@ app.get('/counter', (req, res) => {
 
 app.get('/todo', async (req, res) => {
     const db = await getDb()
-    const response = await db.all('SELECT * FROM todos')
-    res.send(JSON.stringify(response))
+    const todos = await db.all('SELECT * FROM Todos')
+    res.send(/*html*/ `
+        <div class="flex w-screen items-center justify-center flex-col gap-6">${todos.map(
+            (t) => /*html*/ `
+                <div>${t.text}</div>
+            `,
+        )}</div>
+        `)
 })
 app.post('/todo', (req, res) => {})
 
@@ -26,3 +32,5 @@ const port = 3000
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`)
 })
+
+//TODO check if you can do sql injection with prepared statements

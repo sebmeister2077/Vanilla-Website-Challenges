@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------------
 
 CREATE TABLE Todos (
-  id INT  AUTO_INCREMENT PRIMARY KEY,
+  id INT PRIMARY KEY  AUTO_INCREMENT ,
   "text"  varchar(2000) NOT NULL,
   completed bool DEFAULT 0
 );

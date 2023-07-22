@@ -25,26 +25,18 @@
                     fontFamily: {
                         sans: ['"Roboto"', 'sans-serif'],
                     },
-                    extend: {
-                        colors: {
-                            'jet-black': '#140005',
-                            neutral: '#404040',
-                            gray: '#6b6559',
-                            pewter: '#BBC4C2',
-                        },
-                    },
                 },
             }
         </script>
     </head>
 
-    <body class="bg-jet-black text-pewter flex w-screen h-screen p-8">
+    <body class="bg-slate-950 text-stone-300 flex w-screen h-screen p-8">
         <section class="w-1/2 flex items-center justify-center">
             <noscript>This app requires javascript to run</noscript>
             <form>
                 <label
                     for="file-input"
-                    class="flex items-center rounded-lg bg-neutral justify-center p-8 cursor-pointer w-28 h-28 outline-dashed outline-1 outline-offset-[-6px] bg-red"
+                    class="flex items-center rounded-lg bg-slate-500 justify-center p-8 cursor-pointer w-28 h-28 outline-dashed outline-1 outline-offset-[-6px]"
                 >
                     Upload image
                 </label>
@@ -55,12 +47,11 @@
             <img src="https://placehold.co/400x400" class="rounded-lg" />
             <script>
                 const image = $('img')
-                image.attr(
-                    'src',
-                    `${image.attr('src')}/${tailwind.config.theme.extend.colors.gray}/${
-                        tailwind.config.theme.extend.colors.pewter
-                    }`,
-                )
+                console.log(tailwind)
+                const newSrc = `${image.attr('src')}/${tailwind.colors.slate['500']}/${
+                    tailwind.colors.stone[300]
+                }?font=roboto`.replaceAll('#', '')
+                image.attr('src', newSrc)
             </script>
         </section>
         <script>

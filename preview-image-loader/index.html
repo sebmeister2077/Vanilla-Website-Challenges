@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Loading image</title>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"
+            integrity="sha512-MgYeYFj8R3S6rvZHiJ1xA9cM/VDGcT4eRRFQwGA7qDP7NHbnWKNmAm28z0LVjOuUqjD0T9JxpDMdVqsZOSHaSA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <script
+            src="https://code.jquery.com/jquery-3.6.4.slim.js"
+            integrity="sha256-dWvV84T6BhzO4vG6gWhsWVKVoa4lVmLnpBOZh/CAHU4="
+            crossorigin="anonymous"
+        ></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'jet-black': '#140005',
+                            ebony: '#464033',
+                            gray: '#7E7C73',
+                            pewter: '#BBC4C2',
+                        },
+                    },
+                },
+            }
+        </script>
+    </head>
+
+    <body class="bg-jet-black flex w-screen h-screen">
+        <section class="w-1/2 flex items-center justify-center">
+            <noscript>This app requires javascript to run</noscript>
+            <form>
+                <label
+                    for="file-input"
+                    class="flex items-center justify-center p-8 text-gray cursor-pointer w-24 h-24 outline-dashed outline-1 outline-offset-[-2px] bg-red"
+                >
+                    Upload image
+                </label>
+                <input id="file-input" type="file" accept="image/*" hidden />
+            </form>
+        </section>
+        <section class="w-1/2"></section>
+    </body>
+</html>

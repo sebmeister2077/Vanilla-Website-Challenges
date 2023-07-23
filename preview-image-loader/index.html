@@ -99,9 +99,32 @@
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2dnllc2RxbGN3cG9laXNtb3hmIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAxMTQ2MjUsImV4cCI6MjAwNTY5MDYyNX0.7CdAUR4Q5PpzVFbTVuGWmv9KQMULbTgJhHxXsv03A08'
             const _supabase = createClient(supabaseUrl, supabaseKey, {
                 global: {
-                    fetch: (...all) => {
-                        console.log([...all[1].body.values()])
-                        return fetch(...all)
+                    fetch: (input, init) => {
+                        const blob = init.body.get('')
+                        const totalBytes = blob.size
+                        let bytesUploaded = 0
+                        const progressTrackingStream = new TransformStream({
+                            transform(chunk, controller) {
+                                controller.enqueue(chunk)
+                                bytesUploaded += chunk.byteLength
+                                console.log('upload progress:', bytesUploaded / totalBytes)
+                            },
+                            flush(controller) {
+                                console.log('completed stream')
+                            },
+                        })
+
+                        return fetch(input, {
+                            method: 'POST',
+                            headers: {
+                                Apikey: supabaseKey,
+                                Authorization: 'Bearer ' + supabaseKey,
+                                // 'Cache-Control': "no-cache",
+                                'Content-Type': 'application/octet-stream',
+                            },
+                            body: blob.stream().pipeThrough(progressTrackingStream),
+                            duplex: 'half',
+                        })
                     },
                 },
             })
@@ -134,7 +157,7 @@
                     toastr.error('File is exceeds limit of 50 MB')
                     return
                 }
-                toastr.info('Uploading files...')
+                toastr.info('Uploading file...')
 
                 const previousThumbPath = thumbPath
                 imageContainer.removeClass(`bg-[url('${getUrl(previousThumbPath)}')]`)
@@ -147,7 +170,7 @@
                     localThumnPath = thumbPath
 
                 const thumbFile = await compress(file)
-                await Promise.allSettled([
+                const results = await Promise.allSettled([
                     uploadToSupabase(localFilePath, file),
                     uploadToSupabase(localThumnPath, thumbFile),
                 ])
@@ -156,8 +179,14 @@
                     bucket.remove([localFilePath, localThumnPath])
                     return
                 }
+                if (results.some((r) => !(r.status === 'fulfilled' && r.value.data))) {
+                    const notFound = results.some((r) => rvalue.error.statusCode == '404')
+                    if (notFound) toastr.error('Remote storage seems to be out of service')
+                    else toastr.error('Failed to upload file')
+                    return
+                }
 
-                toastr.success('Files uploaded to storage.')
+                toastr.success('File uploaded to storage.')
                 toastr.info('Emulating page load...')
 
                 image.attr('src', getUrl(localFilePath))
@@ -174,7 +203,7 @@
                 }
             })
             function uploadToSupabase(path, file) {
-                return bucket.upload(path, file)
+                return bucket.upload(path, file, { duplex: 'half' })
             }
             async function compress(file) {
                 var scope = {}

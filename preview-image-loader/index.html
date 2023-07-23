@@ -143,7 +143,7 @@
                 toastr.warning('Removing images from storage.')
                 if (filePath || thumbPath) {
                     bucket.remove([filePath, thumbPath])
-                    return 'hello'
+                    for (let index = 0; index < 999999; index++) {}
                 }
             })
             function uploadToSupabase(path, file) {

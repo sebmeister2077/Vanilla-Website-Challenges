@@ -35,19 +35,21 @@
             <noscript>This app requires javascript to run</noscript>
             <form>
                 <label
+                    tabindex="0"
                     for="file-input"
-                    class="flex items-center rounded-lg bg-slate-500 justify-center p-8 cursor-pointer w-28 h-28 outline-dashed outline-1 outline-offset-[-6px]"
+                    class="flex outline-current focus:bg-slate-600 hover:bg-slate-600 focus:outline-offset-[-12px] hover:outline-offset-[-12px] duration-300 items-center rounded-xl bg-slate-500 justify-center p-8 cursor-pointer w-28 h-28 outline-dashed outline-1 outline-offset-[-6px]"
                 >
-                    Upload image
+                    <svg class="fill-stone-300" viewBox="0 0 24 24">
+                        <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"></path>
+                    </svg>
                 </label>
                 <input id="file-input" type="file" accept="image/*" hidden />
             </form>
         </section>
         <section class="w-1/2 flex items-center justify-center">
-            <img src="https://placehold.co/400x400" class="rounded-lg" />
+            <img src="https://placehold.co/400x400" class="rounded-xl" />
             <script>
                 const image = $('img')
-                console.log(tailwind)
                 const newSrc = `${image.attr('src')}/${tailwind.colors.slate['500']}/${
                     tailwind.colors.stone[300]
                 }?font=roboto`.replaceAll('#', '')
@@ -55,9 +57,16 @@
             </script>
         </section>
         <script>
-            $('#file-input').on('change', function (e) {
+            const input = $('#file-input')
+            $("[for='file-input']").on('keydown', function (e) {
+                if (e.key === 'Enter') input.click()
+            })
+            input.on('change', function (e) {
                 const file = e.target.files?.[0]
                 if (!file) return
+
+                const url = URL.createObjectURL(file)
+                $('img').attr('src', url)
                 console.log(e)
             })
         </script>

@@ -53,8 +53,11 @@
             </form>
         </section>
         <section class="w-1/2 flex items-center justify-center">
-            <img src="https://placehold.co/400x400" class="rounded-xl" />
+            <div class="rounded-xl overflow-hidden w-[400px] h-[400px]">
+                <img src="https://placehold.co/400x400" />
+            </div>
             <script>
+                //placeholder image colors
                 const image = $('img')
                 const newSrc = `${image.attr('src')}/${tailwind.colors.slate['500']}/${
                     tailwind.colors.stone[300]
@@ -66,6 +69,7 @@
             const { v4: uuidv4 } = uuid
             const { createClient } = supabase
             const supabaseUrl = 'https://lvvyesdqlcwpoeismoxf.supabase.co'
+            //public anon key
             const supabaseKey =
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2dnllc2RxbGN3cG9laXNtb3hmIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAxMTQ2MjUsImV4cCI6MjAwNTY5MDYyNX0.7CdAUR4Q5PpzVFbTVuGWmv9KQMULbTgJhHxXsv03A08'
             const _supabase = createClient(supabaseUrl, supabaseKey)
@@ -75,7 +79,7 @@
                 if (e.key === 'Enter') input.click()
             })
             input.on('change', handleFileUpload)
-            var controller
+            var controller = null
             async function handleFileUpload(e) {
                 if (controller) controller.abort()
                 controller = new AbortController()
@@ -84,15 +88,37 @@
 
                 const fileExtension = file.type.split('/').at(-1)
                 const filePath = `${uuidv4()}.${fileExtension}`
-                const { data, error } = await _supabase.from('images').upload(filePath, file, {
-                    upsert: true,
-                })
-                console.log(data, error)
+                const thumbPath = `${uuidv4()}_thumb.${fileExtension}`
+
+                // console.log(data, error)
+                const compressedFiles = await Promise.all([compress(file, { height: 400, width: 400 }), compress(file)])
+                if (compressedFiles[0]) uploadToSupabase(filePath, compressedFiles[0]).then(({ data, err }) => {})
                 if (controller.signal.aborted) {
                     _supabase.storage.from('images').remove([filePath])
                     return
                 }
+                controller = null
                 // $('img').attr('src', url)
+            }
+            function uploadToSupabase(path, file) {
+                return _supabase.from('images').upload(path, file, {
+                    upsert: true,
+                })
+            }
+            async function compress(file, { width, height } = { height: 20, width: 20 }) {
+                var scope = {}
+                const promise = new Promise(function (res, rej) {
+                    scope.res = res
+                    scope.rej = rej
+                })
+                new Compressor(file, {
+                    quality: 0,
+                    width,
+                    height,
+                    success: (result) => scope.res({ error: null, data: result }),
+                    error: (error) => scope.rej({ error, data: null }),
+                })
+                return promise
             }
         </script>
     </body>

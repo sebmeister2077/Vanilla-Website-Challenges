@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+    <head style="display: block">
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -11,13 +11,19 @@
             integrity="sha512-MgYeYFj8R3S6rvZHiJ1xA9cM/VDGcT4eRRFQwGA7qDP7NHbnWKNmAm28z0LVjOuUqjD0T9JxpDMdVqsZOSHaSA=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
+            defer
         ></script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         <script
             src="https://code.jquery.com/jquery-3.6.4.slim.js"
             integrity="sha256-dWvV84T6BhzO4vG6gWhsWVKVoa4lVmLnpBOZh/CAHU4="
             crossorigin="anonymous"
         ></script>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"
+            referrerpolicy="no-referrer"
+        ></script>
         <title>Loading image</title>
         <script>
             tailwind.config = {
@@ -57,18 +63,37 @@
             </script>
         </section>
         <script>
+            const { v4: uuidv4 } = uuid
+            const { createClient } = supabase
+            const supabaseUrl = 'https://lvvyesdqlcwpoeismoxf.supabase.co'
+            const supabaseKey =
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2dnllc2RxbGN3cG9laXNtb3hmIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAxMTQ2MjUsImV4cCI6MjAwNTY5MDYyNX0.7CdAUR4Q5PpzVFbTVuGWmv9KQMULbTgJhHxXsv03A08'
+            const _supabase = createClient(supabaseUrl, supabaseKey)
+
             const input = $('#file-input')
             $("[for='file-input']").on('keydown', function (e) {
                 if (e.key === 'Enter') input.click()
             })
-            input.on('change', function (e) {
+            input.on('change', handleFileUpload)
+            var controller
+            async function handleFileUpload(e) {
+                if (controller) controller.abort()
+                controller = new AbortController()
                 const file = e.target.files?.[0]
                 if (!file) return
 
-                const url = URL.createObjectURL(file)
-                $('img').attr('src', url)
-                console.log(e)
-            })
+                const fileExtension = file.type.split('/').at(-1)
+                const filePath = `${uuidv4()}.${fileExtension}`
+                const { data, error } = await _supabase.from('images').upload(filePath, file, {
+                    upsert: true,
+                })
+                console.log(data, error)
+                if (controller.signal.aborted) {
+                    _supabase.storage.from('images').remove([filePath])
+                    return
+                }
+                // $('img').attr('src', url)
+            }
         </script>
     </body>
 </html>

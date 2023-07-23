@@ -71,11 +71,16 @@
                 id="img-container"
                 class="bg-no-repeat bg-cover bg-center rounded-xl overflow-hidden w-[400px] h-[400px]"
             >
-                <img src="https://placehold.co/400x400" class="w-full h-full object-cover object-center" />
+                <img
+                    loading="lazy"
+                    id="output"
+                    src="https://placehold.co/400x400"
+                    class="w-full h-full object-cover object-center"
+                />
             </div>
             <script>
                 //placeholder image colors
-                const image = $('img')
+                const image = $('#output')
                 const newSrc = `${image.attr('src')}/${tailwind.colors.slate['500']}/${
                     tailwind.colors.stone[300]
                 }?font=roboto`.replaceAll('#', '')
@@ -96,7 +101,11 @@
             $("[for='file-input']").on('keydown', function (e) {
                 if (e.key === 'Enter') input.click()
             })
+            const imageContainer = $('#img-container')
 
+            image.on('load', function (e) {
+                image.removeClass('animate-pulse')
+            })
             input.on('change', handleFileUpload)
             var controller = null
             var thumbPath, filePath
@@ -111,38 +120,36 @@
                     toastr.error('File is exceeds limit of 50 MB')
                     return
                 }
+                toastr.info('Uploading files...')
 
+                const previousThumbPath = thumbPath
+                imageContainer.removeClass(`bg-[url('${getUrl(previousThumbPath)}')]`)
+                image.removeAttr('src')
                 const fileExtension = file.type.split('/').at(-1)
-                filePath = `${uuidv4()}.${fileExtension}`
-                thumbPath = `${uuidv4()}_thumb.${fileExtension}`
+                const newId = uuidv4()
+                filePath = `${newId}.${fileExtension}`
+                thumbPath = `${newId}_thumb.${fileExtension}`
                 const localFilePath = filePath,
                     localThumnPath = thumbPath
 
-                // console.log(data, error)
-                const compressedFiles = await Promise.all([
-                    compress(file, { maxHeight: 400, maxWidth: 400, quality: 1 }),
-                    compress(file),
+                const thumbFile = await compress(file)
+                await Promise.allSettled([
+                    uploadToSupabase(localFilePath, file),
+                    uploadToSupabase(localThumnPath, thumbFile),
                 ])
-                if (compressedFiles[0])
-                    uploadToSupabase(localFilePath, compressedFiles[0].data).then(({ data: { path }, err }) => {
-                        const url = getUrl(path)
-                        $('img').removeAttr('src')
-                        setTimeout(() => {
-                            $('img').attr('src', url)
-                        }, 1000)
-                    })
-                if (compressedFiles[1])
-                    uploadToSupabase(localThumnPath, compressedFiles[1].data).then(({ data: { path }, err }) => {
-                        const url = getUrl(path)
-                        $('#img-container').addClass(`bg-[url('${url}')]`)
-                    })
 
                 if (controller.signal.aborted) {
                     bucket.remove([localFilePath, localThumnPath])
                     return
                 }
+
+                toastr.success('Files uploaded to storage.')
+                toastr.info('Emulating page load...')
+
+                image.attr('src', getUrl(localFilePath))
+                image.addClass('animate-pulse')
+                imageContainer.addClass(`bg-[url('${getUrl(localThumnPath)}')]`)
                 controller = null
-                // $('img').attr('src', url)
             }
 
             $(window).on('beforeunload', function (e) {
@@ -153,26 +160,20 @@
                 }
             })
             function uploadToSupabase(path, file) {
-                console.log(file)
-                return bucket.upload(path, file, {
-                    upsert: true,
-                })
+                return bucket.upload(path, file)
             }
-            async function compress(
-                file,
-                { maxWidth, maxHeight, quality } = { maxHeight: 30, maxWidth: 30, quality: 0 },
-            ) {
+            async function compress(file) {
                 var scope = {}
                 const promise = new Promise(function (res, rej) {
                     scope.res = res
                     scope.rej = rej
                 })
                 new Compressor(file, {
-                    quality,
-                    maxWidth,
-                    maxHeight,
-                    success: (result) => scope.res({ error: null, data: result }),
-                    error: (error) => scope.rej({ error, data: null }),
+                    quality: 0.1,
+                    maxWidth: 30,
+                    maxHeight: 30,
+                    success: scope.res,
+                    error: scope.rej,
                 })
                 return promise
             }

@@ -113,15 +113,10 @@
                                 console.log('completed stream')
                             },
                         })
-
+                        init.headers.set('Content-Type', 'application/octet-stream')
                         return fetch(input, {
                             method: 'POST',
-                            headers: {
-                                Apikey: supabaseKey,
-                                Authorization: 'Bearer ' + supabaseKey,
-                                // 'Cache-Control': "no-cache",
-                                'Content-Type': 'application/octet-stream',
-                            },
+                            headers: init.headers,
                             body: blob.stream().pipeThrough(progressTrackingStream),
                             duplex: 'half',
                         })
@@ -180,9 +175,12 @@
                     return
                 }
                 if (results.some((r) => !(r.status === 'fulfilled' && r.value.data))) {
-                    const notFound = results.some((r) => rvalue.error.statusCode == '404')
-                    if (notFound) toastr.error('Remote storage seems to be out of service')
+                    const notFound = results.some((r) => r.value?.error?.statusCode == '404')
+                    const isOnline = window.navigator.onLine
+                    if (!isOnline) toastr.error('You are offline.')
+                    else if (notFound) toastr.error('Remote storage seems to be out of service')
                     else toastr.error('Failed to upload file')
+                    console.log(results)
                     return
                 }
 

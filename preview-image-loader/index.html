@@ -67,8 +67,11 @@
             </form>
         </section>
         <section class="w-1/2 flex items-center justify-center">
-            <div id="img-container" class="bg-no-repeat rounded-xl overflow-hidden w-[400px] h-[400px]">
-                <img src="https://placehold.co/400x400" />
+            <div
+                id="img-container"
+                class="bg-no-repeat bg-cover bg-center rounded-xl overflow-hidden w-[400px] h-[400px]"
+            >
+                <img src="https://placehold.co/400x400" class="w-full h-full object-cover object-center" />
             </div>
             <script>
                 //placeholder image colors
@@ -117,13 +120,16 @@
 
                 // console.log(data, error)
                 const compressedFiles = await Promise.all([
-                    compress(file, { maxHeight: 400, maxWidth: 400 }),
+                    compress(file, { maxHeight: 400, maxWidth: 400, quality: 1 }),
                     compress(file),
                 ])
                 if (compressedFiles[0])
                     uploadToSupabase(localFilePath, compressedFiles[0].data).then(({ data: { path }, err }) => {
                         const url = getUrl(path)
                         $('img').removeAttr('src')
+                        setTimeout(() => {
+                            $('img').attr('src', url)
+                        }, 1000)
                     })
                 if (compressedFiles[1])
                     uploadToSupabase(localThumnPath, compressedFiles[1].data).then(({ data: { path }, err }) => {
@@ -152,14 +158,17 @@
                     upsert: true,
                 })
             }
-            async function compress(file, { maxWidth, maxHeight } = { maxHeight: 20, maxWidth: 20 }) {
+            async function compress(
+                file,
+                { maxWidth, maxHeight, quality } = { maxHeight: 30, maxWidth: 30, quality: 0 },
+            ) {
                 var scope = {}
                 const promise = new Promise(function (res, rej) {
                     scope.res = res
                     scope.rej = rej
                 })
                 new Compressor(file, {
-                    quality: 0,
+                    quality,
                     maxWidth,
                     maxHeight,
                     success: (result) => scope.res({ error: null, data: result }),

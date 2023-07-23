@@ -57,9 +57,12 @@
                 <label
                     tabindex="0"
                     for="file-input"
-                    class="flex outline-current focus:bg-slate-600 hover:bg-slate-600 focus:outline-offset-[-12px] hover:outline-offset-[-12px] duration-300 items-center rounded-xl bg-slate-500 justify-center p-8 cursor-pointer w-28 h-28 outline-dashed outline-1 outline-offset-[-6px]"
+                    class="flex group outline-current focus:bg-slate-600 hover:bg-slate-600 focus:outline-offset-[-12px] hover:outline-offset-[-12px] duration-300 items-center rounded-xl bg-slate-500 justify-center p-8 cursor-pointer w-28 h-28 outline-dashed outline-1 outline-offset-[-8px]"
                 >
-                    <svg class="fill-stone-300" viewBox="0 0 24 24">
+                    <svg
+                        class="ease-in-out group-focus:scale-75 group-hover:scale-75 delay-100 duration-300 fill-stone-300"
+                        viewBox="0 0 24 24"
+                    >
                         <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"></path>
                     </svg>
                 </label>
@@ -94,7 +97,17 @@
             //public anon key
             const supabaseKey =
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2dnllc2RxbGN3cG9laXNtb3hmIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAxMTQ2MjUsImV4cCI6MjAwNTY5MDYyNX0.7CdAUR4Q5PpzVFbTVuGWmv9KQMULbTgJhHxXsv03A08'
-            const _supabase = createClient(supabaseUrl, supabaseKey)
+            const _supabase = createClient(supabaseUrl, supabaseKey, {
+                global: {
+                    fetch: (...all) => {
+                        console.log([...all[1].body.values()])
+                        return fetch(...all)
+                    },
+                },
+            })
+            toastr.options = {
+                newestOnTop: true,
+            }
             const bucket = _supabase.storage.from('images')
 
             const input = $('#file-input')
@@ -110,6 +123,7 @@
             var controller = null
             var thumbPath, filePath
             async function handleFileUpload(e) {
+                imageContainer.blur()
                 if (controller) controller.abort()
                 controller = new AbortController()
                 const file = e.target.files?.[0]

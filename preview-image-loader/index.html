@@ -15,8 +15,8 @@
         ></script>
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         <script
-            src="https://code.jquery.com/jquery-3.6.4.slim.js"
-            integrity="sha256-dWvV84T6BhzO4vG6gWhsWVKVoa4lVmLnpBOZh/CAHU4="
+            src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
             crossorigin="anonymous"
         ></script>
         <script src="https://cdn.tailwindcss.com"></script>
@@ -24,6 +24,20 @@
             src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"
             referrerpolicy="no-referrer"
         ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
+            integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
+            integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+
         <title>Loading image</title>
         <script>
             tailwind.config = {
@@ -73,11 +87,13 @@
             const supabaseKey =
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2dnllc2RxbGN3cG9laXNtb3hmIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAxMTQ2MjUsImV4cCI6MjAwNTY5MDYyNX0.7CdAUR4Q5PpzVFbTVuGWmv9KQMULbTgJhHxXsv03A08'
             const _supabase = createClient(supabaseUrl, supabaseKey)
+            const storage = _supabase.storage
 
             const input = $('#file-input')
             $("[for='file-input']").on('keydown', function (e) {
                 if (e.key === 'Enter') input.click()
             })
+
             input.on('change', handleFileUpload)
             var controller = null
             async function handleFileUpload(e) {
@@ -85,6 +101,12 @@
                 controller = new AbortController()
                 const file = e.target.files?.[0]
                 if (!file) return
+                //50 MB
+                const MAX_FILE_SIZE = 1024 * 1024 * 50
+                if (file.size >= MAX_FILE_SIZE) {
+                    toastr.error('File is exceeds limit of 50 MB')
+                    return
+                }
 
                 const fileExtension = file.type.split('/').at(-1)
                 const filePath = `${uuidv4()}.${fileExtension}`
@@ -92,16 +114,19 @@
 
                 // console.log(data, error)
                 const compressedFiles = await Promise.all([compress(file, { height: 400, width: 400 }), compress(file)])
-                if (compressedFiles[0]) uploadToSupabase(filePath, compressedFiles[0]).then(({ data, err }) => {})
+                if (compressedFiles[0])
+                    uploadToSupabase(filePath, compressedFiles[0]).then(({ data, err }) => {
+                        console.log(data)
+                    })
                 if (controller.signal.aborted) {
-                    _supabase.storage.from('images').remove([filePath])
+                    storage.from('images').remove([filePath])
                     return
                 }
                 controller = null
                 // $('img').attr('src', url)
             }
             function uploadToSupabase(path, file) {
-                return _supabase.from('images').upload(path, file, {
+                return storage.from('images').upload(path, file, {
                     upsert: true,
                 })
             }

@@ -67,7 +67,7 @@
             </form>
         </section>
         <section class="w-1/2 flex items-center justify-center">
-            <div class="rounded-xl overflow-hidden w-[400px] h-[400px]">
+            <div id="img-container" class="bg-no-repeat rounded-xl overflow-hidden w-[400px] h-[400px]">
                 <img src="https://placehold.co/400x400" />
             </div>
             <script>
@@ -87,7 +87,7 @@
             const supabaseKey =
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2dnllc2RxbGN3cG9laXNtb3hmIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTAxMTQ2MjUsImV4cCI6MjAwNTY5MDYyNX0.7CdAUR4Q5PpzVFbTVuGWmv9KQMULbTgJhHxXsv03A08'
             const _supabase = createClient(supabaseUrl, supabaseKey)
-            const storage = _supabase.storage
+            const bucket = _supabase.storage.from('images')
 
             const input = $('#file-input')
             $("[for='file-input']").on('keydown', function (e) {
@@ -96,6 +96,7 @@
 
             input.on('change', handleFileUpload)
             var controller = null
+            var thumbPath, filePath
             async function handleFileUpload(e) {
                 if (controller) controller.abort()
                 controller = new AbortController()
@@ -109,28 +110,49 @@
                 }
 
                 const fileExtension = file.type.split('/').at(-1)
-                const filePath = `${uuidv4()}.${fileExtension}`
-                const thumbPath = `${uuidv4()}_thumb.${fileExtension}`
+                filePath = `${uuidv4()}.${fileExtension}`
+                thumbPath = `${uuidv4()}_thumb.${fileExtension}`
+                const localFilePath = filePath,
+                    localThumnPath = thumbPath
 
                 // console.log(data, error)
-                const compressedFiles = await Promise.all([compress(file, { height: 400, width: 400 }), compress(file)])
+                const compressedFiles = await Promise.all([
+                    compress(file, { maxHeight: 400, maxWidth: 400 }),
+                    compress(file),
+                ])
                 if (compressedFiles[0])
-                    uploadToSupabase(filePath, compressedFiles[0]).then(({ data, err }) => {
-                        console.log(data)
+                    uploadToSupabase(localFilePath, compressedFiles[0].data).then(({ data: { path }, err }) => {
+                        const url = getUrl(path)
+                        $('img').removeAttr('src')
                     })
+                if (compressedFiles[1])
+                    uploadToSupabase(localThumnPath, compressedFiles[1].data).then(({ data: { path }, err }) => {
+                        const url = getUrl(path)
+                        $('#img-container').addClass(`bg-[url('${url}')]`)
+                    })
+
                 if (controller.signal.aborted) {
-                    storage.from('images').remove([filePath])
+                    bucket.remove([localFilePath, localThumnPath])
                     return
                 }
                 controller = null
                 // $('img').attr('src', url)
             }
+
+            $(window).on('beforeunload', function (e) {
+                toastr.warning('Removing images from storage.')
+                if (filePath || thumbPath) {
+                    bucket.remove([filePath, thumbPath])
+                    return 'hello'
+                }
+            })
             function uploadToSupabase(path, file) {
-                return storage.from('images').upload(path, file, {
+                console.log(file)
+                return bucket.upload(path, file, {
                     upsert: true,
                 })
             }
-            async function compress(file, { width, height } = { height: 20, width: 20 }) {
+            async function compress(file, { maxWidth, maxHeight } = { maxHeight: 20, maxWidth: 20 }) {
                 var scope = {}
                 const promise = new Promise(function (res, rej) {
                     scope.res = res
@@ -138,12 +160,16 @@
                 })
                 new Compressor(file, {
                     quality: 0,
-                    width,
-                    height,
+                    maxWidth,
+                    maxHeight,
                     success: (result) => scope.res({ error: null, data: result }),
                     error: (error) => scope.rej({ error, data: null }),
                 })
                 return promise
+            }
+            function getUrl(path) {
+                const { data } = bucket.getPublicUrl(path)
+                return data.publicUrl
             }
         </script>
     </body>

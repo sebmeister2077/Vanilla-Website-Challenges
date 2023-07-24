@@ -516,11 +516,27 @@
                 font-size: 0.8rem;
                 color: var(--cool-gray);
             }
-            .page:nth-of-type(2):has(#monthly:checked) .pricing-card .price::after {
+            .page:nth-of-type(2) .pricing-card .price-frequency {
+                position: relative;
+            }
+            .page:nth-of-type(2) .pricing-card .price-frequency::after,
+            .page:nth-of-type(2) .pricing-card .price-frequency::before {
+                opacity: 0;
+                transition: opacity 0.4s;
+                position: absolute;
+                left: 0px;
+            }
+            .page:nth-of-type(2) .pricing-card .price-frequency::after {
                 content: '/mo';
             }
-            .page:nth-of-type(2):has(#yearly:checked) .pricing-card .price::after {
+            .page:nth-of-type(2) .pricing-card .price-frequency::before {
                 content: '0/yr';
+            }
+            .page:nth-of-type(2):has(#monthly:checked) .pricing-card .price-frequency::after {
+                opacity: 1;
+            }
+            .page:nth-of-type(2):has(#yearly:checked) .pricing-card .price-frequency::before {
+                opacity: 1;
             }
             .page:nth-of-type(2) .pricing-card:has(+ input:where(:checked, :hover)) {
                 border: 1px solid var(--purplish-blue);
@@ -954,8 +970,8 @@
     <body>
         <article class="card">
             <!-- Selected pages -->
-            <input id="p1" hidden type="radio" name="currentpage" />
-            <input id="p2" hidden type="radio" checked name="currentpage" />
+            <input id="p1" hidden type="radio" checked name="currentpage" />
+            <input id="p2" hidden type="radio" name="currentpage" />
             <input id="p3" hidden type="radio" name="currentpage" />
             <input id="p4" hidden type="radio" name="currentpage" />
             <input id="p5" hidden type="radio" name="currentpage" />
@@ -1129,7 +1145,10 @@
                                 </svg>
                                 <div class="text">
                                     <span class="subscription-name">Arcade</span>
-                                    <span class="price">$9</span>
+                                    <span class="price"
+                                        >$9
+                                        <span class="price-frequency"></span>
+                                    </span>
                                 </div>
                             </label>
                             <input hidden checked name="pricing" id="arcade" type="radio" value="9" />
@@ -1146,7 +1165,10 @@
                                 </svg>
                                 <div class="text">
                                     <span class="subscription-name">Advanced</span>
-                                    <span class="price">$12</span>
+                                    <span class="price"
+                                        >$12
+                                        <span class="price-frequency"></span>
+                                    </span>
                                 </div>
                             </label>
                             <input hidden name="pricing" id="advanced" type="radio" value="12" />
@@ -1163,7 +1185,10 @@
                                 </svg>
                                 <div class="text">
                                     <span class="subscription-name">Pro</span>
-                                    <span class="price">$15</span>
+                                    <span class="price">
+                                        $15
+                                        <span class="price-frequency"></span>
+                                    </span>
                                 </div>
                             </label>
                             <input hidden name="pricing" id="pro" type="radio" value="15" />

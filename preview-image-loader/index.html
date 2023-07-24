@@ -51,9 +51,9 @@
     </head>
 
     <body class="bg-slate-950 text-stone-300 flex w-screen h-screen p-8">
-        <section class="w-1/2 flex items-center justify-center">
+        <section class="w-1/2 relative flex items-center justify-center">
             <noscript>This app requires javascript to run</noscript>
-            <form>
+            <form class="flex flex-col gap-12 items-center w-full justify-center">
                 <label
                     tabindex="0"
                     for="file-input"
@@ -68,6 +68,14 @@
                 </label>
                 <input id="file-input" type="file" accept="image/*" hidden />
             </form>
+            <details class="absolute top-[60%] w-full p-6">
+                <summary class="list-none font-bold cursor-pointer text-2xl mb-6">Don't know what to do?</summary>
+                <ol class="flex flex-col gap-4 list-decimal">
+                    <li>Open inspector (Right click), go to network tab and throttle speed.</li>
+                    <li>Select a image to upload.</li>
+                    <li>Check out how image load would look like.</li>
+                </ol>
+            </details>
         </section>
         <section class="w-1/2 flex items-center justify-center">
             <div

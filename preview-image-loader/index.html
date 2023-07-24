@@ -38,6 +38,7 @@
             referrerpolicy="no-referrer"
         />
 
+        <link rel="stylesheet" href="https://loading.io/assets/css-spinner/index.css?v=599062478" />
         <title>Loading image</title>
         <script>
             tailwind.config = {
@@ -87,8 +88,17 @@
         <section class="w-1/2 flex items-center justify-center">
             <div
                 id="img-container"
-                class="bg-no-repeat bg-cover bg-center rounded-xl overflow-hidden w-[400px] h-[400px]"
+                class="bg-no-repeat relative bg-cover bg-center rounded-xl overflow-hidden w-[400px] h-[400px]"
             >
+                <div
+                    id="spinner"
+                    class="duration-300 opacity-0 inset-1/2 translate-x-[-50%] translate-y-[-50%] absolute lds-ellipsis"
+                >
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
                 <img
                     loading="lazy"
                     id="output"
@@ -143,6 +153,7 @@
             }
             const bucket = _supabase.storage.from('images')
 
+            const spinner = $('#spinner')
             const input = $('#file-input')
             $("[for='file-input']").on('keydown', function (e) {
                 if (e.key === 'Enter') input.click()
@@ -168,6 +179,7 @@
                     return
                 }
                 toastr.info('Uploading file...')
+                spinner.removeClass('opacity-0')
 
                 const previousThumbPath = thumbPath
                 imageContainer.removeClass(`bg-[url('${getUrl(previousThumbPath)}')]`)
@@ -189,13 +201,14 @@
                     bucket.remove([localFilePath, localThumnPath])
                     return
                 }
+
+                spinner.addClass('opacity-0')
                 if (results.some((r) => !(r.status === 'fulfilled' && r.value.data))) {
                     const notFound = results.some((r) => r.value?.error?.statusCode == '404')
                     const isOnline = window.navigator.onLine
                     if (!isOnline) toastr.error('You are offline.')
                     else if (notFound) toastr.error('Remote storage seems to be out of service')
                     else toastr.error('Failed to upload file')
-                    console.log(results)
                     return
                 }
 

@@ -500,9 +500,9 @@
                 border-radius: 8px;
                 padding: 16px;
                 width: 30%;
-                border: 1px solid var(--cool-gray);
+                outline: 1px solid var(--cool-gray);
                 will-change: border, background-color;
-                transition: 0.3s border, 0.3s background-color;
+                transition: 0.3s outline, 0.3s background-color, 0.3s outline-offset;
                 cursor: pointer;
             }
             .page:nth-of-type(2) .pricing-card .subscription-name {
@@ -539,8 +539,11 @@
                 opacity: 1;
             }
             .page:nth-of-type(2) .pricing-card:has(+ input:where(:checked, :hover)) {
-                border: 1px solid var(--purplish-blue);
+                outline: 1px solid var(--purplish-blue);
                 background-color: var(--alabaster);
+            }
+            .page:nth-of-type(2) .pricing-card:has(+ input:where(:active)) {
+                outline-offset: 4px;
             }
             .page:nth-of-type(2) .pricing-card svg {
                 margin-bottom: auto;

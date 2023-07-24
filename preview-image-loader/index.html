@@ -69,7 +69,7 @@
                 </label>
                 <input id="file-input" type="file" accept="image/*" hidden />
             </form>
-            <div id="mag-glass" class="fixed top-6 left-6 z-40">
+            <div id="mag-glass" class="fixed opacity-0 top-6 left-6 z-40">
                 <div
                     id="mag-glass-handle"
                     class="absolute cursor-pointer bottom-0 right-0 w-6 h-14 -rotate-45 translate-y-0 -translate-x-4 z-30"
@@ -145,6 +145,16 @@
             </script>
         </section>
         <script>
+            const GLASS_POSITION_LOCATION = 'glass-location'
+            const magGlass = $('#mag-glass')
+            const saved = JSON.parse(localStorage.getItem(GLASS_POSITION_LOCATION) || '{}')
+            magGlass
+                .css({
+                    top: saved.top || '2em',
+                    left: saved.left || '2em',
+                })
+                .removeClass('opacity-0')
+
             const { v4: uuidv4 } = uuid
             const { createClient } = supabase
             const supabaseUrl = 'https://lvvyesdqlcwpoeismoxf.supabase.co'
@@ -183,7 +193,6 @@
             }
             const bucket = _supabase.storage.from('images')
 
-            const magGlass = $('#mag-glass')
             dragElement(magGlass)
             const spinner = $('#spinner')
             const input = $('#file-input')
@@ -255,6 +264,10 @@
 
             $(window).on('beforeunload', function (e) {
                 toastr.warning('Removing images from storage.')
+                localStorage.setItem(
+                    GLASS_POSITION_LOCATION,
+                    JSON.stringify({ top: magGlass.css('top'), left: magGlass.css('left') }),
+                )
                 if (filePath || thumbPath) {
                     bucket.remove([filePath, thumbPath])
                     for (let index = 0; index < 999999; index++) {}

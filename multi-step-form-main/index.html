@@ -555,14 +555,14 @@
                 font-family: UbuntuMedium;
                 color: var(--cool-gray);
                 position: relative;
-                --label-width: 8ch;
+                --label-width-month: 8ch;
+                --label-width-year: 6ch;
                 --switch-width: 30px;
             }
             .page:nth-of-type(2) .payment-frequencies label {
                 position: absolute;
                 top: 50%;
                 translate: 0px -50% 0px;
-                width: var(--label-width);
                 cursor: pointer;
                 will-change: color;
                 transition: 0.3s color;
@@ -573,15 +573,20 @@
                 user-select: none;
                 z-index: 1;
             }
-            .page:nth-of-type(2) .payment-frequencies label:not(:has(+ input:checked)) {
-                width: calc(var(--label-width) + var(--switch-width));
+            .page:nth-of-type(2) .payment-frequencies label[for='monthly']:not(:has(+ input:checked)) {
+                width: calc(var(--label-width-month) + var(--switch-width));
+            }
+            .page:nth-of-type(2) .payment-frequencies label[for='yearly']:not(:has(+ input:checked)) {
+                width: calc(var(--label-width-year) + var(--switch-width));
             }
             .page:nth-of-type(2) .payment-frequencies label[for='monthly'] {
-                left: calc(50% - var(--label-width) - var(--switch-width) / 2);
+                width: var(--label-width-month);
+                left: calc(50% - var(--label-width-month) - var(--switch-width) / 2);
                 text-align: start;
             }
             .page:nth-of-type(2) .payment-frequencies label[for='yearly'] {
-                right: calc(50% - var(--label-width) - var(--switch-width) / 2);
+                width: var(--label-width-year);
+                right: calc(50% - var(--label-width-year) - var(--switch-width) / 2);
                 text-align: end;
             }
             .page:nth-of-type(2) .payment-frequencies label:has(+ input:checked) {
@@ -949,8 +954,8 @@
     <body>
         <article class="card">
             <!-- Selected pages -->
-            <input id="p1" hidden type="radio" checked name="currentpage" />
-            <input id="p2" hidden type="radio" name="currentpage" />
+            <input id="p1" hidden type="radio" name="currentpage" />
+            <input id="p2" hidden type="radio" checked name="currentpage" />
             <input id="p3" hidden type="radio" name="currentpage" />
             <input id="p4" hidden type="radio" name="currentpage" />
             <input id="p5" hidden type="radio" name="currentpage" />

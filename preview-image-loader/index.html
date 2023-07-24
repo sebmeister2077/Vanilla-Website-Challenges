@@ -69,10 +69,10 @@
                 </label>
                 <input id="file-input" type="file" accept="image/*" hidden />
             </form>
-            <div id="mag-glass" class="relative">
+            <div id="mag-glass" class="fixed top-6 left-6 z-40">
                 <div
-                    id="mag-glass-dragg"
-                    class="absolute bottom-0 right-0 bg-red-600 w-6 h-14 -rotate-45 translate-y-0 -translate-x-4"
+                    id="mag-glass-handle"
+                    class="absolute cursor-pointer bottom-0 right-0 w-6 h-14 -rotate-45 translate-y-0 -translate-x-4 z-30"
                 ></div>
                 <div
                     class="absolute outline-neutral-400 outline-4 top-3.5 left-3.5 aspect-square w-[84.4px] backdrop-invert-[.85] z-20 rounded-full"
@@ -183,6 +183,8 @@
             }
             const bucket = _supabase.storage.from('images')
 
+            const magGlass = $('#mag-glass')
+            dragElement(magGlass)
             const spinner = $('#spinner')
             const input = $('#file-input')
             $("[for='file-input']").on('keydown', function (e) {
@@ -279,6 +281,40 @@
             function getUrl(path) {
                 const { data } = bucket.getPublicUrl(path)
                 return data.publicUrl
+            }
+
+            function dragElement() {
+                const element = $(arguments[0][0])
+
+                let pos1 = 0,
+                    pos2 = 0,
+                    pos3 = 0,
+                    pos4 = 0
+                const handle = $('#mag-glass-handle')
+                handle.on('mousedown', dragMouseDown)
+                function dragMouseDown(e) {
+                    e.preventDefault()
+                    pos3 = e.clientX
+                    pos4 = e.clientY
+                    $(document).on('mouseup', closeDragElement)
+                    $(document).on('mousemove', elementDrag)
+                }
+
+                function elementDrag(e) {
+                    e.preventDefault()
+                    pos1 = pos3 - e.clientX
+                    pos2 = pos4 - e.clientY
+                    pos3 = e.clientX
+                    pos4 = e.clientY
+                    element.css({
+                        top: element[0].offsetTop - pos2 + 'px',
+                        left: element[0].offsetLeft - pos1 + 'px',
+                    })
+                }
+
+                function closeDragElement() {
+                    $(document).off('mouseup').off('mousemove')
+                }
             }
         </script>
     </body>

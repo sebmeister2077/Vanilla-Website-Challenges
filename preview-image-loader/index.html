@@ -201,7 +201,7 @@
             const imageContainer = $('#img-container')
 
             image.on('load', function (e) {
-                image.removeClass('animate-pulse')
+                imageContainer.removeClass('animate-pulse')
             })
             input.on('change', handleFileUpload)
             var controller = null
@@ -223,7 +223,7 @@
 
                 const previousThumbPath = thumbPath
                 imageContainer.removeClass(`bg-[url('${getUrl(previousThumbPath)}')]`)
-                image.removeAttr('src')
+                image.removeAttr('src').css({ opacity: 0 })
                 const fileExtension = file.type.split('/').at(-1)
                 const newId = uuidv4()
                 filePath = `${newId}.${fileExtension}`
@@ -255,9 +255,8 @@
                 toastr.success('File uploaded to storage.')
                 toastr.info('Emulating page load...')
 
-                image.attr('src', getUrl(localFilePath))
-                image.addClass('animate-pulse')
-                imageContainer.addClass(`bg-[url('${getUrl(localThumnPath)}')]`)
+                image.attr('src', getUrl(localFilePath)).css({ opacity: 1 })
+                imageContainer.addClass('animate-pulse').addClass(`bg-[url('${getUrl(localThumnPath)}')]`)
                 controller = null
             }
 

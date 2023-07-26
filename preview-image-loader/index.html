@@ -148,12 +148,11 @@
             const GLASS_POSITION_LOCATION = 'glass-location'
             const magGlass = $('#mag-glass')
             const saved = JSON.parse(localStorage.getItem(GLASS_POSITION_LOCATION) || '{}')
-            magGlass
-                .css({
-                    top: saved.top || '2em',
-                    left: saved.left || '2em',
-                })
-                .removeClass('opacity-0')
+            magGlass.css({
+                top: saved.top || '2em',
+                left: saved.left || '2em',
+            })
+            // .removeClass('opacity-0')
 
             const { v4: uuidv4 } = uuid
             const { createClient } = supabase

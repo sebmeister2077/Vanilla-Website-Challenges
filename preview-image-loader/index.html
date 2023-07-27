@@ -218,13 +218,6 @@
             input.on('change', handleFileUpload)
             var controller = null
             var thumbPath, filePath
-            requestIdleCallback(removeUnusedFiles)
-            async function removeUnusedFiles() {
-                const { data: filesToRemove, error } = await bucket.list('')
-                console.dir(filesToRemove, error)
-                console.dir(error)
-                // return _supabase.storage.emptyBucket(BUCKET_NAME)
-            }
             async function handleFileUpload(e) {
                 imageContainer.blur()
                 if (controller) controller.abort()

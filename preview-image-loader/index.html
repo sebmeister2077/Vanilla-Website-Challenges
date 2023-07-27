@@ -145,17 +145,23 @@
             </script>
         </section>
         <script>
+            const { v4: uuidv4 } = uuid
+            const { createClient } = supabase
             const GLASS_POSITION_LOCATION = 'glass-location'
+            const UNIQUE_USER_ID_LOCATION = 'user-id'
+
+            let userId = localStorage.getItem(UNIQUE_USER_ID_LOCATION)
+            if (!userId) {
+                userId = `${uuidv4()}#${new Date().toLocaleDateString().replaceAll('/', '-')}`
+                localStorage.setItem(UNIQUE_USER_ID_LOCATION, userId)
+            }
             const magGlass = $('#mag-glass')
             const saved = JSON.parse(localStorage.getItem(GLASS_POSITION_LOCATION) || '{}')
             magGlass.css({
                 top: saved.top || '2em',
                 left: saved.left || '2em',
             })
-            // .removeClass('opacity-0')
 
-            const { v4: uuidv4 } = uuid
-            const { createClient } = supabase
             const supabaseUrl = 'https://lvvyesdqlcwpoeismoxf.supabase.co'
             //public anon key
             const supabaseKey =
@@ -187,10 +193,12 @@
                     },
                 },
             })
+            removeUnusedFiles()
             toastr.options = {
                 newestOnTop: true,
             }
-            const bucket = _supabase.storage.from('images')
+            const BUCKET_NAME = 'images'
+            const bucket = _supabase.storage.from(BUCKET_NAME)
 
             dragElement(magGlass)
             const spinner = $('#spinner')
@@ -206,6 +214,9 @@
             input.on('change', handleFileUpload)
             var controller = null
             var thumbPath, filePath
+            function removeUnusedFiles() {
+                return _supabase.storage.emptyBucket(BUCKET_NAME)
+            }
             async function handleFileUpload(e) {
                 imageContainer.blur()
                 if (controller) controller.abort()
@@ -226,8 +237,8 @@
                 image.removeAttr('src').css({ opacity: 0 })
                 const fileExtension = file.type.split('/').at(-1)
                 const newId = uuidv4()
-                filePath = `${newId}.${fileExtension}`
-                thumbPath = `${newId}_thumb.${fileExtension}`
+                filePath = `${userId}/${newId}.${fileExtension}`
+                thumbPath = `${userId}/${newId}_thumb.${fileExtension}`
                 const localFilePath = filePath,
                     localThumnPath = thumbPath
 

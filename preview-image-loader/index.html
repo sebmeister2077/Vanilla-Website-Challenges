@@ -30,6 +30,11 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
@@ -150,11 +155,6 @@
             const GLASS_POSITION_LOCATION = 'glass-location'
             const UNIQUE_USER_ID_LOCATION = 'user-id'
 
-            let userId = localStorage.getItem(UNIQUE_USER_ID_LOCATION)
-            if (!userId) {
-                userId = `${uuidv4()}#${new Date().toLocaleDateString().replaceAll('/', '-')}`
-                localStorage.setItem(UNIQUE_USER_ID_LOCATION, userId)
-            }
             const magGlass = $('#mag-glass')
             const saved = JSON.parse(localStorage.getItem(GLASS_POSITION_LOCATION) || '{}')
             magGlass.css({
@@ -177,10 +177,10 @@
                             transform(chunk, controller) {
                                 controller.enqueue(chunk)
                                 bytesUploaded += chunk.byteLength
-                                console.log('upload progress:', bytesUploaded / totalBytes)
+                                // console.log('upload progress:', bytesUploaded / totalBytes)
                             },
                             flush(controller) {
-                                console.log('completed stream')
+                                // console.log('completed stream')
                             },
                         })
                         init.headers.set('Content-Type', 'application/octet-stream')
@@ -193,13 +193,16 @@
                     },
                 },
             })
-            removeUnusedFiles()
             toastr.options = {
                 newestOnTop: true,
             }
             const BUCKET_NAME = 'images'
             const bucket = _supabase.storage.from(BUCKET_NAME)
-
+            let userId = localStorage.getItem(UNIQUE_USER_ID_LOCATION)
+            if (!userId) {
+                userId = 'user_' + uuidv4()
+                localStorage.setItem(UNIQUE_USER_ID_LOCATION, userId)
+            }
             dragElement(magGlass)
             const spinner = $('#spinner')
             const input = $('#file-input')
@@ -214,8 +217,11 @@
             input.on('change', handleFileUpload)
             var controller = null
             var thumbPath, filePath
-            function removeUnusedFiles() {
-                return _supabase.storage.emptyBucket(BUCKET_NAME)
+            requestIdleCallback(removeUnusedFiles)
+            async function removeUnusedFiles() {
+                const { data: filesToRemove } = await bucket.list(userId)
+                // console.log(filesToRemove)
+                // return _supabase.storage.emptyBucket(BUCKET_NAME)
             }
             async function handleFileUpload(e) {
                 imageContainer.blur()
@@ -237,19 +243,20 @@
                 image.removeAttr('src').css({ opacity: 0 })
                 const fileExtension = file.type.split('/').at(-1)
                 const newId = uuidv4()
-                filePath = `${userId}/${newId}.${fileExtension}`
-                thumbPath = `${userId}/${newId}_thumb.${fileExtension}`
+                const date = moment().format('YYYY-MM-DD')
+                filePath = `${userId}/${date}/${newId}.${fileExtension}`
+                thumbPath = `${userId}/${date}/${newId}_thumb.${fileExtension}`
                 const localFilePath = filePath,
-                    localThumnPath = thumbPath
+                    localThumbPath = thumbPath
 
                 const thumbFile = await compress(file)
                 const results = await Promise.allSettled([
                     uploadToSupabase(localFilePath, file),
-                    uploadToSupabase(localThumnPath, thumbFile),
+                    uploadToSupabase(localThumbPath, thumbFile),
                 ])
 
                 if (controller.signal.aborted) {
-                    bucket.remove([localFilePath, localThumnPath])
+                    bucket.remove([localFilePath, localThumbPath])
                     return
                 }
 
@@ -267,7 +274,7 @@
                 toastr.info('Emulating page load...')
 
                 image.attr('src', getUrl(localFilePath)).css({ opacity: 1 })
-                imageContainer.addClass('animate-pulse').addClass(`bg-[url('${getUrl(localThumnPath)}')]`)
+                imageContainer.addClass('animate-pulse').addClass(`bg-[url('${getUrl(localThumbPath)}')]`)
                 controller = null
             }
 

@@ -55,98 +55,103 @@
             }
         </script>
     </head>
-    <body class="bg-slate-950 text-stone-300 flex w-screen h-screen p-8">
-        <section class="w-1/2 relative flex flex-col items-center justify-center gap-12">
-            <noscript>This app requires javascript to run</noscript>
-            <form>
-                <label
-                    tabindex="0"
-                    for="file-input"
-                    class="flex group outline-current focus:bg-slate-600 hover:bg-slate-600 focus:outline-offset-[-12px] hover:outline-offset-[-12px] duration-300 items-center rounded-xl bg-slate-500 justify-center p-8 cursor-pointer w-28 h-28 outline-dashed outline-1 outline-offset-[-8px]"
-                >
-                    <svg
-                        class="ease-in-out group-focus:scale-75 group-hover:scale-75 delay-100 duration-300 fill-stone-300"
-                        viewBox="0 0 24 24"
+    <body class="bg-slate-950 text-stone-300 flex w-screen h-screen p-8 flex-col">
+        <header class="text-4xl w-full">
+            <h1>Preview Image Loader</h1>
+        </header>
+        <section class="grow flex w-full">
+            <section class="w-1/2 relative flex items-center justify-center gap-12">
+                <noscript>This app requires javascript to run</noscript>
+                <form>
+                    <label
+                        tabindex="0"
+                        for="file-input"
+                        class="flex group outline-current focus:bg-slate-600 hover:bg-slate-600 focus:outline-offset-[-12px] hover:outline-offset-[-12px] duration-300 items-center rounded-xl bg-slate-500 justify-center p-8 cursor-pointer w-28 h-28 outline-dashed outline-1 outline-offset-[-8px]"
                     >
-                        <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"></path>
-                    </svg>
-                </label>
-                <input id="file-input" type="file" accept="image/*" hidden />
-            </form>
-            <div id="mag-glass" class="fixed opacity-0 top-6 left-6 z-40">
-                <div
-                    id="mag-glass-handle"
-                    class="absolute cursor-pointer bottom-0 right-0 w-6 h-14 -rotate-45 translate-y-0 -translate-x-4 z-30"
-                ></div>
-                <div
-                    class="absolute outline-neutral-400 outline-4 top-3.5 left-3.5 aspect-square w-[84.4px] backdrop-invert-[.85] z-20 rounded-full"
-                ></div>
+                        <svg
+                            class="ease-in-out group-focus:scale-75 group-hover:scale-75 delay-100 duration-300 fill-stone-300"
+                            viewBox="0 0 24 24"
+                        >
+                            <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"></path>
+                        </svg>
+                    </label>
+                    <input id="file-input" type="file" accept="image/*" hidden />
+                </form>
+                <div id="mag-glass" class="fixed opacity-0 top-6 left-6 z-40">
+                    <div
+                        id="mag-glass-handle"
+                        class="absolute cursor-pointer bottom-0 right-0 w-6 h-14 -rotate-45 translate-y-0 -translate-x-4 z-30"
+                    ></div>
+                    <div
+                        class="absolute outline-neutral-400 outline-4 top-3.5 left-3.5 aspect-square w-[84.4px] backdrop-invert-[.85] z-20 rounded-full"
+                    ></div>
 
-                <svg
-                    class="fill-neutral-400 w-36 h-36"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                    viewBox="0 0 30.239 30.239"
-                    xml:space="preserve"
-                >
-                    <g>
-                        <path
-                            d="M20.194,3.46c-4.613-4.613-12.121-4.613-16.734,0c-4.612,4.614-4.612,12.121,0,16.735
+                    <svg
+                        class="fill-neutral-400 w-36 h-36"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 0 30.239 30.239"
+                        xml:space="preserve"
+                    >
+                        <g>
+                            <path
+                                d="M20.194,3.46c-4.613-4.613-12.121-4.613-16.734,0c-4.612,4.614-4.612,12.121,0,16.735
 		c4.108,4.107,10.506,4.547,15.116,1.34c0.097,0.459,0.319,0.897,0.676,1.254l6.718,6.718c0.979,0.977,2.561,0.977,3.535,0
 		c0.978-0.978,0.978-2.56,0-3.535l-6.718-6.72c-0.355-0.354-0.794-0.577-1.253-0.674C24.743,13.967,24.303,7.57,20.194,3.46z
 		 M18.073,18.074c-3.444,3.444-9.049,3.444-12.492,0c-3.442-3.444-3.442-9.048,0-12.492c3.443-3.443,9.048-3.443,12.492,0
 		C21.517,9.026,21.517,14.63,18.073,18.074z"
-                        />
-                    </g>
-                </svg>
-            </div>
-            <details class="absolute top-[65%] w-full p-6">
-                <summary class="list-none font-bold cursor-pointer text-2xl mb-6">
-                    Don't know what to do? See instructions
-                    <svg class="ml-2 w-6 h-6 fill-current inline" viewBox="0 0 24 24">
-                        <path
-                            d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
-                        ></path>
+                            />
+                        </g>
                     </svg>
-                </summary>
-                <ol class="flex flex-col gap-4 list-decimal">
-                    <li>Open inspector (Right click),</li>
-                    <li>Go to Network tab and change throttle speed.</li>
-                    <li>Select a image to upload.</li>
-                    <li>Check out how simulated image load would look like.</li>
-                </ol>
-            </details>
-        </section>
-        <section class="w-1/2 flex items-center justify-center">
-            <div
-                id="img-container"
-                class="bg-no-repeat relative bg-cover bg-center rounded-xl overflow-hidden w-[400px] h-[400px]"
-            >
-                <div
-                    id="spinner"
-                    class="duration-300 opacity-0 inset-1/2 -translate-x-1/2 -translate-y-1/2 absolute lds-ellipsis"
-                >
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
                 </div>
-                <img
-                    loading="lazy"
-                    id="output"
-                    src="https://placehold.co/400x400"
-                    class="w-full h-full object-cover object-center"
-                />
-            </div>
-            <script>
-                //placeholder image colors
-                const image = $('#output')
-                const newSrc = `${image.attr('src')}/${tailwind.colors.slate['500']}/${
-                    tailwind.colors.stone[300]
-                }?font=roboto`.replaceAll('#', '')
-                image.attr('src', newSrc)
-            </script>
+                <details class="absolute top-[65%] w-full p-6">
+                    <summary class="list-none font-bold cursor-pointer text-2xl mb-6">
+                        Don't know what to do? See instructions
+                        <svg class="ml-2 w-6 h-6 fill-current inline" viewBox="0 0 24 24">
+                            <path
+                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
+                            ></path>
+                        </svg>
+                    </summary>
+                    <ol class="flex flex-col gap-4 list-decimal">
+                        <li>Open inspector (Right click),</li>
+                        <li>Go to Network tab and change throttle speed.</li>
+                        <li>Select a image to upload.</li>
+                        <li>Check out how simulated image load would look like.</li>
+                    </ol>
+                </details>
+            </section>
+            <section class="w-1/2 flex items-center justify-center">
+                <div
+                    id="img-container"
+                    class="bg-no-repeat relative bg-cover bg-center rounded-xl overflow-hidden w-[400px] h-[400px]"
+                >
+                    <div
+                        id="spinner"
+                        class="duration-300 opacity-0 inset-1/2 -translate-x-1/2 -translate-y-1/2 absolute lds-ellipsis"
+                    >
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <img
+                        loading="lazy"
+                        id="output"
+                        src="https://placehold.co/400x400"
+                        class="w-full h-full object-cover object-center"
+                    />
+                </div>
+                <script>
+                    //placeholder image colors
+                    const image = $('#output')
+                    const newSrc = `${image.attr('src')}/${tailwind.colors.slate['500']}/${
+                        tailwind.colors.stone[300]
+                    }?font=roboto`.replaceAll('#', '')
+                    image.attr('src', newSrc)
+                </script>
+            </section>
         </section>
         <script>
             const { v4: uuidv4 } = uuid

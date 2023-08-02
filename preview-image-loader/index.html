@@ -125,7 +125,7 @@
             <section class="w-1/2 flex items-center justify-center">
                 <div
                     id="img-container"
-                    class="bg-no-repeat relative bg-cover bg-center rounded-xl overflow-hidden w-[400px] h-[400px]"
+                    class="bg-no-repeat animate-pulse bg-[url('https://lvvyesdqlcwpoeismoxf.supabase.co/storage/v1/object/public/static/initial_thumb.jpg')] relative bg-cover bg-center rounded-xl overflow-hidden w-[400px] h-[400px]"
                 >
                     <div
                         id="spinner"
@@ -139,18 +139,10 @@
                     <img
                         loading="lazy"
                         id="output"
-                        src="https://placehold.co/400x400"
+                        src="https://lvvyesdqlcwpoeismoxf.supabase.co/storage/v1/object/public/static/initial.jpg"
                         class="w-full h-full object-cover object-center"
                     />
                 </div>
-                <script>
-                    //placeholder image colors
-                    const image = $('#output')
-                    const newSrc = `${image.attr('src')}/${tailwind.colors.slate['500']}/${
-                        tailwind.colors.stone[300]
-                    }?font=roboto`.replaceAll('#', '')
-                    image.attr('src', newSrc)
-                </script>
             </section>
         </section>
         <script>
@@ -215,13 +207,16 @@
                 if (e.key === 'Enter') input.click()
             })
             const imageContainer = $('#img-container')
+            const image = $('#output')
 
-            image.on('load', function (e) {
-                imageContainer.removeClass('animate-pulse')
-            })
+            if (image[0].complete) removeLoadingAnimation()
+            image.on('load', removeLoadingAnimation)
             input.on('change', handleFileUpload)
             var controller = null
             var thumbPath, filePath
+            function removeLoadingAnimation() {
+                imageContainer.removeClass('animate-pulse')
+            }
             async function handleFileUpload(e) {
                 imageContainer.blur()
                 if (controller) controller.abort()
@@ -234,6 +229,15 @@
                     toastr.error('File is exceeds limit of 50 MB')
                     return
                 }
+
+                compress(file).then((val) => {
+                    const l = document.createElement('a')
+                    l.href = URL.createObjectURL(val)
+                    l.setAttribute('download', '')
+                    l.click()
+                })
+                return
+
                 toastr.info('Uploading file...')
                 spinner.removeClass('opacity-0')
 

@@ -125,7 +125,7 @@
             <section class="w-1/2 flex items-center justify-center">
                 <div
                     id="img-container"
-                    class="bg-no-repeat animate-pulse bg-[url('https://lvvyesdqlcwpoeismoxf.supabase.co/storage/v1/object/public/static/initial_thumb.jpg')] relative bg-cover bg-center rounded-xl overflow-hidden w-[400px] h-[400px]"
+                    class="w-[700px] h-[700px] bg-no-repeat animate-pulse bg-[url('https://lvvyesdqlcwpoeismoxf.supabase.co/storage/v1/object/public/static/initial_thumb.jpg')] relative bg-cover bg-center rounded-xl overflow-hidden"
                 >
                     <div
                         id="spinner"
@@ -140,7 +140,7 @@
                         loading="lazy"
                         id="output"
                         src="https://lvvyesdqlcwpoeismoxf.supabase.co/storage/v1/object/public/static/initial.jpg"
-                        class="w-full h-full object-cover object-center"
+                        class="opacity-0 duration-1000 w-full h-full object-cover object-center"
                     />
                 </div>
             </section>
@@ -216,6 +216,7 @@
             var thumbPath, filePath
             function removeLoadingAnimation() {
                 imageContainer.removeClass('animate-pulse')
+                image.addClass('duration-1000').removeClass('opacity-0')
             }
             async function handleFileUpload(e) {
                 imageContainer.blur()
@@ -230,20 +231,24 @@
                     return
                 }
 
-                compress(file).then((val) => {
-                    const l = document.createElement('a')
-                    l.href = URL.createObjectURL(val)
-                    l.setAttribute('download', '')
-                    l.click()
-                })
-                return
+                // compress(file).then((val) => {
+                //     const l = document.createElement('a')
+                //     l.href = URL.createObjectURL(val)
+                //     l.setAttribute('download', '')
+                //     l.click()
+                // })
+                // return
 
                 toastr.info('Uploading file...')
                 spinner.removeClass('opacity-0')
 
                 const previousThumbPath = thumbPath
-                imageContainer.removeClass(`bg-[url('${getUrl(previousThumbPath)}')]`)
-                image.removeAttr('src').css({ opacity: 0 })
+                const initialContainerImageUrl =
+                    'https://lvvyesdqlcwpoeismoxf.supabase.co/storage/v1/object/public/static/initial_thumb.jpg'
+                imageContainer
+                    .removeClass(`bg-[url('${initialContainerImageUrl}')]`)
+                    .removeClass(`bg-[url('${getUrl(previousThumbPath)}')]`)
+                image.removeAttr('src').addClass('opacity-0').removeClass('duration-1000')
                 const fileExtension = file.type.split('/').at(-1)
                 const newId = uuidv4()
                 const date = moment().format('YYYY-MM-DD')
@@ -276,7 +281,7 @@
                 toastr.success('File uploaded to storage.')
                 toastr.info('Emulating page load...')
 
-                image.attr('src', getUrl(localFilePath)).css({ opacity: 1 })
+                image.attr('src', getUrl(localFilePath))
                 imageContainer.addClass('animate-pulse').addClass(`bg-[url('${getUrl(localThumbPath)}')]`)
                 controller = null
             }
@@ -303,8 +308,8 @@
                 })
                 new Compressor(file, {
                     quality: 0.1,
-                    maxWidth: 30,
-                    maxHeight: 30,
+                    maxWidth: 60,
+                    maxHeight: 60,
                     success: scope.res,
                     error: scope.rej,
                 })

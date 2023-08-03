@@ -105,6 +105,7 @@
                         </g>
                     </svg>
                 </div>
+                <button id="function-button">Call function</button>
                 <details class="absolute top-[65%] w-full p-6">
                     <summary class="list-none font-bold cursor-pointer text-2xl mb-6">
                         Don't know what to do? See instructions
@@ -189,6 +190,25 @@
                         })
                     },
                 },
+            })
+
+            const functionButton = $('#function-button')
+            const localDockerKey =
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0'
+            const IS_LOCAL = window.location.hostname === '127.0.0.1'
+            functionButton.on('click', async function () {
+                const { data, error } = await createClient(
+                    'http://localhost:54321',
+                    IS_LOCAL ? localDockerKey : supabaseKey,
+                ).functions.invoke('delete-images', {
+                    mode: 'cors',
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                    },
+                })
+
+                console.log(data)
+                console.dir(error)
             })
             toastr.options = {
                 newestOnTop: true,

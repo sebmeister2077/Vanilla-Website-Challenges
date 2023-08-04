@@ -192,10 +192,10 @@
                 },
             })
 
-            const functionButton = $('#function-button')
             const localDockerKey =
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0'
             const IS_LOCAL = window.location.hostname === '127.0.0.1'
+            const functionButton = $('#function-button')
             functionButton.on('click', async function () {
                 const { data, error } = await createClient(
                     'http://localhost:54321',
@@ -250,14 +250,6 @@
                     toastr.error('File is exceeds limit of 50 MB')
                     return
                 }
-
-                // compress(file).then((val) => {
-                //     const l = document.createElement('a')
-                //     l.href = URL.createObjectURL(val)
-                //     l.setAttribute('download', '')
-                //     l.click()
-                // })
-                // return
 
                 toastr.info('Uploading file...')
                 spinner.removeClass('opacity-0')
@@ -339,7 +331,14 @@
                 const { data } = bucket.getPublicUrl(path)
                 return data.publicUrl
             }
-
+            function downloadFile(file) {
+                if (!(file instanceof Blob)) return
+                const l = document.createElement('a')
+                l.href = URL.createObjectURL(file)
+                l.setAttribute('download', '')
+                l.click()
+                URL.revokeObjectURL(l.href)
+            }
             function dragElement() {
                 const element = $(arguments[0][0])
 

@@ -53,6 +53,7 @@
                     },
                 },
             }
+            const IS_LOCAL = window.location.hostname === '127.0.0.1'
         </script>
     </head>
     <body class="bg-slate-950 text-stone-300 flex w-screen h-screen p-8 flex-col">
@@ -77,7 +78,7 @@
                     </label>
                     <input id="file-input" type="file" accept="image/*" hidden />
                 </form>
-                <div id="mag-glass" class="fixed opacity-0 top-6 left-6 z-40">
+                <div id="mag-glass" data-dev class="fixed opacity-0 top-6 left-6 z-40">
                     <div
                         id="mag-glass-handle"
                         class="absolute cursor-pointer bottom-0 right-0 w-6 h-14 -rotate-45 translate-y-0 -translate-x-4 z-30"
@@ -105,7 +106,7 @@
                         </g>
                     </svg>
                 </div>
-                <button id="function-button">Call function</button>
+                <button id="function-button" data-dev>Call function</button>
                 <details class="absolute top-[65%] w-full p-6">
                     <summary class="list-none font-bold cursor-pointer text-2xl mb-6">
                         Don't know what to do? See instructions
@@ -147,6 +148,7 @@
             </section>
         </section>
         <script>
+            if (!IS_LOCAL) $('[data-dev]').remove()
             const { v4: uuidv4 } = uuid
             const { createClient } = supabase
             const GLASS_POSITION_LOCATION = 'glass-location'
@@ -194,7 +196,6 @@
 
             const localDockerKey =
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0'
-            const IS_LOCAL = window.location.hostname === '127.0.0.1'
             const functionButton = $('#function-button')
             functionButton.on('click', async function () {
                 const { data, error } = await createClient(

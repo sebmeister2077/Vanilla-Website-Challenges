@@ -66,27 +66,42 @@ alert(1)</textarea
                 const DEFAULT_TEXT = 'alert(1)'
                 const input = $('#in')
                 const output = $('#out')
-                const btn = $('#run')
+                const runBtn = $('#run')
                 const copy = $('#copy-code')
                 const filter = encode('filter'),
                     constructor = encode('constructor')
                 const instantCheck = $('#instant-check')
 
                 input.text(getParsedFromStorage(STORAGE_KEYS.LAST_SCRIPT) ?? DEFAULT_TEXT)
-                var encodedText = encodeInputToExecutable(input.val().trim())
-                var instantCompile = getParsedFromStorage(STORAGE_KEYS.INSTANT_COMPILE) ?? true
-                if (instantCompile) instantCheck.attr('checked', '')
-                else instantCheck.removeAttr('checked')
+                var isInstantCompile = getParsedFromStorage(STORAGE_KEYS.INSTANT_COMPILE) ?? true
+                var encodedText = ''
+                if (isInstantCompile) {
+                    encodedText = encodeInputToExecutable(input.val().trim())
+                    instantCheck.attr('checked', '')
+                    input.on('keyup', updateOutput)
+                    output.text(encodedText)
+                } else instantCheck.removeAttr('checked')
 
                 instantCheck.on('change', changeCheck)
-                input.on('keyup', function (e) {
-                    updateOutput(input.val().trim())
-                })
-                output.text(encodedText)
-                btn.on('click', runEncodedText)
+                runBtn.on('click', runEncodedText)
                 copy.on('click', copyCode)
-
                 $(window).on('beforeunload', saveLastScript)
+
+                function changeCheck() {
+                    isInstantCompile = !isInstantCompile
+                    localStorage.setItem(STORAGE_KEYS.INSTANT_COMPILE, isInstantCompile)
+                    updateRunButtonText()
+                }
+                function updateRunButtonText() {
+                    const removeListener = (runBtn[0].onclick = null)
+                    if (isInstantCompile) {
+                        runBtn.text('Run').on('click', runEncodedText)
+                        updateOutput(input.val().trim())
+                    } else {
+                        output.text('')
+                        runBtn.text('Compile').on('click', () => updateOutput(input.val().trim()))
+                    }
+                }
                 function saveLastScript() {
                     const text = input.val()
                     localStorage.setItem(STORAGE_KEYS.LAST_SCRIPT, text.trim())
@@ -97,9 +112,10 @@ alert(1)</textarea
                         .then(() => M.toast({ html: 'Code copied' }))
                         .catch(() => M.toast({ html: 'Failed to copy' }))
                 }
-                function updateOutput(text) {
+                function updateOutput() {
+                    const text = input.val().trim()
                     encodedText = encodeInputToExecutable(text)
-                    output.html(encodedText)
+                    output.text(encodedText)
                 }
                 function runEncodedText() {
                     eval(encodedText)
@@ -127,11 +143,6 @@ alert(1)</textarea
                     if (value === 'true' || value === 'false') return value === 'true'
                     if (!isNaN(Number(value))) return Number(value)
                     return value
-                }
-
-                function changeCheck() {
-                    instantCompile = !instantCompile
-                    localStorage.setItem(STORAGE_KEYS.INSTANT_COMPILE, instantCompile)
                 }
             </script>
         </main>

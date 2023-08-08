@@ -93,7 +93,7 @@ alert(1)</textarea
                     updateRunButtonText()
                 }
                 function updateRunButtonText() {
-                    const removeListener = (runBtn[0].onclick = null)
+                    runBtn.off('click')
                     if (isInstantCompile) {
                         runBtn.text('Run').on('click', runEncodedText)
                         updateOutput(input.val().trim())

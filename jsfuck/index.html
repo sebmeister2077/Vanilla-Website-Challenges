@@ -38,7 +38,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </head>
     <body class="bg-indigo-950 text-white flex items-center justify-center w-screen h-screen m-0">
-        <main class="z-10 flex flex-col w-full p-12 gap-6">
+        <main class="z-10 flex flex-col w-full h-full p-12 gap-6">
             <textarea id="in" class="materialize-textarea" placeholder="Add script you want to compile to jsfuck">
 alert(1)</textarea
             >
@@ -54,7 +54,7 @@ alert(1)</textarea
                     <input type="checkbox" id="instant-check" />
                     <span class="text-white">Instant Compile</span>
                 </label>
-                <button id="run" class="waves-effect waves-light btn">Run</button>
+                <button id="run" class="waves-effect waves-light btn w-24">Run</button>
             </div>
             <div id="out" class="max-w-[90vw]"></div>
 

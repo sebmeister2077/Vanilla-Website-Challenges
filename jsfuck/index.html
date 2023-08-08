@@ -50,29 +50,47 @@ alert(1)</textarea
                         ></path>
                     </svg>
                 </button>
-                <!-- <label class="checkbox ml-auto">
-                    <input type="checkbox" />
-                    Instant compile
-                </label> -->
+                <label class="ml-auto">
+                    <input type="checkbox" id="instant-check" />
+                    <span class="text-white">Instant Compile</span>
+                </label>
                 <button id="run" class="waves-effect waves-light btn">Run</button>
             </div>
             <div id="out" class="max-w-[90vw]"></div>
 
             <script>
+                const STORAGE_KEYS = Object.freeze({
+                    INSTANT_COMPILE: 'instant_compile',
+                    LAST_SCRIPT: 'last-written-script',
+                })
+                const DEFAULT_TEXT = 'alert(1)'
                 const input = $('#in')
                 const output = $('#out')
                 const btn = $('#run')
                 const copy = $('#copy-code')
                 const filter = encode('filter'),
                     constructor = encode('constructor')
+                const instantCheck = $('#instant-check')
 
+                input.text(getParsedFromStorage(STORAGE_KEYS.LAST_SCRIPT) ?? DEFAULT_TEXT)
+                var encodedText = encodeInputToExecutable(input.val().trim())
+                var instantCompile = getParsedFromStorage(STORAGE_KEYS.INSTANT_COMPILE) ?? true
+                if (instantCompile) instantCheck.attr('checked', '')
+                else instantCheck.removeAttr('checked')
+
+                instantCheck.on('change', changeCheck)
                 input.on('keyup', function (e) {
                     updateOutput(input.val().trim())
                 })
-                var encodedText = encodeInputToExecutable(input.val().trim())
                 output.text(encodedText)
                 btn.on('click', runEncodedText)
                 copy.on('click', copyCode)
+
+                $(window).on('beforeunload', saveLastScript)
+                function saveLastScript() {
+                    const text = input.val()
+                    localStorage.setItem(STORAGE_KEYS.LAST_SCRIPT, text.trim())
+                }
                 function copyCode() {
                     navigator.clipboard
                         .writeText(encodedText)
@@ -97,6 +115,23 @@ alert(1)</textarea
                     const encoded = encode(text)
                     // https://github.com/aemkei/jsfuck#basics
                     return `[][${filter}][${constructor}](${encoded})()`
+                }
+                function getParsedFromStorage(key) {
+                    const value = localStorage.getItem(key)
+                    if (value === null) return null
+                    if (value.startsWith('{') && value.endsWith('}')) {
+                        try {
+                            return JSON.parse(value)
+                        } catch {}
+                    }
+                    if (value === 'true' || value === 'false') return value === 'true'
+                    if (!isNaN(Number(value))) return Number(value)
+                    return value
+                }
+
+                function changeCheck() {
+                    instantCompile = !instantCompile
+                    localStorage.setItem(STORAGE_KEYS.INSTANT_COMPILE, instantCompile)
                 }
             </script>
         </main>

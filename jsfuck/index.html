@@ -10,52 +10,70 @@
         <!-- There is a jsfuck cdn but i used this one instead, fix nest time -->
         <script src="https://jsfuck.com/jsfuck.js"></script>
         <script
-            src="https://code.jquery.com/jquery-3.7.0.slim.min.js"
-            integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE="
+            src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
             crossorigin="anonymous"
         ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
+            integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
+            integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
     </head>
     <body class="bg-indigo-950 text-white flex items-center justify-center w-screen h-screen m-0">
-        <!-- <div class="lds-roller absolute transition delay-200">
-            <div class="after:bg-indigo-200"></div>
-            <div class="after:bg-indigo-200"></div>
-            <div class="after:bg-indigo-200"></div>
-            <div class="after:bg-indigo-200"></div>
-            <div class="after:bg-indigo-200"></div>
-            <div class="after:bg-indigo-200"></div>
-            <div class="after:bg-indigo-200"></div>
-            <div class="after:bg-indigo-200"></div>
-        </div> -->
-        <main class="z-10 flex flex-col w-full p-12 gap-4">
-            <textarea id="in" class="textarea">alert(1)</textarea>
+        <main class="z-10 flex flex-col w-full p-12 gap-6">
+            <textarea id="in" class="textarea" placeholder="Add script you want to compile to jsfuck">
+alert(1)</textarea
+            >
             <div class="flex justify-between">
-                <div>Copy clipboard</div>
+                <svg id="copy-code" class="w-6 h-6 fill-white cursor-pointer" title="Copy code" viewBox="0 0 24 24">
+                    <path
+                        d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+                    ></path>
+                </svg>
                 <button id="run" class="button">Run</button>
             </div>
             <div id="out" class="max-w-[90vw]"></div>
 
             <script>
+                toastr.options = {
+                    newestOnTop: true,
+                }
                 const input = $('#in')
                 const output = $('#out')
                 const btn = $('#run')
+                const copy = $('#copy-code')
                 const filter = encode('filter'),
                     constructor = encode('constructor')
 
                 input.on('keyup', function (e) {
-                    updateOutput(input.val())
+                    updateOutput(input.val().trim())
                 })
-                var encodedText = encodeInputToExecutable(input.val())
+                var encodedText = encodeInputToExecutable(input.val().trim())
                 output.text(encodedText)
                 btn.on('click', runEncodedText)
+                copy.on('click', copyCode)
+                function copyCode() {
+                    navigator.clipboard
+                        .writeText(encodedText)
+                        .then(() => toastr.success('Code copied'))
+                        .catch(() => toastr.error('Failed to copy'))
+                }
                 function updateOutput(text) {
-                    console.log(text)
                     encodedText = encodeInputToExecutable(text)
                     output.html(encodedText)
                 }
                 function runEncodedText() {
                     eval(encodedText)
                 }
-
                 function encode(str) {
                     return JSFuck.encode(str)
                 }

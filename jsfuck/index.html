@@ -5,29 +5,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>JS Fuck</title>
         <link rel="stylesheet" href="./spinner.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
         <script src="https://cdn.tailwindcss.com"></script>
         <!-- There is a jsfuck cdn but i used this one instead, fix nest time -->
-        <script
-            defer
-            src="https://jsfuck.com/jsfuck.js"
-            onload="document.body.setAttribute('script-loadded','')"
-        ></script>
+        <script src="https://jsfuck.com/jsfuck.js"></script>
         <script
             src="https://code.jquery.com/jquery-3.7.0.slim.min.js"
             integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE="
             crossorigin="anonymous"
         ></script>
-        <style>
-            body[script-loadded] .lds-roller {
-                opacity: 0;
-            }
-            body[script-loadded] main {
-                opacity: 1;
-            }
-        </style>
     </head>
     <body class="bg-indigo-950 text-white flex items-center justify-center w-screen h-screen m-0">
-        <div class="lds-roller absolute transition delay-200">
+        <!-- <div class="lds-roller absolute transition delay-200">
             <div class="after:bg-indigo-200"></div>
             <div class="after:bg-indigo-200"></div>
             <div class="after:bg-indigo-200"></div>
@@ -36,27 +25,46 @@
             <div class="after:bg-indigo-200"></div>
             <div class="after:bg-indigo-200"></div>
             <div class="after:bg-indigo-200"></div>
-        </div>
-        <main class="opacity-0 transition delay-700 z-10">
-            <div id="in" contenteditable="true" class="outline-0 p-4">alert(1)</div>
+        </div> -->
+        <main class="z-10 flex flex-col w-full p-12 gap-4">
+            <textarea id="in" class="textarea">alert(1)</textarea>
+            <div class="flex justify-between">
+                <div>Copy clipboard</div>
+                <button id="run" class="button">Run</button>
+            </div>
+            <div id="out" class="max-w-[90vw]"></div>
+
             <script>
-                $('#in').on('keyup', function (e) {
-                    updateOutput($('#in').text())
+                const input = $('#in')
+                const output = $('#out')
+                const btn = $('#run')
+                const filter = encode('filter'),
+                    constructor = encode('constructor')
+
+                input.on('keyup', function (e) {
+                    updateOutput(input.val())
                 })
+                var encodedText = encodeInputToExecutable(input.val())
+                output.text(encodedText)
+                btn.on('click', runEncodedText)
                 function updateOutput(text) {
-                    const outEl = $('#out')
-                    outEl.replaceWith(
-                        $(document.createElement('script'))
-                            .attr({ id: 'out', class: outEl.attr('class') })
-                            .html(runAndEncode(text))
-                    )
+                    console.log(text)
+                    encodedText = encodeInputToExecutable(text)
+                    output.html(encodedText)
                 }
-                // https://github.com/aemkei/jsfuck#basics
-                function runAndEncode(text) {
-                    return `[][${JSFuck.encode('filter')}][${JSFuck.encode('constructor')}](${JSFuck.encode(text)})()`
+                function runEncodedText() {
+                    eval(encodedText)
+                }
+
+                function encode(str) {
+                    return JSFuck.encode(str)
+                }
+                function encodeInputToExecutable(text) {
+                    const encoded = encode(text)
+                    // https://github.com/aemkei/jsfuck#basics
+                    return `[][${filter}][${constructor}](${encoded})()`
                 }
             </script>
-            <script id="out" class="block"></script>
         </main>
     </body>
 </html>

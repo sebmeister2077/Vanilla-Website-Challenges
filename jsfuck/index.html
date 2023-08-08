@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>JS Fuck</title>
         <link rel="stylesheet" href="./spinner.css" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" /> -->
         <script src="https://cdn.tailwindcss.com"></script>
         <!-- There is a jsfuck cdn but i used this one instead, fix nest time -->
         <script src="https://jsfuck.com/jsfuck.js"></script>
@@ -14,7 +14,9 @@
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
             crossorigin="anonymous"
         ></script>
-        <script
+
+        <!-- Alternative to this found in materialize -->
+        <!-- <script
             src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
             integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
             crossorigin="anonymous"
@@ -26,27 +28,37 @@
             integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
+        /> -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
         />
+
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </head>
     <body class="bg-indigo-950 text-white flex items-center justify-center w-screen h-screen m-0">
         <main class="z-10 flex flex-col w-full p-12 gap-6">
-            <textarea id="in" class="textarea" placeholder="Add script you want to compile to jsfuck">
+            <textarea id="in" class="materialize-textarea" placeholder="Add script you want to compile to jsfuck">
 alert(1)</textarea
             >
-            <div class="flex justify-between">
-                <svg id="copy-code" class="w-6 h-6 fill-white cursor-pointer" title="Copy code" viewBox="0 0 24 24">
-                    <path
-                        d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
-                    ></path>
-                </svg>
-                <button id="run" class="button">Run</button>
+            <div class="flex gap-6 w-full items-center">
+                <button id="copy-code" title="Copy code" class="focus:bg-transparent">
+                    <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24">
+                        <path
+                            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+                        ></path>
+                    </svg>
+                </button>
+                <!-- <label class="checkbox ml-auto">
+                    <input type="checkbox" />
+                    Instant compile
+                </label> -->
+                <button id="run" class="waves-effect waves-light btn">Run</button>
             </div>
             <div id="out" class="max-w-[90vw]"></div>
 
             <script>
-                toastr.options = {
-                    newestOnTop: true,
-                }
                 const input = $('#in')
                 const output = $('#out')
                 const btn = $('#run')
@@ -64,8 +76,8 @@ alert(1)</textarea
                 function copyCode() {
                     navigator.clipboard
                         .writeText(encodedText)
-                        .then(() => toastr.success('Code copied'))
-                        .catch(() => toastr.error('Failed to copy'))
+                        .then(() => M.toast({ html: 'Code copied' }))
+                        .catch(() => M.toast({ html: 'Failed to copy' }))
                 }
                 function updateOutput(text) {
                     encodedText = encodeInputToExecutable(text)
@@ -75,7 +87,11 @@ alert(1)</textarea
                     eval(encodedText)
                 }
                 function encode(str) {
-                    return JSFuck.encode(str)
+                    try {
+                        return JSFuck.encode(str)
+                    } catch (e) {
+                        M.toast({ html: 'The library failed to load' })
+                    }
                 }
                 function encodeInputToExecutable(text) {
                     const encoded = encode(text)

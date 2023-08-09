@@ -33,8 +33,6 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
         />
-
-        <!-- Compiled and minified JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </head>
     <body class="bg-indigo-950 text-white flex items-center justify-center w-screen h-screen m-0">
@@ -101,7 +99,9 @@ alert(1)</textarea
                     if (isInstantCompile) {
                         runBtn.text('Run').on('click', runEncodedText)
                         updateOutput(input.val().trim())
+                        input.on('keyup', updateOutput)
                     } else {
+                        input.off('keyup')
                         output.text('')
                         runBtn.text('Compile').on('click', () => updateOutput(input.val().trim()))
                     }

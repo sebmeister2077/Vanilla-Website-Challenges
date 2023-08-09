@@ -56,7 +56,7 @@ alert(1)</textarea
                 </label>
                 <button id="run" class="waves-effect waves-light btn w-24">Run</button>
             </div>
-            <div id="out" class="max-w-[90vw]"></div>
+            <div id="out" class="s-full max-h-[60%] overflow-auto"></div>
 
             <script>
                 const STORAGE_KEYS = Object.freeze({
@@ -80,7 +80,11 @@ alert(1)</textarea
                     instantCheck.attr('checked', '')
                     input.on('keyup', updateOutput)
                     output.text(encodedText)
-                } else instantCheck.removeAttr('checked')
+                    runBtn.text('Run').on('click', runEncodedText)
+                } else {
+                    runBtn.text('Compile').on('click', () => updateOutput(input.val().trim()))
+                    instantCheck.removeAttr('checked')
+                }
 
                 instantCheck.on('change', changeCheck)
                 runBtn.on('click', runEncodedText)

@@ -35,8 +35,10 @@
         />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </head>
+
     <body class="bg-indigo-950 text-white flex items-center justify-center w-screen h-screen m-0 overflow-hidden">
         <main class="z-10 flex flex-col w-full h-full p-12 gap-6">
+            <h1 class="text-2xl">Write your javascript here and compile it to JSFuck</h1>
             <textarea id="in" class="materialize-textarea" placeholder="Add script you want to compile to jsfuck">
 alert(1)</textarea
             >
@@ -68,7 +70,7 @@ alert(1)</textarea
         </footer>
         <script>
             const STORAGE_KEYS = Object.freeze({
-                INSTANT_COMPILE: 'instant_compile',
+                INSTANT_COMPILE: 'instant-compile',
                 LAST_SCRIPT: 'last-written-script',
             })
             const DEFAULT_TEXT = 'alert(1)'
@@ -117,8 +119,8 @@ alert(1)</textarea
                 }
             }
             function saveLastScript() {
-                const text = input.val()
-                localStorage.setItem(STORAGE_KEYS.LAST_SCRIPT, text.trim())
+                const text = input.val().trim()
+                localStorage.setItem(STORAGE_KEYS.LAST_SCRIPT, text)
             }
             function copyCode() {
                 navigator.clipboard
@@ -142,6 +144,7 @@ alert(1)</textarea
                 }
             }
             function encodeInputToExecutable(text) {
+                if (!text) return ''
                 const encoded = encode(text)
                 // https://github.com/aemkei/jsfuck#basics
                 return `[][${filter}][${constructor}](${encoded})()`
@@ -155,7 +158,7 @@ alert(1)</textarea
                     } catch {}
                 }
                 if (value === 'true' || value === 'false') return value === 'true'
-                if (!isNaN(Number(value))) return Number(value)
+                if (!isNaN(Number(value)) && value?.trim() !== '') return Number(value)
                 return value
             }
         </script>

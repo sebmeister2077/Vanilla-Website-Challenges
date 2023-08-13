@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>View transition API</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script
+            src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"
+        ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+    </head>
+    <body class="bg-sky-700 flex w-screen h-screen p-12 gap-16">
+        <button id="dup" class="button h-12">Duplicate</button>
+        <button id="reorder" class="button h-12">Reorder</button>
+        <main class="flex gap-6 max-h-16 flex-wrap">
+            <div data-copy class="w-20 h-20 text-slate-200">Hello</div>
+        </main>
+        <script type="module">
+            if (!('startViewTransition' in document) || typeof document.startViewTransition !== 'function') {
+                alert('Browser doesnt support start transition view')
+            }
+            const btn = $('#dup')
+            btn.on('click', function () {
+                const node = $('[data-copy]')[0].cloneNode(true)
+                node.textContent = faker.name.firstName()
+                const t = document.startViewTransition((k) => {
+                    console.log(k)
+                    document.body.append(node)
+                })
+                console.log(t)
+            })
+            $('#reorder').on('click', function () {})
+        </script>
+    </body>
+</html>

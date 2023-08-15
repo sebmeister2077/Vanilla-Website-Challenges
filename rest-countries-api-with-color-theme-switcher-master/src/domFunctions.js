@@ -126,7 +126,7 @@ export function createSingleTemplate(country, isHidden) {
         });
         history.pushState(null, '', this.href);
         appBar.classList.remove('fade');
-        const cardElement = document.getElementById(country.name.common);
+        const cardElement = document.getElementById(normalizeText(country.name.common));
         cardElement.focus();
 
         const thisCountry = document.querySelector('.single-country');

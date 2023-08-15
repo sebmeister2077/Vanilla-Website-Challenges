@@ -160,7 +160,12 @@ export function createSingleTemplate(country, isHidden) {
         .map((k) => country.languages[k])
         .join(', ');
     createSpecific(content, `single-country-${languages}`, languages, 'Languages');
-
+    const wikiLink = document.createElement('a');
+    wikiLink.target = '_blank';
+    wikiLink.id = 'single-country-wikipedia';
+    wikiLink.href = `https://en.wikipedia.org/wiki/${country.name.common}`;
+    wikiLink.textContent = 'Read more';
+    createSpecific(content, null, wikiLink);
     const bordersContainer = content.querySelector('.border-countries');
     if (!country.borders.length) bordersContainer.append(createCard('None'));
     else {
@@ -197,9 +202,18 @@ function createSpecific(content, id, value, label) {
     const countrySpecificTemplate = content.getElementById('country-specific');
     const specific = countrySpecificTemplate.content.cloneNode(true);
     const specificLabel = specific.querySelector('label');
-    specificLabel.for = id;
-    specificLabel.innerText = label + ':';
+    if (!(specificLabel instanceof HTMLLabelElement)) return;
     const specifivValue = specific.querySelector('span');
+    if (!(specifivValue instanceof HTMLElement)) return;
+
+    if (value instanceof HTMLElement) {
+        specificLabel.replaceWith(value);
+        specifivValue.remove();
+        countrySpecificsContainer.append(specific);
+        return;
+    }
+    specificLabel.setAttribute('for', id);
+    specificLabel.innerText = label + ':';
     specifivValue.innerText = value;
     specifivValue.id = id;
     countrySpecificsContainer.append(specific);

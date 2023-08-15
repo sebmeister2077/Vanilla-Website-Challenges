@@ -162,7 +162,7 @@ export function createSingleTemplate(country, isHidden) {
     createSpecific(content, `single-country-${languages}`, languages, 'Languages');
     const wikiLink = document.createElement('a');
     wikiLink.target = '_blank';
-    wikiLink.id = 'single-country-wikipedia';
+    wikiLink.classList.add('underline', 'font-semibold');
     wikiLink.href = `https://en.wikipedia.org/wiki/${country.name.common}`;
     wikiLink.textContent = 'Read more';
     createSpecific(content, null, wikiLink);

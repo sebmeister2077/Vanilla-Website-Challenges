@@ -164,13 +164,12 @@ export function createSingleTemplate(country, isHidden) {
     const bordersContainer = content.querySelector('.border-countries');
     if (!country.borders.length) bordersContainer.append(createCard('None'));
     else {
-        country.borders.forEach((border) => {
-            bordersContainer.append(createCard(border, border));
-        });
+        const borderElements = country.borders.map((border) => createCard(border, border));
+        bordersContainer.append(...borderElements);
         requestIdleCallback(() => {
             searchCountriesByCodes(country.borders).then((resCountries) => {
                 window.borders = resCountries;
-                main.querySelectorAll('.single-country .border-countries a').forEach((el) => {
+                borderElements.forEach((el) => {
                     const elCode = el.getAttribute('data-border-code');
                     const correspondingCountry = resCountries.find((c) => [c.fifa, c.cca2, c.cca3, c.cioc].includes(elCode));
                     if (!correspondingCountry) return;

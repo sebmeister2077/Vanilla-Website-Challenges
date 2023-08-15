@@ -470,7 +470,16 @@ header h2 {
 }
 .single-country .country-map {
     flex-grow: 1;
+    animation: fadeIn 1s 1s;
     border-radius: var(--border-radius);
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 @media only screen and (width<= 1260px) {
     .single-country .content {

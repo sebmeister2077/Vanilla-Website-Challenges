@@ -135,11 +135,9 @@ export function createSingleTemplate(country, isHidden) {
         setTimeout(() => thisCountry.remove(), 800);
     };
     //image
-    const imageFlags = content.querySelectorAll('img');
-    imageFlags.forEach((flag) => {
-        flag.src = country.flags.svg;
-        flag.alt = country.flags.alt;
-    });
+    const imageFlag = content.querySelector('img');
+    imageFlag.src = country.flags.svg || country.flags.png;
+    imageFlag.alt = country.flags.alt;
 
     //name
     const name = content.querySelector('.country-name');
@@ -151,8 +149,8 @@ export function createSingleTemplate(country, isHidden) {
     createSpecific(content, `single-country-${country.population}`, formatNumber(country.population), 'Population');
     createSpecific(content, `single-country-${country.region}`, country.region, 'Region');
     createSpecific(content, `single-country-${country.subregion}`, country.subregion, 'Sub Region');
-    createSpecific(content, `single-country-${country.capital.join(', ')}`, country.capital.join(','), 'Capital');
-    createSpecific(content, `single-country-${country.tld.join(', ')}`, country.tld.join(','), 'Top Level Domain');
+    createSpecific(content, `single-country-${country.capital.join(', ')}`, country.capital.join(', '), 'Capital');
+    createSpecific(content, `single-country-${country.tld.join(', ')}`, country.tld.join(', '), 'Top Level Domain');
 
     const currencies = Object.keys(country.currencies)
         .map((k) => country.currencies[k].name)

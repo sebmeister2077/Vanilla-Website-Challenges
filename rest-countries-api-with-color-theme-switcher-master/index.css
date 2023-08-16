@@ -388,6 +388,11 @@ header h2 {
     width: max-content;
     padding-block: 8px;
     height: 48px;
+    will-change: opacity;
+    transition: opacity 0.3s;
+}
+.back-button:where(:hover) {
+    opacity: 0.65;
 }
 .single-country {
     position: fixed;

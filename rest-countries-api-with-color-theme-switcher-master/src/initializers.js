@@ -3,7 +3,7 @@ import { COUNTRY_NAMES_LOCATION, applyNewCountries, initializeAutocompleteList }
 import {
     beforeDocumentUnload as beforeWindowUnload,
     containerScrollListener,
-    documentClickListener,
+    documentRegionClickListener,
     documentKeypressListener,
     keydownRegionDialogLiElement,
     regionChangeListener,
@@ -46,6 +46,6 @@ export function initializeHomePage() {
     searchName.addEventListener('change', searchNameChangeListener);
     document.addEventListener('keypress', documentKeypressListener);
     mainContainer.addEventListener('scroll', containerScrollListener);
-    document.addEventListener('click', documentClickListener);
+    document.addEventListener('click', documentRegionClickListener, { capture: true });
     window.addEventListener('beforeunload', beforeWindowUnload);
 }

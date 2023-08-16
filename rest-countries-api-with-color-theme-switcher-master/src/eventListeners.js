@@ -42,10 +42,11 @@ export function regionDialogListener(e) {
     region.dispatchEvent(new Event('change'));
     expandMoreIcon.classList.remove('rotate180');
 }
-export function documentClickListener(e) {
+export function documentRegionClickListener(e) {
     if (e.target === regionControl) return;
     regionsDialog.removeAttribute('open');
     if (regionControl.classList.contains('retract-width')) regionControl.style.width = '';
+    regionControl.querySelector('.expand-more').classList.remove('rotate180');
 }
 var searchNameTimeout;
 var searchNameAbort;

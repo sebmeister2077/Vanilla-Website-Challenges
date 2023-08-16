@@ -146,7 +146,6 @@ export function createSingleTemplate(country, isHidden) {
 
     const nativeName = country.name.nativeName[Object.keys(country.name.nativeName)[0]].common;
     createSpecific(content, `single-country-${nativeName}`, nativeName, 'Native Name');
-
     createSpecific(content, `single-country-${country.population}`, formatNumber(country.population), 'Population');
     createSpecific(content, `single-country-${country.region}`, country.region, 'Region');
     createSpecific(content, `single-country-${country.subregion}`, country.subregion, 'Sub Region');
@@ -154,13 +153,15 @@ export function createSingleTemplate(country, isHidden) {
     createSpecific(content, `single-country-${country.tld.join(', ')}`, country.tld.join(', '), 'Top Level Domain');
 
     const currencies = Object.keys(country.currencies)
-        .map((k) => country.currencies[k].name)
+        .map((k) => `${country.currencies[k].name} (${country.currencies[k].symbol})`)
         .join(', ');
     createSpecific(content, `single-country-${currencies}`, currencies, 'Currencies');
+
     const languages = Object.keys(country.languages)
         .map((k) => country.languages[k])
         .join(', ');
     createSpecific(content, `single-country-${languages}`, languages, 'Languages');
+
     const wikiLink = document.createElement('a');
     wikiLink.target = '_blank';
     wikiLink.classList.add('underline', 'font-semibold');

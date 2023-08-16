@@ -43,7 +43,7 @@ export function regionDialogListener(e) {
     expandMoreIcon.classList.remove('rotate180');
 }
 export function documentRegionClickListener(e) {
-    if (e.target === regionControl) return;
+    if (regionControl.contains(e.target)) return;
     regionsDialog.removeAttribute('open');
     if (regionControl.classList.contains('retract-width')) regionControl.style.width = '';
     regionControl.querySelector('.expand-more').classList.remove('rotate180');

@@ -67,3 +67,53 @@ export function getCurrentQueryCountry() {
 export function sleep(delay) {
     return new Promise((res, rej) => setTimeout(res, delay));
 }
+
+export async function getRGBValuesWithPercentage(imageUrl) {
+    const imageData = await getImageData(imageUrl);
+    if (!imageData) return null;
+
+    const response = {};
+    let R, G, B, A;
+    for (let i = 0; i < imageData.data.length; i++) {
+        const { data } = imageData;
+        R = data[i + 0] || 0;
+        G = data[i + 1] || 0;
+        B = data[i + 2] || 0;
+        A = data[i + 3] || 0;
+
+        const hex = rgbToHex(R, G, B);
+        if (response[hex]) response[hex]++;
+        else response[hex] = 1;
+    }
+    Object.seal(response);
+    const total = Object.values(response).reduce((prev, next) => prev + next, 0);
+    Object.keys(response).forEach((key) => {
+        response[key] = (response[key] / total).toFixed(2);
+    });
+    return response;
+}
+
+function rgbToHex(r, g, b) {
+    function componentToHex(c) {
+        var hex = c.toString(16);
+        return hex.length == 1 ? '0' + hex : hex;
+    }
+    return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+async function getImageData(imageUrl) {
+    const image = await new Promise((resolve, reject) => {
+        const image = new Image();
+        image.src = imageUrl;
+        image.onload = function () {
+            resolve(image);
+        };
+        image.crossOrigin = 'Anonymous';
+    });
+    if (!(image instanceof HTMLImageElement)) return null;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0);
+
+    return ctx.getImageData(0, 0, parseFloat(image.width), parseFloat(image.height));
+}

@@ -1,5 +1,5 @@
 import { PAGE_SIZE, searchCountriesByCodes } from './apiMethods.js';
-import { formatNumber, normalizeText, throttleFunction } from './helpers.js';
+import { formatNumber, getRGBValuesWithPercentage, normalizeText, throttleFunction } from './helpers.js';
 
 export function applyNewCountries(newCountries) {
     countries = newCountries;
@@ -139,6 +139,7 @@ export function createSingleTemplate(country, isHidden) {
     imageFlag.src = country.flags.svg || country.flags.png;
     imageFlag.alt = country.flags.alt;
 
+    getRGBValuesWithPercentage(imageFlag.src).then(console.log);
     //name
     const name = content.querySelector('.country-name');
     name.innerText = country.name.common;

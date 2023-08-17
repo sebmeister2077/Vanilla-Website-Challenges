@@ -24,7 +24,8 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+        <!-- Bulma is ok if you make mini projects where you dont have a design guide -->
+        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" /> -->
         <script>
             tailwind.config = {
                 theme: {
@@ -35,17 +36,22 @@
                         backgroundImage: {
                             main: 'radial-gradient(circle at 50% 0%, hsl(214, 47%, 23%), hsl(237, 49%, 15%) 100%)',
                         },
-                        colors: {},
+                        colors: {
+                            score: 'hsl(229, 64%, 46%)',
+                            ['header']: 'hsl(217, 16%, 45%)',
+                            ['dark']: 'hsl(229, 25%, 31%)',
+                        },
                     },
                 },
             }
         </script>
     </head>
-    <body class="bg-main h-screen">
-        <section class="section">
-            <div class="container">
-                <h1 class="title">Hello World</h1>
-                <p class="subtitle">My first website with <strong>Bulma</strong>!</p>
+    <body class="bg-main h-screen w-screen flex flex-col items-center p-8">
+        <section class="outline outline-2 rounded-xl outline-header p-6 flex justify-between min-w-[32rem]">
+            <h1 class="w-min text-white font-extrabold">ROCK PAPER SCISSORS</h1>
+            <div class="rounded-xl p-2 bg-white h-full flex flex-col aspect-square items-center">
+                <h3 class="text-score">SCORE</h3>
+                <span class="text-dark text-xl">12</span>
             </div>
         </section>
     </body>

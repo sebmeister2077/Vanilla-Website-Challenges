@@ -17,6 +17,12 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         ></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&display=swap"
+            rel="stylesheet"
+        />
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
@@ -30,7 +36,7 @@
             tailwind.config = {
                 theme: {
                     fontFamily: {
-                        sans: ['"Roboto"', 'sans-serif'],
+                        sans: ['"Barlow Semi Condensed"', 'sans-serif'],
                     },
                     extend: {
                         backgroundImage: {
@@ -48,10 +54,10 @@
     </head>
     <body class="bg-main h-screen w-screen flex flex-col items-center p-8">
         <section class="outline outline-2 rounded-xl outline-header p-6 flex justify-between min-w-[32rem]">
-            <h1 class="w-min text-white font-extrabold">ROCK PAPER SCISSORS</h1>
-            <div class="rounded-xl p-2 bg-white h-full flex flex-col aspect-square items-center">
-                <h3 class="text-score">SCORE</h3>
-                <span class="text-dark text-xl">12</span>
+            <h1 class="w-min text-white leading-none font-extrabold text-2xl">ROCK PAPER SCISSORS</h1>
+            <div class="rounded-lg p-2 bg-white h-full flex flex-col aspect-square items-center">
+                <h3 class="text-score text-xs font-bold">SCORE</h3>
+                <span class="text-dark text-4xl font-extrabold">12</span>
             </div>
         </section>
     </body>

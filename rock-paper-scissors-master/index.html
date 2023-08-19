@@ -40,12 +40,16 @@
                     },
                     extend: {
                         backgroundImage: {
+                            ['image-inherit']: 'inherit',
                             main: 'radial-gradient(circle at 50% 0%, hsl(214, 47%, 23%), hsl(237, 49%, 15%) 100%)',
+                            scissors: 'radial-gradient(circle at 50% 0%, hsl(39, 89%, 49%), hsl(40, 84%, 53%) 100%)',
+                            paper: 'radial-gradient(circle at 50% 0%, hsl(230, 89%, 62%),hsl(230, 89%, 65%) 100%)',
+                            rock: 'radial-gradient(circle at 50% 0%, hsl(349, 71%, 52%),hsl(349, 70%, 56%) 100%)',
                         },
                         colors: {
                             score: 'hsl(229, 64%, 46%)',
-                            ['header']: 'hsl(217, 16%, 45%)',
-                            ['dark']: 'hsl(229, 25%, 31%)',
+                            header: 'hsl(217, 16%, 45%)',
+                            dark: 'hsl(229, 25%, 31%)',
                         },
                     },
                 },
@@ -53,16 +57,28 @@
         </script>
     </head>
     <body class="bg-main h-screen w-screen flex flex-col items-center p-8">
-        <section class="outline outline-2 rounded-xl outline-header p-6 flex justify-between min-w-[32rem]">
+        <section class="outline select-none outline-2 rounded-xl outline-header p-6 flex justify-between min-w-[32rem]">
             <!-- <h1 class="w-min text-white leading-none font-extrabold text-2xl">ROCK PAPER SCISSORS</h1> -->
             <img src="./images/logo.svg" />
             <div class="rounded-lg p-2 bg-white h-full flex flex-col aspect-square items-center">
-                <h3 class="text-score text-sm font-bold">SCORE</h3>
+                <h3 class="text-score text-sm font-bold tracking-widest">SCORE</h3>
                 <span class="text-dark text-6xl font-extrabold">12</span>
             </div>
         </section>
         <section class="relative">
-            <div class="" id="hand"></div>
+            <div
+                class="aspect-square group cursor-pointer relative flex items-center justify-center rounded-full bg-paper w-48 after:top-0 after:bg-image-inherit after:brightness-50 after:content-[''] after:rounded-full after:z-[-1] after:w-full after:h-full after:border-full after:absolute after:translate-y-2 after:scale-[.98]"
+                id="hand"
+            >
+                <div
+                    class="flex items-center justify-center aspect-square relative rounded-full bg-white w-36 border border-0 border-t-4 border-neutral-300"
+                >
+                    <img
+                        class="group-hover:scale-110 scale-[1.40] duration-300 transition-transform ease-in-out will-change-transform"
+                        src="./images/icon-paper.svg"
+                    />
+                </div>
+            </div>
         </section>
     </body>
 </html>

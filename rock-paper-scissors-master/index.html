@@ -62,7 +62,7 @@
             <!-- <h1 class="w-min text-white leading-none font-extrabold text-2xl">ROCK PAPER SCISSORS</h1> -->
             <img src="./images/logo.svg" />
             <div class="rounded-lg p-2 bg-white h-full flex flex-col aspect-square items-center">
-                <h3 class="text-score text-sm font-bold tracking-widest">SCORE</h3>
+                <h3 class="text-score text-sm font-bold tracking-widest uppercase">Score</h3>
                 <span class="text-dark text-6xl font-extrabold">12</span>
             </div>
         </section>
@@ -91,18 +91,32 @@
         </section>
         <footer class="p-6 fixed bottom-0 w-screen">
             <button
-                class="py-2 focus:bg-red-400 tracking-widest uppercase px-8 ml-auto block border-white border rounded-lg"
+                class="py-2 tracking-widest uppercase px-8 ml-auto block border-white border rounded-lg"
                 id="rules-btn"
             >
                 Rules
             </button>
         </footer>
-        <dialog class="backdrop:cursor-pointer">
-            This is inside the modal
-
-            <form method="dialog">
-                <button>Close Modal</button>
-            </form>
+        <dialog
+            open
+            class="flex w-72 inset-0 fixed [&:not([open])]:z-[-1] [&[open]]:opacity-1 [&:not([open])]:opacity-0 transition-opacity duration-300 flex-col gap-6 rounded-lg p-6 backdrop:cursor-pointer"
+        >
+            <header class="flex justify-between">
+                <h2 class="text-2xl text-dark font-bold uppercase">Rules</h2>
+                <form method="dialog">
+                    <button class="block">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+                            <path
+                                fill="#3B4262"
+                                fill-rule="evenodd"
+                                d="M16.97 0l2.122 2.121-7.425 7.425 7.425 7.425-2.121 2.12-7.425-7.424-7.425 7.425L0 16.97l7.425-7.425L0 2.121 2.121 0l7.425 7.425L16.971 0z"
+                                opacity=".25"
+                            />
+                        </svg>
+                    </button>
+                </form>
+            </header>
+            <section class="relative"></section>
         </dialog>
     </body>
 </html>

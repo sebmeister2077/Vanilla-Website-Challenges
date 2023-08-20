@@ -55,6 +55,11 @@
                             test: 'transition-z-index 0s .4s linear forwards',
                         },
                         keyframes: {
+                            dash: {
+                                to: {
+                                    'stroke-dashoffset': 0,
+                                },
+                            },
                             'transition-z-index': {
                                 '0%, 99%': {
                                     'z-index': 50,
@@ -120,7 +125,7 @@
                 </div>
             </button>
         </template>
-        <section class="outline select-none outline-2 rounded-xl outline-header p-6 flex justify-between min-w-[32rem]">
+        <section class="outline select-none outline-2 rounded-xl outline-header p-6 flex justify-between min-w-[42rem]">
             <img src="./images/logo.svg" alt="Rock paper scissors" />
             <div class="rounded-lg p-2 bg-white h-full flex flex-col aspect-square items-center">
                 <h3 class="text-score text-sm font-bold tracking-widest uppercase">Score</h3>
@@ -128,8 +133,18 @@
             </div>
         </section>
         <section id="home-section" class="relative flex items-center justify-center grow">
+            <svg width="313" height="278" class="scale-150" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    stroke="#000"
+                    class="[stroke-dasharray:1800] [stroke-dashoffset:-1800] animate-[dash_2s_1s_ease-in-out_forwards]"
+                    stroke-width="15"
+                    fill="none"
+                    opacity=".2"
+                    d="M156.5 262 300 8H13z"
+                />
+            </svg>
             <script>
-                const radius = '12rem',
+                const radius = '14rem',
                     rotation = '90deg'
                 const handNode = $('#hand-template')
                     .contents()

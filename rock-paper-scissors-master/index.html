@@ -58,25 +58,17 @@
         <script src="./index.js" type="module" defer></script>
     </head>
     <body class="bg-main h-screen w-screen flex flex-col items-center p-8 text-white">
-        <section class="outline select-none outline-2 rounded-xl outline-header p-6 flex justify-between min-w-[32rem]">
-            <!-- <h1 class="w-min text-white leading-none font-extrabold text-2xl">ROCK PAPER SCISSORS</h1> -->
-            <img src="./images/logo.svg" />
-            <div class="rounded-lg p-2 bg-white h-full flex flex-col aspect-square items-center">
-                <h3 class="text-score text-sm font-bold tracking-widest uppercase">Score</h3>
-                <span class="text-dark text-6xl font-extrabold">12</span>
-            </div>
-        </section>
-        <section class="relative">
+        <template id="hand-template">
             <div
-                data-gray="true"
-                class="aspect-square group cursor-pointer relative flex items-center justify-center rounded-full data-[gray=false]:bg-paper w-48 data-[gray=false]:text-dark data-[gray=true]:text-slate-500 data-[gray=true]:bg-gray-400 data-[gray=true]:after:hidden after:top-0 after:bg-image-inherit after:brightness-50 after:content-[''] after:rounded-full after:z-[-1] after:w-full after:h-full after:border-full after:absolute after:translate-y-2 after:scale-[.98]"
-                id="hand"
+                data-small="false"
+                data-disabled="false"
+                class="aspect-square top-1/4 absolute transition-all duration-1000 group translate-x-[calc(cos(360deg/--children-length*--child-index+--rotation)*--radius)] translate-y-[calc(sin(360deg/--children-length*--child-index+--rotation)*--radius)] flex items-center justify-center rounded-full w-48 data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400 data-[disabled=true]:after:hidden after:top-0 after:bg-image-inherit after:brightness-50 after:content-[''] after:rounded-full after:z-[-1] after:w-full after:h-full after:border-full after:absolute after:translate-y-2 after:scale-[.98]"
             >
                 <div
-                    class="flex items-center justify-center aspect-square relative rounded-full w-36 border-0 border-neutral-300 group-data-[gray=false]:bg-white group-data-[gray=false]:border-t-4 group-data-[gray=true]:border-t-0 group-data-[gray=true]:bg-slate-200"
+                    class="flex items-center justify-center aspect-square relative rounded-full w-3/4 border-0 border-neutral-300 group-data-[disabled=false]:bg-white group-data-[disabled=false]:border-t-4 group-data-[disabled=true]:border-t-0 group-data-[disabled=true]:bg-slate-200"
                 >
                     <svg
-                        class="group-hover:scale-110 scale-[1.40] duration-300 transition-transform ease-in-out will-change-transform"
+                        class="group-hover:scale-110 scale-[1.40] group-data-[small=true]:scale-[.85] group-data-[disabled=true]:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
                         xmlns="http://www.w3.org/2000/svg"
                         width="49"
                         height="59"
@@ -88,7 +80,15 @@
                     </svg>
                 </div>
             </div>
+        </template>
+        <section class="outline select-none outline-2 rounded-xl outline-header p-6 flex justify-between min-w-[32rem]">
+            <img src="./images/logo.svg" />
+            <div class="rounded-lg p-2 bg-white h-full flex flex-col aspect-square items-center">
+                <h3 class="text-score text-sm font-bold tracking-widest uppercase">Score</h3>
+                <span class="text-dark text-6xl font-extrabold">12</span>
+            </div>
         </section>
+        <section class="relative"></section>
         <footer class="p-6 fixed bottom-0 w-screen">
             <button
                 class="py-2 tracking-widest uppercase px-8 ml-auto block border-white border rounded-lg"
@@ -99,7 +99,7 @@
         </footer>
         <dialog
             open
-            class="flex w-72 inset-0 fixed [&:not([open])]:z-[-1] [&[open]]:opacity-1 [&:not([open])]:opacity-0 transition-opacity duration-300 flex-col gap-6 rounded-lg p-6 backdrop:cursor-pointer"
+            class="flex w-96 h-96 inset-0 fixed [&:not([open])]:z-[-1] [&[open]]:opacity-1 [&:not([open])]:opacity-0 transition-opacity duration-300 flex-col gap-6 rounded-lg p-6 backdrop:cursor-pointer"
         >
             <header class="flex justify-between">
                 <h2 class="text-2xl text-dark font-bold uppercase">Rules</h2>
@@ -116,7 +116,31 @@
                     </button>
                 </form>
             </header>
-            <section class="relative"></section>
+            <section class="relative flex items-center justify-center grow">
+                <script>
+                    const radius = '100px',
+                        rotation = '(-30deg)'
+                    const handNode = $('#hand-template')
+                        .contents()
+                        .filter((idx, el) => el.nodeType !== Node.TEXT_NODE)
+                    const elements = ['paper', 'rock', 'scissors']
+                    elements.forEach((elName, idx) => {
+                        const el = handNode.clone(true, true)
+                        el.attr({
+                            id: elName,
+                            'data-small': true,
+                            'data-disabled': true,
+                        })
+                        el.addClass(`data-[disabled=false]:bg-${elName}`)
+                        el[0].className = el[0].className
+                            .replaceAll('--rotation', rotation)
+                            .replaceAll('--radius', radius)
+                            .replaceAll('--children-length', elements.length)
+                            .replaceAll('--child-index', idx)
+                        document.writeln(el[0].outerHTML)
+                    })
+                </script>
+            </section>
         </dialog>
     </body>
 </html>

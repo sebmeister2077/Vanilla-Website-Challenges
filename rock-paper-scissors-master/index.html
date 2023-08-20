@@ -51,6 +51,19 @@
                             header: 'hsl(217, 16%, 45%)',
                             dark: 'hsl(229, 25%, 31%)',
                         },
+                        animation: {
+                            test: 'transition-z-index 0s .4s linear forwards',
+                        },
+                        keyframes: {
+                            'transition-z-index': {
+                                '0%, 99%': {
+                                    'z-index': 50,
+                                },
+                                '100%': {
+                                    'z-index': -1,
+                                },
+                            },
+                        },
                     },
                 },
             }
@@ -158,7 +171,7 @@
             </button>
         </footer>
         <dialog
-            class="flex w-96 h-96 inset-0 fixed [&:not([open])]:z-[-1] [&[open]]:opacity-1 [&:not([open])]:opacity-0 transition-opacity duration-300 flex-col gap-6 rounded-lg p-6 backdrop:cursor-pointer"
+            class="flex w-96 h-96 inset-0 fixed [&:not([open])]:animate-test [&[open]]:z-50 [&[open]]:opacity-1 [&:not([open])]:opacity-0 transition-opacity duration-400 flex-col gap-6 rounded-lg p-6 backdrop:cursor-pointer"
         >
             <header class="flex justify-between">
                 <h2 class="text-2xl text-dark font-bold uppercase">Rules</h2>

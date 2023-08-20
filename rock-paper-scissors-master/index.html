@@ -77,7 +77,7 @@
                 data-type=""
                 data-small="false"
                 data-disabled="false"
-                class="aspect-square outline-0 top-1/4 absolute transition-all duration-1000 group flex items-center justify-center rounded-full w-48 data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
+                class="aspect-square outline-0 top-1/4 absolute transition-all delay-1000 duration-1000 group flex items-center justify-center rounded-full w-48 data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
             >
                 <div
                     class="group-data-[disabled=true]:hidden top-2 bg-image-inherit brightness-50 rounded-full z-[-1] w-full h-full border-full absolute scale-[.98]"
@@ -127,7 +127,7 @@
                 <span class="text-dark text-6xl font-extrabold">12</span>
             </div>
         </section>
-        <section class="relative flex items-center justify-center grow">
+        <section id="home-section" class="relative flex items-center justify-center grow">
             <script>
                 const radius = '12rem',
                     rotation = '90deg'
@@ -153,13 +153,11 @@
                     })
                     el.addClass(`data-[disabled=false]:bg-${elName}`)
                     requestAnimationFrame(() => {
-                        setTimeout(() => {
-                            const domEl = $(`#${elName}`)
-                            domEl.addClass(translateClass.replaceAll('--child-index', idx))
-                        }, 1000)
+                        el.addClass(translateClass.replaceAll('--child-index', idx))
                     })
-                    document.writeln(el[0].outerHTML)
+                    $('#home-section').append(el)
                 })
+                console.log('If you wanna know how the circles should look disable the transform on them')
             </script>
         </section>
         <footer class="p-6 fixed bottom-0 w-screen">

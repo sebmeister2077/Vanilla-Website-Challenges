@@ -59,20 +59,21 @@
     </head>
     <body class="bg-main h-screen w-screen flex flex-col items-center p-8 text-white">
         <template id="hand-template">
-            <div
+            <button
+                aria-label=""
                 data-type=""
                 data-small="false"
                 data-disabled="false"
-                class="aspect-square top-1/4 absolute transition-all duration-1000 group flex items-center justify-center rounded-full w-48 data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
+                class="aspect-square outline-0 top-1/4 absolute transition-all duration-1000 group flex items-center justify-center rounded-full w-48 data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
             >
                 <div
-                    class="data-[disabled=true]:hidden top-2 bg-image-inherit brightness-50 content-[''] rounded-full z-[-1] w-full h-full border-full absolute scale-[.98]"
+                    class="group-data-[disabled=true]:hidden top-2 bg-image-inherit brightness-50 rounded-full z-[-1] w-full h-full border-full absolute scale-[.98]"
                 ></div>
                 <div
                     class="flex items-center justify-center aspect-square relative rounded-full w-3/4 border-0 border-neutral-300 group-data-[disabled=false]:bg-white group-data-[disabled=false]:border-t-4 group-data-[disabled=true]:border-t-0 group-data-[disabled=true]:bg-slate-200"
                 >
                     <svg
-                        class="hidden group-data-[type=paper]:block group-hover:scale-110 scale-[1.40] group-data-[small=true]:scale-[.85] group-data-[disabled=true]:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
+                        class="hidden group-data-[type=paper]:block group-hover:scale-125 group-focus:scale-125 group-active:scale-110 scale-[1.40] group-data-[small=true]:scale-[.85] group-data-[disabled=true]:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
                         xmlns="http://www.w3.org/2000/svg"
                         width="49"
                         height="59"
@@ -83,7 +84,7 @@
                         />
                     </svg>
                     <svg
-                        class="hidden group-data-[type=rock]:block group-hover:scale-110 scale-[1.40] group-data-[small=true]:scale-[.85] group-data-[disabled=true]:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
+                        class="hidden group-data-[type=rock]:block group-hover:scale-125 group-focus:scale-125 group-active:scale-110 scale-[1.40] group-data-[small=true]:scale-[.85] group-data-[disabled=true]:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
                         width="48"
                         height="48"
                     >
@@ -93,7 +94,7 @@
                         />
                     </svg>
                     <svg
-                        class="hidden group-data-[type=scissors]:block group-hover:scale-110 scale-[1.40] group-data-[small=true]:scale-[.85] group-data-[disabled=true]:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
+                        class="hidden group-data-[type=scissors]:block group-hover:scale-125 group-focus:scale-125 group-active:scale-110 scale-[1.40] group-data-[small=true]:scale-[.85] group-data-[disabled=true]:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
                         xmlns="http://www.w3.org/2000/svg"
                         width="51"
                         height="58"
@@ -104,10 +105,10 @@
                         />
                     </svg>
                 </div>
-            </div>
+            </button>
         </template>
         <section class="outline select-none outline-2 rounded-xl outline-header p-6 flex justify-between min-w-[32rem]">
-            <img src="./images/logo.svg" />
+            <img src="./images/logo.svg" alt="Rock paper scissors" />
             <div class="rounded-lg p-2 bg-white h-full flex flex-col aspect-square items-center">
                 <h3 class="text-score text-sm font-bold tracking-widest uppercase">Score</h3>
                 <span class="text-dark text-6xl font-extrabold">12</span>
@@ -116,14 +117,14 @@
         <section class="relative flex items-center justify-center grow">
             <script>
                 const radius = '12rem',
-                    rotation = '(-30deg)'
+                    rotation = '90deg'
                 const handNode = $('#hand-template')
                     .contents()
                     .filter((idx, el) => el.nodeType !== Node.TEXT_NODE)
                 const arrowNode = $('#rules-arrow')
                     .contents()
                     .filter((idx, el) => el.nodeType !== Node.TEXT_NODE)
-                const elementNames = ['paper', 'rock', 'scissors']
+                const elementNames = ['rock', 'paper', 'scissors']
                 const translateTemplate =
                     'translate-x-[calc(cos(360deg/--children-length*--child-index+--rotation)*--radius)] translate-y-[calc(sin(360deg/--children-length*--child-index+--rotation)*--radius)]'
                 const translateClass = translateTemplate
@@ -135,11 +136,11 @@
                     el.attr({
                         id: elName,
                         'data-type': elName,
+                        'aria-label': elName,
                     })
                     el.addClass(`data-[disabled=false]:bg-${elName}`)
                     requestAnimationFrame(() => {
                         setTimeout(() => {
-                            console.log(new Date())
                             const domEl = $(`#${elName}`)
                             domEl.addClass(translateClass.replaceAll('--child-index', idx))
                         }, 1000)

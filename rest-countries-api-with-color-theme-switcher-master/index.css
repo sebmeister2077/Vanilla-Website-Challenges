@@ -48,6 +48,12 @@ body {
     flex-direction: column;
     font-family: 'Nunito Sans', sans-serif;
 }
+@media only screen and (width<=610px) {
+    body {
+        height: 100dvh;
+    }
+}
+
 * {
     box-sizing: border-box;
     margin: 0px;

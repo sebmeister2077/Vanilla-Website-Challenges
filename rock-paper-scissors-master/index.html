@@ -32,6 +32,16 @@
         />
         <!-- Bulma is ok if you make mini projects where you dont have a design guide -->
         <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" /> -->
+        <style>
+            @layer base {
+                :root {
+                    --red: hsl(349, 71%, 52%);
+                    --blue: hsl(230, 89%, 62%);
+                    --yellow: hsl(39, 89%, 49%);
+                }
+            }
+        </style>
+
         <script>
             tailwind.config = {
                 theme: {
@@ -58,12 +68,22 @@
                             dark: 'hsl(229, 25%, 31%)',
                         },
                         animation: {
-                            test: 'transition-z-index 0s .4s linear forwards',
+                            'dialog-close': 'transition-z-index 0s .4s linear forwards',
                         },
                         keyframes: {
                             dash: {
                                 to: {
                                     'stroke-dashoffset': 0,
+                                },
+                            },
+                            'transfer-dash': {
+                                '0%': {
+                                    stroke: 'var(--dash-from-color)',
+                                    'stroke-dashoffset': 95,
+                                },
+                                '20%, 100%': {
+                                    stroke: 'var(--dash-to-color)',
+                                    'stroke-dashoffset': 435,
                                 },
                             },
                             'transition-z-index': {
@@ -140,9 +160,9 @@
             </div>
         </section>
         <section id="home-section" class="relative flex items-center justify-center grow">
-            <svg width="313" height="278" class="scale-150" xmlns="http://www.w3.org/2000/svg">
+            <svg width="313" height="278" class="scale-150 absolute" xmlns="http://www.w3.org/2000/svg">
                 <path
-                    stroke="#000"
+                    stroke="black"
                     class="[stroke-dasharray:1800] [stroke-dashoffset:-1800] animate-[dash_2s_1s_ease-in-out_forwards]"
                     stroke-width="15"
                     fill="none"
@@ -150,6 +170,32 @@
                     d="M156.5 262 300 8H13z"
                 />
             </svg>
+
+            <svg
+                width="313"
+                height="278"
+                class="absolute scale-150 [--dash-from-color:var(--red)] [--dash-to-color:var(--blue)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_5s_ease-in-out_infinite]"
+                viewBox="0 0 313 278"
+            >
+                <path d="M13,8L156.5,262" opacity="0.2" fill="none" stroke-width="15" />
+            </svg>
+            <svg
+                width="313"
+                height="278"
+                class="absolute scale-150 [--dash-from-color:var(--blue)] [--dash-to-color:var(--yellow)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_10s_ease-in-out_infinite]"
+                viewBox="0 0 313 278"
+            >
+                <path d="M300,8L13,8" opacity="0.2" fill="none" stroke-width="15" />
+            </svg>
+            <svg
+                width="313"
+                height="278"
+                class="absolute scale-150 [--dash-from-color:var(--yellow)] [--dash-to-color:var(--red)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_15s_ease-in-out_infinite]"
+                viewBox="0 0 313 278"
+            >
+                <path d="M156.5,262L300,8" opacity="0.2" fill="none" stroke-width="15" />
+            </svg>
+
             <script>
                 const radius = '14rem',
                     rotation = '90deg'
@@ -191,15 +237,14 @@
             </button>
         </footer>
         <dialog
-            class="flex w-96 h-96 inset-0 fixed backdrop:bg-black backdrop:opacity-40 transition-opacity duration-500 drop-shadow-md [&:not([open])]:animate-test [&[open]]:z-50 [&[open]]:opacity-1 [&:not([open])]:opacity-0 transition-opacity duration-400 flex-col gap-6 rounded-lg p-6 backdrop:cursor-pointer"
+            class="flex w-96 h-96 inset-0 fixed backdrop:bg-black backdrop:opacity-40 transition-opacity duration-500 drop-shadow-md [&:not([open])]:animate-close [&[open]]:z-50 [&[open]]:opacity-1 [&:not([open])]:opacity-0 transition-opacity duration-400 flex-col gap-6 rounded-lg p-6 backdrop:cursor-pointer"
         >
             <header class="flex justify-between">
                 <h2 class="text-2xl text-dark font-bold uppercase">Rules</h2>
                 <form method="dialog">
                     <button class="block">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+                        <svg class="fill-dark" width="20" height="20">
                             <path
-                                fill="#3B4262"
                                 fill-rule="evenodd"
                                 d="M16.97 0l2.122 2.121-7.425 7.425 7.425 7.425-2.121 2.12-7.425-7.424-7.425 7.425L0 16.97l7.425-7.425L0 2.121 2.121 0l7.425 7.425L16.971 0z"
                                 opacity=".25"

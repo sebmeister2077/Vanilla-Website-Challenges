@@ -108,7 +108,7 @@
                 data-type=""
                 data-small="false"
                 data-disabled="false"
-                class="aspect-square z-10 [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 top-1/4 absolute translate-x-2 transition-all delay-1000 duration-1000 group/item data-[disabled=true]:bg-none rounded-full w-[var(--size)] data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
+                class="aspect-square z-10 [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 top-1/4 absolute translate-x-2 transition delay-1000 duration-1000 group/item data-[disabled=true]:bg-none rounded-full w-[var(--size)] data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
             >
                 <div
                     class="flex items-center justify-center -translate-y-[calc(var(--scale-percentage)*1px/20)] scale-y-[calc(100/var(--scale-percentage))] scale-x-[calc(var(--scale-percentage)/100)] rounded-full w-full h-full border-full"
@@ -160,7 +160,7 @@
         <main class="relative flex items-center justify-center grow w-full">
             <section
                 id="home-section"
-                class="absolute z-10 transition-opacity duration-500 ease-in-out inset-0 flex items-center justify-center"
+                class="absolute z-10 transition-opacity duration-700 ease-in-out inset-0 flex items-center justify-center"
             >
                 <svg width="313" height="278" class="scale-150 absolute">
                     <path
@@ -197,119 +197,18 @@
                 >
                     <path d="M156.5,262L300,8" opacity="0.2" fill="none" stroke-width="15" />
                 </svg>
-
-                <script>
-                    const radius = '14rem',
-                        rotation = '90deg',
-                        homeSize = '12rem',
-                        gameSize = '16rem'
-                    const elementNames = ['rock', 'paper', 'scissors']
-                    const translateTemplate =
-                        'translate-x-[calc(cos(360deg/--children-length*--child-index+--rotation)*--radius)] translate-y-[calc(sin(360deg/--children-length*--child-index+--rotation)*--radius)]'
-                    const translateClass = translateTemplate
-                        .replaceAll('--rotation', rotation)
-                        .replaceAll('--radius', radius)
-                        .replaceAll('--children-length', elementNames.length)
-                    elementNames.forEach((elName, idx) => {
-                        const el = createItem(elName, homeSize)
-                        requestAnimationFrame(() => {
-                            el.addClass(translateClass.replaceAll('--child-index', idx))
-                        })
-                        el.on('click', function (e) {
-                            const destination = $('#user-selection')
-                            //need center point of this shit
-                            const currentSnapshot = el[0].getBoundingClientRect()
-                            const containerSnapshot = $('#game-section')[0].getBoundingClientRect()
-                            const currentCenterLocation = getCenterOfComparedTo(currentSnapshot, containerSnapshot)
-                            //need center point of this shit too
-                            const destinationShapshot = destination[0].getBoundingClientRect()
-                            const destinationCenterLocation = getCenterOfComparedTo(destinationShapshot, containerSnapshot)
-
-                            const translateX = currentCenterLocation.x - destinationCenterLocation.x,
-                                translateY = currentCenterLocation.y - destinationCenterLocation.y
-
-                            const newEl = el.clone()
-                            newEl
-                                .css({
-                                    transform: `translate(${translateX}px,${translateY}px)`,
-                                })
-                                .off('click')
-                                .removeClass('top-1/4')
-                                .removeClass('absolute')
-                                .removeClass(`[--size:${homeSize}]`)
-                                .addClass(`[--size:${gameSize}]`)
-
-                            destination.replaceWith(newEl)
-                            const additionalSizeIncrease = parseInt(gameSize.replace('rem')) / parseInt(homeSize.replace('rem'))
-                            requestAnimationFrame(() => {
-                                newEl.css({
-                                    transform: `scale(${additionalSizeIncrease})`,
-                                })
-                            })
-                            $('#home-section').removeClass('z-10').addClass('opacity-0')
-                            $('#game-section').addClass('z-10').removeClass('opacity-0')
-                            console.log({ translateX, translateY })
-                            // const { scaleX, scaleY } = getXYScaleFromMatrix(currentSizeIncrease.transform)
-                        })
-                        $('#home-section').append(el)
-                    })
-                    $('#rules-btn').on('click', function (e) {
-                        const dialog = document.getElementsByTagName('dialog')[0]
-                        if (dialog.open) dialog.close()
-                        else dialog.showModal()
-                    })
-                    var score = 0
-                    $('#score').text(score)
-                    function getCenterOfComparedTo(domRect, domRectContainer) {
-                        if (!(domRect instanceof DOMRect) || !(domRectContainer instanceof DOMRect)) return null
-                        return {
-                            x: domRect.x - domRectContainer.x + domRect.width / 2,
-                            y: domRect.y - domRectContainer.y + domRect.height / 2,
-                        }
-                    }
-                    function getXYScaleFromMatrix(matrix) {
-                        if (!matrix.startsWith('matrix')) throw Error('Um this matrix is not a matrix dude')
-                        const scaleX = parseFloat(/(?<=matrix\()[.0-9]+/.exec(matrix)?.[0] ?? '')
-                        const scaleY = parseFloat(/(?<=matrix\([.0-9]+, [.0-9]+, [.0-9]+, )[.0-9]+/.exec(matrix)?.[0] ?? '')
-                        return { scaleX, scaleY }
-                    }
-                    function createItem(elName, isHomeItem) {
-                        const handNode = $('#hand-template')
-                            .contents()
-                            .filter((idx, el) => el.nodeType !== Node.TEXT_NODE)
-                        const el = handNode.clone(true, true)
-                        el.attr({
-                            id: elName,
-                            'data-type': elName,
-                            'aria-label': elName,
-                        })
-                        el.addClass(`data-[disabled=false]:bg-${elName}-dark `)
-                        if (isHomeItem) {
-                            el.addClass(`[--size:${homeSize}]`)
-                        } else {
-                            el.off('click')
-                            el.removeClass('absolute')
-                            el.addClass(`[--size:${gameSize}]`)
-                        }
-                        el.children('div').addClass(`group-data-[disabled=false]/item:bg-${elName}`)
-                        return el
-                    }
-                </script>
             </section>
             <section
                 id="game-section"
-                class="opacity-0 transition-opacity duration-500 ease-in-out absolute inset-0 flex items-center justify-center"
+                class="opacity-0 transition-opacity duration-700 ease-in-out absolute inset-0 flex items-center justify-center gap-16"
             >
                 <article class="flex flex-col items-center justify-evenly h-full">
                     <h2 class="uppercase text-4xl">You Picked</h2>
                     <div class="flex items-center justify-center rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
-                        <!-- <script>
-                            document.writeln(createItem('scissors', false)[0].outerHTML)
-                        </script> -->
                         <div id="user-selection"></div>
                     </div>
                 </article>
-                <div class="flex flex-col gap-6">
+                <div class="flex max-w-0 flex-col gap-6 overflow-hidden whitespace-nowrap">
                     <h1 class="uppercase text-5xl">You Lose</h1>
                     <button class="uppercase rounded-lg bg-neutral-50 text-red-500 py-2 drop-shadow-md">Play Again</button>
                 </div>
@@ -346,5 +245,104 @@
                 <img src="./images/image-rules.svg" />
             </section>
         </dialog>
+        <script>
+            const radius = '14rem',
+                rotation = '90deg',
+                homeSize = '12rem',
+                gameSize = '16rem'
+            const elementNames = ['rock', 'paper', 'scissors']
+            const translateTemplate =
+                'translate-x-[calc(cos(360deg/--children-length*--child-index+--rotation)*--radius)] translate-y-[calc(sin(360deg/--children-length*--child-index+--rotation)*--radius)]'
+            const translateClass = translateTemplate
+                .replaceAll('--rotation', rotation)
+                .replaceAll('--radius', radius)
+                .replaceAll('--children-length', elementNames.length)
+            elementNames.forEach((elName, idx) => {
+                const el = createItem(elName, homeSize)
+                requestAnimationFrame(() => {
+                    el.addClass(translateClass.replaceAll('--child-index', idx))
+                })
+                el.on('click', function (e) {
+                    const destination = $('#user-selection')
+                    //need center point of this shit
+                    const currentSnapshot = el[0].getBoundingClientRect()
+                    const containerSnapshot = $('#game-section')[0].getBoundingClientRect()
+                    const currentCenterLocation = getCenterOfComparedTo(currentSnapshot, containerSnapshot)
+                    //need center point of this shit too
+                    const destinationShapshot = destination[0].getBoundingClientRect()
+                    const destinationCenterLocation = getCenterOfComparedTo(destinationShapshot, containerSnapshot)
+
+                    const translateX = currentCenterLocation.x - destinationCenterLocation.x,
+                        translateY = currentCenterLocation.y - destinationCenterLocation.y
+
+                    const newEl = el.clone()
+                    newEl
+                        .css({
+                            transform: `translate(${translateX}px,${translateY}px)`,
+                        })
+                        .off('click')
+                        .removeClass('delay-1000')
+                        .addClass('delay-500')
+                        .removeClass('top-1/4')
+                        .removeClass('absolute')
+                        .removeClass(`[--size:${homeSize}]`)
+                        .addClass(`[--size:${gameSize}]`)
+
+                    destination.replaceWith(newEl)
+                    const additionalSizeIncrease = parseInt(gameSize.replace('rem')) / parseInt(homeSize.replace('rem'))
+                    requestAnimationFrame(() => {
+                        newEl.css({
+                            transform: `scale(${additionalSizeIncrease})`,
+                        })
+                    })
+                    $('#home-section').removeClass('z-10').addClass('opacity-0')
+                    $('#game-section').addClass('z-10').removeClass('opacity-0')
+                    // console.log({ translateX, translateY })
+                    // const { scaleX, scaleY } = getXYScaleFromMatrix(currentSizeIncrease.transform)
+                })
+                $('#home-section').append(el)
+            })
+            $('#rules-btn').on('click', function (e) {
+                const dialog = document.getElementsByTagName('dialog')[0]
+                if (dialog.open) dialog.close()
+                else dialog.showModal()
+            })
+            var score = 0
+            $('#score').text(score)
+            function getCenterOfComparedTo(domRect, domRectContainer) {
+                if (!(domRect instanceof DOMRect) || !(domRectContainer instanceof DOMRect)) return null
+                return {
+                    x: domRect.x - domRectContainer.x + domRect.width / 2,
+                    y: domRect.y - domRectContainer.y + domRect.height / 2,
+                }
+            }
+            function getXYScaleFromMatrix(matrix) {
+                if (!matrix.startsWith('matrix')) throw Error('Um this matrix is not a matrix dude')
+                const scaleX = parseFloat(/(?<=matrix\()[.0-9]+/.exec(matrix)?.[0] ?? '')
+                const scaleY = parseFloat(/(?<=matrix\([.0-9]+, [.0-9]+, [.0-9]+, )[.0-9]+/.exec(matrix)?.[0] ?? '')
+                return { scaleX, scaleY }
+            }
+            function createItem(elName, isHomeItem) {
+                const handNode = $('#hand-template')
+                    .contents()
+                    .filter((idx, el) => el.nodeType !== Node.TEXT_NODE)
+                const el = handNode.clone(true, true)
+                el.attr({
+                    id: elName,
+                    'data-type': elName,
+                    'aria-label': elName,
+                })
+                el.addClass(`data-[disabled=false]:bg-${elName}-dark `)
+                if (isHomeItem) {
+                    el.addClass(`[--size:${homeSize}]`)
+                } else {
+                    el.off('click')
+                    el.removeClass('absolute')
+                    el.addClass(`[--size:${gameSize}]`)
+                }
+                el.children('div').addClass(`group-data-[disabled=false]/item:bg-${elName}`)
+                return el
+            }
+        </script>
     </body>
 </html>

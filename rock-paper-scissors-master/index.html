@@ -104,20 +104,21 @@
     <body class="bg-main h-screen w-screen flex flex-col items-center p-8 text-white">
         <template id="hand-template">
             <button
+                data-item-button
                 aria-label=""
                 data-type=""
                 data-small="false"
                 data-disabled="false"
-                class="aspect-square [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 top-1/4 absolute translate-x-2 transition-all delay-1000 duration-1000 group data-[disabled=true]:bg-none rounded-full w-48 data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
+                class="aspect-square z-10 [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 top-1/4 absolute translate-x-2 transition-all delay-1000 duration-1000 group/item data-[disabled=true]:bg-none rounded-full w-48 data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
             >
                 <div
                     class="flex items-center justify-center -translate-y-[calc(var(--scale-percentage)*1px/20)] scale-y-[calc(100/var(--scale-percentage))] scale-x-[calc(var(--scale-percentage)/100)] rounded-full w-full h-full border-full"
                 >
                     <div
-                        class="flex items-center justify-center aspect-square relative rounded-full w-3/4 border-0 border-neutral-300 group-data-[disabled=false]:bg-white group-data-[disabled=false]:border-t-4 group-data-[disabled=true]:border-t-0 group-data-[disabled=true]:bg-slate-200"
+                        class="flex items-center justify-center aspect-square relative rounded-full w-3/4 border-0 border-neutral-300 group-data-[disabled=false]/item:bg-white group-data-[disabled=false]/item:border-t-4 group-data-[disabled=true]/item:border-t-0 group-data-[disabled=true]/item:bg-slate-200"
                     >
                         <svg
-                            class="hidden group-data-[type=paper]:block group-hover:scale-125 group-focus:scale-125 group-active:scale-110 scale-[1.40] group-data-[small=true]:scale-[.85] group-data-[disabled=true]:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
+                            class="hidden group-data-[type=paper]/item:block group-hover/item:scale-125 group-focus/item:scale-125 group-active/item:scale-110 scale-[1.40] group-data-[small=true]/item:scale-[.85] group-data-[disabled=true]/item:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
                             xmlns="http://www.w3.org/2000/svg"
                             width="49"
                             height="59"
@@ -128,7 +129,7 @@
                             />
                         </svg>
                         <svg
-                            class="hidden group-data-[type=rock]:block group-hover:scale-125 group-focus:scale-125 group-active:scale-110 scale-[1.40] group-data-[small=true]:scale-[.85] group-data-[disabled=true]:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
+                            class="hidden group-data-[type=rock]/item:block group-hover/item:scale-125 group-focus/item:scale-125 group-active/item:scale-110 scale-[1.40] group-data-[small=true]/item:scale-[.85] group-data-[disabled=true]/item:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
                             width="48"
                             height="48"
                         >
@@ -138,7 +139,7 @@
                             />
                         </svg>
                         <svg
-                            class="hidden group-data-[type=scissors]:block group-hover:scale-125 group-focus:scale-125 group-active:scale-110 scale-[1.40] group-data-[small=true]:scale-[.85] group-data-[disabled=true]:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
+                            class="hidden group-data-[type=scissors]/item:block group-hover/item:scale-125 group-focus/item:scale-125 group-active/item:scale-110 scale-[1.40] group-data-[small=true]/item:scale-[.85] group-data-[disabled=true]/item:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
                             xmlns="http://www.w3.org/2000/svg"
                             width="51"
                             height="58"
@@ -220,7 +221,7 @@
                         'aria-label': elName,
                     })
                     el.addClass(`data-[disabled=false]:bg-${elName}-dark`)
-                    el.children('div').addClass(`group-data-[disabled=false]:bg-${elName}`)
+                    el.children('div').addClass(`group-data-[disabled=false]/item:bg-${elName}`)
                     requestAnimationFrame(() => {
                         el.addClass(translateClass.replaceAll('--child-index', idx))
                     })

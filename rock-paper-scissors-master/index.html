@@ -154,7 +154,7 @@
             <img src="./images/logo.svg" alt="Rock paper scissors" />
             <div class="rounded-lg p-2 bg-white h-full flex flex-col aspect-square items-center">
                 <h3 class="text-score text-sm font-bold tracking-widest uppercase">Score</h3>
-                <span class="text-dark text-6xl font-extrabold" id="score"></span>
+                <span class="text-dark text-6xl font-extrabold" id="score">0</span>
             </div>
         </section>
         <main class="relative flex items-center justify-center grow w-full">
@@ -208,9 +208,12 @@
                         <div id="user-selection"></div>
                     </div>
                 </article>
-                <div class="flex max-w-0 flex-col gap-6 overflow-hidden whitespace-nowrap">
-                    <h1 class="uppercase text-5xl">You Lose</h1>
-                    <button class="uppercase rounded-lg bg-neutral-50 text-red-500 py-2 drop-shadow-md">Play Again</button>
+                <div
+                    id="outcome"
+                    class="flex max-w-0 duration-1000 ease-in-out transition-[max-width] flex-col gap-6 overflow-hidden whitespace-nowrap"
+                >
+                    <h1 id="outcome-text" class="uppercase text-5xl">You Lose</h1>
+                    <button id="play-again" class="uppercase rounded-lg bg-neutral-50 text-red-500 py-2 drop-shadow-md">Play Again</button>
                 </div>
                 <article class="flex flex-col items-center justify-evenly h-full">
                     <h2 class="uppercase text-4xl">The House Picked</h2>
@@ -246,6 +249,11 @@
             </section>
         </dialog>
         <script>
+            const BEATING_RULES = Object.seal({
+                scissors: 'paper',
+                rock: 'scissors',
+                paper: 'rock',
+            })
             const radius = '14rem',
                 rotation = '90deg',
                 homeSize = '12rem',
@@ -264,7 +272,8 @@
                     el.addClass(translateClass.replaceAll('--child-index', idx))
                 })
                 el.on('click', function (e) {
-                    const destination = $('#user-selection')
+                    const destinationId = 'user-selection'
+                    const destination = $(`#${destinationId}`)
                     //need center point of this shit
                     const currentSnapshot = el[0].getBoundingClientRect()
                     const containerSnapshot = $('#game-section')[0].getBoundingClientRect()
@@ -291,6 +300,7 @@
                         .removeClass('delay-1000')
                         .addClass('delay-500')
                         .addClass(`[--size:${gameSize}]`)
+                        .attr({ 'data-initial-id': destinationId })
 
                     requestAnimationFrame(() => {
                         newEl.css({
@@ -300,22 +310,26 @@
 
                     destination.replaceWith(newEl)
 
-                    $('#home-section').removeClass('z-10').addClass('opacity-0')
-                    $('#game-section').addClass('z-10').removeClass('opacity-0')
+                    togglePageView()
 
                     setTimeout(() => {
+                        const destinationId = 'house-selection'
                         houseSelection = elementNames[Date.now() % elementNames.length]
                         const houseEl = createItem(houseSelection)
-                        houseEl.addClass(`[--size:${gameSize}]`).css({
-                            transform: finalTransform,
-                            opacity: 0,
-                        })
+                        houseEl
+                            .addClass(`[--size:${gameSize}]`)
+                            .css({
+                                transform: finalTransform,
+                                opacity: 0,
+                            })
+                            .attr({ 'data-initial-id': destinationId })
                         setTimeout(() => {
                             houseEl.css({
                                 opacity: 1,
                             })
                         })
-                        $('#house-selection').replaceWith(houseEl)
+                        setTimeout(showResult, 1000)
+                        $(`#${destinationId}`).replaceWith(houseEl)
                     }, 2000)
                     // console.log({ translateX, translateY })
                 })
@@ -326,10 +340,33 @@
                 if (dialog.open) dialog.close()
                 else dialog.showModal()
             })
+            $('#play-again').on('click', function (e) {
+                togglePageView()
+                $('[data-initial-id]').each(function (i, el) {
+                    const prevId = el.getAttribute('data-initial-id')
+                    const initialEl = document.createElement('div')
+                    initialEl.id = prevId
+                    $(el).replaceWith(initialEl)
+                })
+                $('#outcome').removeClass('max-w-[100%]').addClass('max-w-0')
+            })
             var score = 0
             var userSelection = null
             var houseSelection = null
-            $('#score').text(score)
+            function showResult() {
+                let text = 'Draw'
+                if (BEATING_RULES[userSelection] === houseSelection) {
+                    text = 'You Win'
+                    score++
+                }
+                if (BEATING_RULES[houseSelection] === userSelection) {
+                    text = 'You Lose'
+                }
+
+                $('#outcome').addClass('max-w-[100%]').removeClass('max-w-0')
+                $('#outcome-text').text(text)
+                $('#score').text(score)
+            }
             function getCenterOfComparedTo(domRect, domRectContainer) {
                 if (!(domRect instanceof DOMRect) || !(domRectContainer instanceof DOMRect)) return null
                 return {
@@ -357,6 +394,17 @@
                     .children('div')
                     .addClass(`group-data-[disabled=false]/item:bg-${elName}`)
                 return el
+            }
+            function togglePageView() {
+                const home = $('#home-section')
+                const game = $('#game-section')
+                if (home.hasClass('opacity-0')) {
+                    home.addClass('z-10').removeClass('opacity-0')
+                    game.removeClass('z-10').addClass('opacity-0')
+                } else {
+                    game.addClass('z-10').removeClass('opacity-0')
+                    home.removeClass('z-10').addClass('opacity-0')
+                }
             }
         </script>
     </body>

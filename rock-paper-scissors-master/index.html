@@ -108,7 +108,7 @@
                 data-type=""
                 data-small="false"
                 data-disabled="false"
-                class="aspect-square z-10 [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 top-1/4 absolute translate-x-2 transition delay-1000 duration-1000 group/item data-[disabled=true]:bg-none rounded-full w-[var(--size)] data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
+                class="aspect-square z-10 [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 translate-x-2 transition delay-1000 duration-1000 group/item data-[disabled=true]:bg-none rounded-full w-[var(--size)] data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
             >
                 <div
                     class="flex items-center justify-center -translate-y-[calc(var(--scale-percentage)*1px/20)] scale-y-[calc(100/var(--scale-percentage))] scale-x-[calc(var(--scale-percentage)/100)] rounded-full w-full h-full border-full"
@@ -258,7 +258,8 @@
                 .replaceAll('--radius', radius)
                 .replaceAll('--children-length', elementNames.length)
             elementNames.forEach((elName, idx) => {
-                const el = createItem(elName, homeSize)
+                const el = createItem(elName)
+                el.addClass('top-1/4').addClass('absolute').addClass(`[--size:${homeSize}]`)
                 requestAnimationFrame(() => {
                     el.addClass(translateClass.replaceAll('--child-index', idx))
                 })
@@ -275,7 +276,13 @@
                     const translateX = currentCenterLocation.x - destinationCenterLocation.x,
                         translateY = currentCenterLocation.y - destinationCenterLocation.y
 
-                    const newEl = el.clone()
+                    const currentSizeIncrease = window.getComputedStyle(el[0])
+                    const { scaleX, scaleY } = getXYScaleFromMatrix(currentSizeIncrease.transform)
+                    const additionalSizeIncrease = parseInt(gameSize.replace('rem')) / parseInt(homeSize.replace('rem'))
+                    const finalTransform = `scaleX(${scaleX * additionalSizeIncrease}) scaleY(${scaleY * additionalSizeIncrease})`
+
+                    userSelection = el[0].id
+                    const newEl = createItem(userSelection)
                     newEl
                         .css({
                             transform: `translate(${translateX}px,${translateY}px)`,
@@ -283,22 +290,34 @@
                         .off('click')
                         .removeClass('delay-1000')
                         .addClass('delay-500')
-                        .removeClass('top-1/4')
-                        .removeClass('absolute')
-                        .removeClass(`[--size:${homeSize}]`)
                         .addClass(`[--size:${gameSize}]`)
 
-                    destination.replaceWith(newEl)
-                    const additionalSizeIncrease = parseInt(gameSize.replace('rem')) / parseInt(homeSize.replace('rem'))
                     requestAnimationFrame(() => {
                         newEl.css({
-                            transform: `scale(${additionalSizeIncrease})`,
+                            transform: finalTransform,
                         })
                     })
+
+                    destination.replaceWith(newEl)
+
                     $('#home-section').removeClass('z-10').addClass('opacity-0')
                     $('#game-section').addClass('z-10').removeClass('opacity-0')
+
+                    setTimeout(() => {
+                        houseSelection = elementNames[Date.now() % elementNames.length]
+                        const houseEl = createItem(houseSelection)
+                        houseEl.addClass(`[--size:${gameSize}]`).css({
+                            transform: finalTransform,
+                            opacity: 0,
+                        })
+                        setTimeout(() => {
+                            houseEl.css({
+                                opacity: 1,
+                            })
+                        })
+                        $('#house-selection').replaceWith(houseEl)
+                    }, 2000)
                     // console.log({ translateX, translateY })
-                    // const { scaleX, scaleY } = getXYScaleFromMatrix(currentSizeIncrease.transform)
                 })
                 $('#home-section').append(el)
             })
@@ -308,6 +327,8 @@
                 else dialog.showModal()
             })
             var score = 0
+            var userSelection = null
+            var houseSelection = null
             $('#score').text(score)
             function getCenterOfComparedTo(domRect, domRectContainer) {
                 if (!(domRect instanceof DOMRect) || !(domRectContainer instanceof DOMRect)) return null
@@ -322,7 +343,7 @@
                 const scaleY = parseFloat(/(?<=matrix\([.0-9]+, [.0-9]+, [.0-9]+, )[.0-9]+/.exec(matrix)?.[0] ?? '')
                 return { scaleX, scaleY }
             }
-            function createItem(elName, isHomeItem) {
+            function createItem(elName) {
                 const handNode = $('#hand-template')
                     .contents()
                     .filter((idx, el) => el.nodeType !== Node.TEXT_NODE)
@@ -332,15 +353,9 @@
                     'data-type': elName,
                     'aria-label': elName,
                 })
-                el.addClass(`data-[disabled=false]:bg-${elName}-dark `)
-                if (isHomeItem) {
-                    el.addClass(`[--size:${homeSize}]`)
-                } else {
-                    el.off('click')
-                    el.removeClass('absolute')
-                    el.addClass(`[--size:${gameSize}]`)
-                }
-                el.children('div').addClass(`group-data-[disabled=false]/item:bg-${elName}`)
+                    .addClass(`data-[disabled=false]:bg-${elName}-dark`)
+                    .children('div')
+                    .addClass(`group-data-[disabled=false]/item:bg-${elName}`)
                 return el
             }
         </script>

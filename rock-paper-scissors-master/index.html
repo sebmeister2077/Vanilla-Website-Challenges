@@ -19,10 +19,7 @@
         ></script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&display=swap"
-            rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
@@ -53,14 +50,11 @@
                             ['image-inherit']: 'inherit',
                             main: 'radial-gradient(circle at 50% 0%, hsl(214, 47%, 23%), hsl(237, 49%, 15%) 100%)',
                             scissors: 'radial-gradient(circle at 50% 0%, hsl(39, 89%, 49%), hsl(40, 84%, 53%) 100%)',
-                            'scissors-dark':
-                                'radial-gradient(circle at 50% 0%, hsl(39, 89%, 29%), hsl(40, 84%, 33%) 100%)',
+                            'scissors-dark': 'radial-gradient(circle at 50% 0%, hsl(39, 89%, 29%), hsl(40, 84%, 33%) 100%)',
                             paper: 'radial-gradient(circle at 50% 0%, hsl(230, 89%, 62%),hsl(230, 89%, 65%) 100%)',
-                            'paper-dark':
-                                'radial-gradient(circle at 50% 0%, hsl(230, 89%, 40%),hsl(230, 89%, 45%) 100%)',
+                            'paper-dark': 'radial-gradient(circle at 50% 0%, hsl(230, 89%, 40%),hsl(230, 89%, 45%) 100%)',
                             rock: 'radial-gradient(circle at 50% 0%, hsl(349, 71%, 52%),hsl(349, 70%, 56%) 100%)',
-                            'rock-dark':
-                                'radial-gradient(circle at 50% 0%, hsl(349, 71%, 32%),hsl(349, 70%, 38%) 100%)',
+                            'rock-dark': 'radial-gradient(circle at 50% 0%, hsl(349, 71%, 32%),hsl(349, 70%, 38%) 100%)',
                         },
                         colors: {
                             score: 'hsl(229, 64%, 46%)',
@@ -163,122 +157,142 @@
                 <span class="text-dark text-6xl font-extrabold" id="score"></span>
             </div>
         </section>
-        <section id="home-section" style="display: none" class="relative flex items-center justify-center grow">
-            <svg width="313" height="278" class="scale-150 absolute">
-                <path
-                    stroke="black"
-                    class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] [stroke-dasharray:1800] [stroke-dashoffset:-1800] animate-[dash_2s_1s_ease-in-out_forwards]"
-                    stroke-width="15"
-                    fill="none"
-                    opacity=".2"
-                    d="M156.5 262 300 8H13z"
-                />
-            </svg>
+        <main class="relative flex items-center justify-center grow w-full">
+            <section
+                id="home-section"
+                class="absolute z-10 transition-opacity duration-500 ease-in-out inset-0 flex items-center justify-center"
+            >
+                <svg width="313" height="278" class="scale-150 absolute">
+                    <path
+                        stroke="black"
+                        class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] [stroke-dasharray:1800] [stroke-dashoffset:-1800] animate-[dash_2s_1s_ease-in-out_forwards]"
+                        stroke-width="15"
+                        fill="none"
+                        opacity=".2"
+                        d="M156.5 262 300 8H13z"
+                    />
+                </svg>
 
-            <svg
-                width="313"
-                height="278"
-                class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--red)] [--dash-to-color:var(--blue)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_5s_ease-in-out_infinite]"
-                viewBox="0 0 313 278"
-            >
-                <path d="M13,8L156.5,262" opacity="0.2" fill="none" stroke-width="15" />
-            </svg>
-            <svg
-                width="313"
-                height="278"
-                class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--blue)] [--dash-to-color:var(--yellow)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_10s_ease-in-out_infinite]"
-                viewBox="0 0 313 278"
-            >
-                <path d="M300,8L13,8" opacity="0.2" fill="none" stroke-width="15" />
-            </svg>
-            <svg
-                width="313"
-                height="278"
-                class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--yellow)] [--dash-to-color:var(--red)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_15s_ease-in-out_infinite]"
-                viewBox="0 0 313 278"
-            >
-                <path d="M156.5,262L300,8" opacity="0.2" fill="none" stroke-width="15" />
-            </svg>
+                <svg
+                    width="313"
+                    height="278"
+                    class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--red)] [--dash-to-color:var(--blue)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_5s_ease-in-out_infinite]"
+                    viewBox="0 0 313 278"
+                >
+                    <path d="M13,8L156.5,262" opacity="0.2" fill="none" stroke-width="15" />
+                </svg>
+                <svg
+                    width="313"
+                    height="278"
+                    class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--blue)] [--dash-to-color:var(--yellow)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_10s_ease-in-out_infinite]"
+                    viewBox="0 0 313 278"
+                >
+                    <path d="M300,8L13,8" opacity="0.2" fill="none" stroke-width="15" />
+                </svg>
+                <svg
+                    width="313"
+                    height="278"
+                    class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--yellow)] [--dash-to-color:var(--red)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_15s_ease-in-out_infinite]"
+                    viewBox="0 0 313 278"
+                >
+                    <path d="M156.5,262L300,8" opacity="0.2" fill="none" stroke-width="15" />
+                </svg>
 
-            <script>
-                const radius = '14rem',
-                    rotation = '90deg',
-                    homeSize = '12rem',
-                    gameSize = '16rem'
-                const elementNames = ['rock', 'paper', 'scissors']
-                const translateTemplate =
-                    'translate-x-[calc(cos(360deg/--children-length*--child-index+--rotation)*--radius)] translate-y-[calc(sin(360deg/--children-length*--child-index+--rotation)*--radius)]'
-                const translateClass = translateTemplate
-                    .replaceAll('--rotation', rotation)
-                    .replaceAll('--radius', radius)
-                    .replaceAll('--children-length', elementNames.length)
-                elementNames.forEach((elName, idx) => {
-                    const el = createItem(elName, homeSize)
-                    requestAnimationFrame(() => {
-                        el.addClass(translateClass.replaceAll('--child-index', idx))
+                <script>
+                    const radius = '14rem',
+                        rotation = '90deg',
+                        homeSize = '12rem',
+                        gameSize = '16rem'
+                    const elementNames = ['rock', 'paper', 'scissors']
+                    const translateTemplate =
+                        'translate-x-[calc(cos(360deg/--children-length*--child-index+--rotation)*--radius)] translate-y-[calc(sin(360deg/--children-length*--child-index+--rotation)*--radius)]'
+                    const translateClass = translateTemplate
+                        .replaceAll('--rotation', rotation)
+                        .replaceAll('--radius', radius)
+                        .replaceAll('--children-length', elementNames.length)
+                    elementNames.forEach((elName, idx) => {
+                        const el = createItem(elName, homeSize)
+                        requestAnimationFrame(() => {
+                            el.addClass(translateClass.replaceAll('--child-index', idx))
+                        })
+                        el.on('click', function (e) {
+                            const destination = $('#user-selection')
+                            const snapshot = el[0].getBoundingClientRect()
+                            const destinationShapshot = destination[0].getBoundingClientRect()
+                            const currentSizeIncrease = window.getComputedStyle(el[0])
+                            console.log(currentSizeIncrease.transform)
+                            const additionalSizeIncrease = parseInt(gameSize.replace('rem')) / parseInt(homeSize.replace('rem'))
+
+                            getXYScaleFromMatrix(currentSizeIncrease.transform)
+                            console.log(snapshot, destinationShapshot, additionalSizeIncrease)
+
+                            // const translateX =
+                        })
+                        $('#home-section').append(el)
                     })
-                    el.on('click', function (e) {})
-                    $('#home-section').append(el)
-                })
-                $('#rules-btn').on('click', function (e) {
-                    const dialog = document.getElementsByTagName('dialog')[0]
-                    if (dialog.open) dialog.close()
-                    else dialog.showModal()
-                })
-                var score = 0
-                $('#score').text(score)
-                function createItem(elName, isHomeItem) {
-                    const handNode = $('#hand-template')
-                        .contents()
-                        .filter((idx, el) => el.nodeType !== Node.TEXT_NODE)
-                    const el = handNode.clone(true, true)
-                    el.attr({
-                        id: elName,
-                        'data-type': elName,
-                        'aria-label': elName,
+                    $('#rules-btn').on('click', function (e) {
+                        const dialog = document.getElementsByTagName('dialog')[0]
+                        if (dialog.open) dialog.close()
+                        else dialog.showModal()
                     })
-                    el.addClass(`data-[disabled=false]:bg-${elName}-dark `)
-                    if (isHomeItem) {
-                        el.addClass(`[--size:${homeSize}]`)
-                    } else {
-                        el.off('click')
-                        el.removeClass('absolute')
-                        el.addClass(`[--size:${gameSize}]`)
+                    var score = 0
+                    $('#score').text(score)
+                    function getXYScaleFromMatrix(matrix) {
+                        const scaleX = parseFloat(/(?<=matrix\()[.0-9]+/.exec(matrix)?.[0] ?? '')
+                        const scaleY = parseFloat(/(?<=matrix\([.0-9]+, [.0-9]+, [.0-9]+, )[.0-9]+/.exec(matrix)?.[0] ?? '')
+                        return { scaleX, scaleY }
                     }
-                    el.children('div').addClass(`group-data-[disabled=false]/item:bg-${elName}`)
-                    return el
-                }
-            </script>
-        </section>
-        <section id="game-section" class="relative flex items-center justify-center grow gap-48">
-            <article class="flex flex-col items-center justify-evenly h-full">
-                <h2 class="uppercase text-4xl">You Picked</h2>
-                <div class="rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
-                    <script>
-                        document.writeln(createItem('scissors', false)[0].outerHTML)
-                    </script>
-                </div>
-            </article>
-            <div class="flex flex-col gap-6">
-                <h1 class="uppercase text-5xl">You Lose</h1>
-                <button class="uppercase rounded-lg bg-neutral-50 text-red-500 py-2 drop-shadow-md">Play Again</button>
-            </div>
-            <article class="flex flex-col items-center justify-evenly h-full">
-                <h2 class="uppercase text-4xl">The House Picked</h2>
-                <div class="rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
-                    <script>
-                        document.writeln(createItem('rock', false)[0].outerHTML)
-                    </script>
-                </div>
-            </article>
-        </section>
-        <footer class="p-6 fixed bottom-0 w-screen">
-            <button
-                class="py-2 tracking-widest uppercase px-8 ml-auto block border-white border rounded-lg"
-                id="rules-btn"
+                    function createItem(elName, isHomeItem) {
+                        const handNode = $('#hand-template')
+                            .contents()
+                            .filter((idx, el) => el.nodeType !== Node.TEXT_NODE)
+                        const el = handNode.clone(true, true)
+                        el.attr({
+                            id: elName,
+                            'data-type': elName,
+                            'aria-label': elName,
+                        })
+                        el.addClass(`data-[disabled=false]:bg-${elName}-dark `)
+                        if (isHomeItem) {
+                            el.addClass(`[--size:${homeSize}]`)
+                        } else {
+                            el.off('click')
+                            el.removeClass('absolute')
+                            el.addClass(`[--size:${gameSize}]`)
+                        }
+                        el.children('div').addClass(`group-data-[disabled=false]/item:bg-${elName}`)
+                        return el
+                    }
+                </script>
+            </section>
+            <section
+                id="game-section"
+                class="opacity-0 transition-opacity duration-500 ease-in-out absolute inset-0 flex items-center justify-center"
             >
-                Rules
-            </button>
+                <article class="flex flex-col items-center justify-evenly h-full">
+                    <h2 class="uppercase text-4xl">You Picked</h2>
+                    <div class="rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
+                        <!-- <script>
+                            document.writeln(createItem('scissors', false)[0].outerHTML)
+                        </script> -->
+                        <div id="user-selection"></div>
+                    </div>
+                </article>
+                <div class="flex flex-col gap-6">
+                    <h1 class="uppercase text-5xl">You Lose</h1>
+                    <button class="uppercase rounded-lg bg-neutral-50 text-red-500 py-2 drop-shadow-md">Play Again</button>
+                </div>
+                <article class="flex flex-col items-center justify-evenly h-full">
+                    <h2 class="uppercase text-4xl">The House Picked</h2>
+                    <div class="rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
+                        <div id="house-selection"></div>
+                    </div>
+                </article>
+            </section>
+        </main>
+
+        <footer class="p-6 fixed bottom-0 w-screen">
+            <button class="py-2 tracking-widest uppercase px-8 ml-auto block border-white border rounded-lg" id="rules-btn">Rules</button>
         </footer>
         <dialog
             class="flex w-96 h-96 inset-0 fixed backdrop:bg-black backdrop:opacity-40 transition-opacity duration-500 drop-shadow-md [&:not([open])]:animate-dialog-close [&[open]]:z-50 [&[open]]:opacity-1 [&:not([open])]:opacity-0 transition-opacity duration-400 flex-col gap-6 rounded-lg p-6 backdrop:cursor-pointer"

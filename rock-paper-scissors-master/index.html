@@ -105,7 +105,6 @@
                 },
             }
         </script>
-        <script src="./index.js" type="module" defer></script>
     </head>
     <body class="bg-main group/body h-screen w-screen flex flex-col items-center p-8 text-white">
         <template id="hand-template">
@@ -115,7 +114,7 @@
                 data-type=""
                 data-small="false"
                 data-disabled="false"
-                class="aspect-square z-10 [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 top-1/4 absolute translate-x-2 transition-all delay-1000 duration-1000 group/item data-[disabled=true]:bg-none rounded-full w-48 data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
+                class="aspect-square z-10 [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 top-1/4 absolute translate-x-2 transition-all delay-1000 duration-1000 group/item data-[disabled=true]:bg-none rounded-full w-[var(--size)] data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
             >
                 <div
                     class="flex items-center justify-center -translate-y-[calc(var(--scale-percentage)*1px/20)] scale-y-[calc(100/var(--scale-percentage))] scale-x-[calc(var(--scale-percentage)/100)] rounded-full w-full h-full border-full"
@@ -161,11 +160,11 @@
             <img src="./images/logo.svg" alt="Rock paper scissors" />
             <div class="rounded-lg p-2 bg-white h-full flex flex-col aspect-square items-center">
                 <h3 class="text-score text-sm font-bold tracking-widest uppercase">Score</h3>
-                <span class="text-dark text-6xl font-extrabold">12</span>
+                <span class="text-dark text-6xl font-extrabold" id="score"></span>
             </div>
         </section>
-        <section id="home-section" class="relative flex items-center justify-center grow">
-            <svg width="313" height="278" class="scale-150 absolute" xmlns="http://www.w3.org/2000/svg">
+        <section id="home-section" style="display: none" class="relative flex items-center justify-center grow">
+            <svg width="313" height="278" class="scale-150 absolute">
                 <path
                     stroke="black"
                     class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] [stroke-dasharray:1800] [stroke-dashoffset:-1800] animate-[dash_2s_1s_ease-in-out_forwards]"
@@ -203,13 +202,9 @@
 
             <script>
                 const radius = '14rem',
-                    rotation = '90deg'
-                const handNode = $('#hand-template')
-                    .contents()
-                    .filter((idx, el) => el.nodeType !== Node.TEXT_NODE)
-                const arrowNode = $('#rules-arrow')
-                    .contents()
-                    .filter((idx, el) => el.nodeType !== Node.TEXT_NODE)
+                    rotation = '90deg',
+                    homeSize = '12rem',
+                    gameSize = '16rem'
                 const elementNames = ['rock', 'paper', 'scissors']
                 const translateTemplate =
                     'translate-x-[calc(cos(360deg/--children-length*--child-index+--rotation)*--radius)] translate-y-[calc(sin(360deg/--children-length*--child-index+--rotation)*--radius)]'
@@ -218,20 +213,64 @@
                     .replaceAll('--radius', radius)
                     .replaceAll('--children-length', elementNames.length)
                 elementNames.forEach((elName, idx) => {
+                    const el = createItem(elName, homeSize)
+                    requestAnimationFrame(() => {
+                        el.addClass(translateClass.replaceAll('--child-index', idx))
+                    })
+                    el.on('click', function (e) {})
+                    $('#home-section').append(el)
+                })
+                $('#rules-btn').on('click', function (e) {
+                    const dialog = document.getElementsByTagName('dialog')[0]
+                    if (dialog.open) dialog.close()
+                    else dialog.showModal()
+                })
+                var score = 0
+                $('#score').text(score)
+                function createItem(elName, isHomeItem) {
+                    const handNode = $('#hand-template')
+                        .contents()
+                        .filter((idx, el) => el.nodeType !== Node.TEXT_NODE)
                     const el = handNode.clone(true, true)
                     el.attr({
                         id: elName,
                         'data-type': elName,
                         'aria-label': elName,
                     })
-                    el.addClass(`data-[disabled=false]:bg-${elName}-dark`)
+                    el.addClass(`data-[disabled=false]:bg-${elName}-dark `)
+                    if (isHomeItem) {
+                        el.addClass(`[--size:${homeSize}]`)
+                    } else {
+                        el.off('click')
+                        el.removeClass('absolute')
+                        el.addClass(`[--size:${gameSize}]`)
+                    }
                     el.children('div').addClass(`group-data-[disabled=false]/item:bg-${elName}`)
-                    requestAnimationFrame(() => {
-                        el.addClass(translateClass.replaceAll('--child-index', idx))
-                    })
-                    $('#home-section').append(el)
-                })
+                    return el
+                }
             </script>
+        </section>
+        <section id="game-section" class="relative flex items-center justify-center grow gap-48">
+            <article class="flex flex-col items-center justify-evenly h-full">
+                <h2 class="uppercase text-4xl">You Picked</h2>
+                <div class="rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
+                    <script>
+                        document.writeln(createItem('scissors', false)[0].outerHTML)
+                    </script>
+                </div>
+            </article>
+            <div class="flex flex-col gap-6">
+                <h1 class="uppercase text-5xl">You Lose</h1>
+                <button class="uppercase rounded-lg bg-neutral-50 text-red-500 py-2 drop-shadow-md">Play Again</button>
+            </div>
+            <article class="flex flex-col items-center justify-evenly h-full">
+                <h2 class="uppercase text-4xl">The House Picked</h2>
+                <div class="rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
+                    <script>
+                        document.writeln(createItem('rock', false)[0].outerHTML)
+                    </script>
+                </div>
+            </article>
         </section>
         <footer class="p-6 fixed bottom-0 w-screen">
             <button

@@ -217,16 +217,39 @@
                         })
                         el.on('click', function (e) {
                             const destination = $('#user-selection')
-                            const snapshot = el[0].getBoundingClientRect()
+                            //need center point of this shit
+                            const currentSnapshot = el[0].getBoundingClientRect()
+                            const containerSnapshot = $('#game-section')[0].getBoundingClientRect()
+                            const currentCenterLocation = getCenterOfComparedTo(currentSnapshot, containerSnapshot)
+                            //need center point of this shit too
                             const destinationShapshot = destination[0].getBoundingClientRect()
-                            const currentSizeIncrease = window.getComputedStyle(el[0])
-                            console.log(currentSizeIncrease.transform)
+                            const destinationCenterLocation = getCenterOfComparedTo(destinationShapshot, containerSnapshot)
+
+                            const translateX = currentCenterLocation.x - destinationCenterLocation.x,
+                                translateY = currentCenterLocation.y - destinationCenterLocation.y
+
+                            const newEl = el.clone()
+                            newEl
+                                .css({
+                                    transform: `translate(${translateX}px,${translateY}px)`,
+                                })
+                                .off('click')
+                                .removeClass('top-1/4')
+                                .removeClass('absolute')
+                                .removeClass(`[--size:${homeSize}]`)
+                                .addClass(`[--size:${gameSize}]`)
+
+                            destination.replaceWith(newEl)
                             const additionalSizeIncrease = parseInt(gameSize.replace('rem')) / parseInt(homeSize.replace('rem'))
-
-                            getXYScaleFromMatrix(currentSizeIncrease.transform)
-                            console.log(snapshot, destinationShapshot, additionalSizeIncrease)
-
-                            // const translateX =
+                            requestAnimationFrame(() => {
+                                newEl.css({
+                                    transform: `scale(${additionalSizeIncrease})`,
+                                })
+                            })
+                            $('#home-section').removeClass('z-10').addClass('opacity-0')
+                            $('#game-section').addClass('z-10').removeClass('opacity-0')
+                            console.log({ translateX, translateY })
+                            // const { scaleX, scaleY } = getXYScaleFromMatrix(currentSizeIncrease.transform)
                         })
                         $('#home-section').append(el)
                     })
@@ -237,7 +260,15 @@
                     })
                     var score = 0
                     $('#score').text(score)
+                    function getCenterOfComparedTo(domRect, domRectContainer) {
+                        if (!(domRect instanceof DOMRect) || !(domRectContainer instanceof DOMRect)) return null
+                        return {
+                            x: domRect.x - domRectContainer.x + domRect.width / 2,
+                            y: domRect.y - domRectContainer.y + domRect.height / 2,
+                        }
+                    }
                     function getXYScaleFromMatrix(matrix) {
+                        if (!matrix.startsWith('matrix')) throw Error('Um this matrix is not a matrix dude')
                         const scaleX = parseFloat(/(?<=matrix\()[.0-9]+/.exec(matrix)?.[0] ?? '')
                         const scaleY = parseFloat(/(?<=matrix\([.0-9]+, [.0-9]+, [.0-9]+, )[.0-9]+/.exec(matrix)?.[0] ?? '')
                         return { scaleX, scaleY }
@@ -271,7 +302,7 @@
             >
                 <article class="flex flex-col items-center justify-evenly h-full">
                     <h2 class="uppercase text-4xl">You Picked</h2>
-                    <div class="rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
+                    <div class="flex items-center justify-center rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
                         <!-- <script>
                             document.writeln(createItem('scissors', false)[0].outerHTML)
                         </script> -->
@@ -284,7 +315,7 @@
                 </div>
                 <article class="flex flex-col items-center justify-evenly h-full">
                     <h2 class="uppercase text-4xl">The House Picked</h2>
-                    <div class="rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
+                    <div class="flex items-center justify-center rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
                         <div id="house-selection"></div>
                     </div>
                 </article>

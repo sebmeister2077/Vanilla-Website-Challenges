@@ -296,7 +296,7 @@
             $('#play-again').on('click', function (e) {
                 togglePageView()
                 $('[data-initial-id]')
-                    .removeClass('delay-500')
+                    .removeClass('delay-1500')
                     .removeClass('delay-1000')
                     .css('opacity', 0)
                     .each(function (i, el) {
@@ -341,7 +341,7 @@
                         .off('click')
                         .removeClass('opacity-0')
                         .removeClass('delay-1000')
-                        .addClass('delay-500')
+                        .addClass('delay-1500')
                         .addClass(`[--size:${gameSize}]`)
                         .addClass('group-data-[active]/game:opacity-100')
 

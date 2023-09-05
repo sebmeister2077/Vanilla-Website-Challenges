@@ -208,7 +208,7 @@
                 class="group/game transition-opacity duration-700 ease-in-out absolute inset-0 flex items-center justify-center gap-16"
             >
                 <article
-                    class="flex flex-col items-center justify-evenly h-full group-data-[active]/game:opacity-100 opacity-0 delay-1000 duration-300"
+                    class="flex flex-col items-center justify-evenly h-full group-data-[active]/game:opacity-100 opacity-0 delay-1000 transition-opacity duration-300"
                 >
                     <h2 class="uppercase text-4xl select-none">You Picked</h2>
                     <div class="flex items-center justify-center rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
@@ -225,7 +225,7 @@
                     </button>
                 </div>
                 <article
-                    class="flex flex-col items-center justify-evenly h-full group-data-[active]/game:opacity-100 opacity-0 delay-1000 duration-300"
+                    class="flex flex-col items-center justify-evenly h-full group-data-[active]/game:opacity-100 opacity-0 delay-1000 duration-300 transition-opacity"
                 >
                     <h2 class="uppercase text-4xl select-none">The House Picked</h2>
                     <div class="flex items-center justify-center rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
@@ -436,10 +436,7 @@
                 const isHomePage = Boolean(home[0].hasAttribute('data-active'))
                 if (isHomePage) {
                     home.removeClass('z-10').removeAttr('data-active')
-                    game.addClass('z-10')
-                    setTimeout(() => {
-                        game.attr('data-active', '')
-                    }, 500)
+                    game.addClass('z-10').attr('data-active', '')
                 } else {
                     game.removeClass('z-10').removeAttr('data-active')
                     home.addClass('z-10')

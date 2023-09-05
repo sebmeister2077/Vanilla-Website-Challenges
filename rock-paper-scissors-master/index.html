@@ -272,7 +272,29 @@
                 requestAnimationFrame(() => {
                     el.addClass(translateClass.replaceAll('--child-index', idx))
                 })
-                el.on('click', function (e) {
+                el.on('click', elementClickListener(el))
+                $('#home-section').append(el)
+            })
+            $('#rules-btn').on('click', function (e) {
+                const dialog = document.getElementsByTagName('dialog')[0]
+                if (dialog.open) dialog.close()
+                else dialog.showModal()
+            })
+            $('#play-again').on('click', function (e) {
+                togglePageView()
+                $('[data-initial-id]').each(function (i, el) {
+                    const prevId = el.getAttribute('data-initial-id')
+                    const initialEl = document.createElement('div')
+                    initialEl.id = prevId
+                    $(el).replaceWith(initialEl)
+                })
+                $('#outcome').removeClass('max-w-[100%]').addClass('max-w-0')
+            })
+            var score = 0
+            var userSelection = null
+            var houseSelection = null
+            function elementClickListener(el) {
+                return function (e) {
                     const destinationId = 'user-selection'
                     const destination = $(`#${destinationId}`)
                     //need center point of this shit
@@ -333,27 +355,8 @@
                         $(`#${destinationId}`).replaceWith(houseEl)
                     }, 2000)
                     // console.log({ translateX, translateY })
-                })
-                $('#home-section').append(el)
-            })
-            $('#rules-btn').on('click', function (e) {
-                const dialog = document.getElementsByTagName('dialog')[0]
-                if (dialog.open) dialog.close()
-                else dialog.showModal()
-            })
-            $('#play-again').on('click', function (e) {
-                togglePageView()
-                $('[data-initial-id]').each(function (i, el) {
-                    const prevId = el.getAttribute('data-initial-id')
-                    const initialEl = document.createElement('div')
-                    initialEl.id = prevId
-                    $(el).replaceWith(initialEl)
-                })
-                $('#outcome').removeClass('max-w-[100%]').addClass('max-w-0')
-            })
-            var score = 0
-            var userSelection = null
-            var houseSelection = null
+                }
+            }
             function showResult() {
                 let text = 'Draw'
                 let winner = userSelection
@@ -406,12 +409,17 @@
             function togglePageView() {
                 const home = $('#home-section')
                 const game = $('#game-section')
-                if (home.hasClass('opacity-0')) {
-                    home.addClass('z-10').removeClass('opacity-0')
+                const isGamePage = home.hasClass('opacity-0')
+                if (isGamePage) {
                     game.removeClass('z-10').addClass('opacity-0')
+                    setTimeout(() => {
+                        home.addClass('z-10').removeClass('opacity-0')
+                    }, 500)
                 } else {
-                    game.addClass('z-10').removeClass('opacity-0')
                     home.removeClass('z-10').addClass('opacity-0')
+                    setTimeout(() => {
+                        game.addClass('z-10').removeClass('opacity-0')
+                    }, 500)
                 }
             }
         </script>

@@ -46,6 +46,9 @@
                         sans: ['"Barlow Semi Condensed"', 'sans-serif'],
                     },
                     extend: {
+                        transitionDelay: {
+                            1500: '1500ms',
+                        },
                         backgroundImage: {
                             'image-inherit': 'inherit',
                             main: 'radial-gradient(circle at 50% 0%, hsl(214, 47%, 23%), hsl(237, 49%, 15%) 100%)',
@@ -109,7 +112,7 @@
                 data-type=""
                 data-small="false"
                 data-disabled="false"
-                class="aspect-square z-10 [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 translate-x-2 transition delay-1000 duration-1000 group/item data-[disabled=true]:bg-none rounded-full w-[var(--size)] data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
+                class="aspect-square z-10 opacity-0 [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 translate-x-2 transition delay-1000 duration-1000 group/item data-[disabled=true]:bg-none rounded-full w-[var(--size)] data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
             >
                 <div
                     class="flex items-center justify-center -translate-y-[calc(var(--scale-percentage)*1px/20)] scale-y-[calc(100/var(--scale-percentage))] scale-x-[calc(var(--scale-percentage)/100)] rounded-full w-full h-full border-full"
@@ -161,9 +164,10 @@
         <main class="relative flex items-center justify-center grow w-full">
             <section
                 id="home-section"
-                class="absolute z-10 transition-opacity duration-700 ease-in-out inset-0 flex items-center justify-center"
+                data-active
+                class="absolute group/home z-10 transition-opacity duration-700 ease-in-out inset-0 flex items-center justify-center"
             >
-                <svg width="313" height="278" class="scale-150 absolute">
+                <svg width="313" height="278" class="scale-150 absolute group-data-[active]/home:opacity-100 opacity-0 delay-1000">
                     <path
                         stroke="black"
                         class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] [stroke-dasharray:1800] [stroke-dashoffset:-1800] animate-[dash_2s_1s_ease-in-out_forwards]"
@@ -177,7 +181,7 @@
                 <svg
                     width="313"
                     height="278"
-                    class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--red)] [--dash-to-color:var(--blue)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_5s_ease-in-out_infinite]"
+                    class="group-data-[active]/home:opacity-100 opacity-0 group-data-[active]/home:delay-1500 delay-0 group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--red)] [--dash-to-color:var(--blue)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_5s_ease-in-out_infinite]"
                     viewBox="0 0 313 278"
                 >
                     <path d="M13,8L156.5,262" opacity="0.2" fill="none" stroke-width="15" />
@@ -185,7 +189,7 @@
                 <svg
                     width="313"
                     height="278"
-                    class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--blue)] [--dash-to-color:var(--yellow)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_10s_ease-in-out_infinite]"
+                    class="group-data-[active]/home:opacity-100 de opacity-0 group-data-[active]/home:delay-1500 delay-0 group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--blue)] [--dash-to-color:var(--yellow)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_10s_ease-in-out_infinite]"
                     viewBox="0 0 313 278"
                 >
                     <path d="M300,8L13,8" opacity="0.2" fill="none" stroke-width="15" />
@@ -193,7 +197,7 @@
                 <svg
                     width="313"
                     height="278"
-                    class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--yellow)] [--dash-to-color:var(--red)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_15s_ease-in-out_infinite]"
+                    class="group-data-[active]/home:opacity-100 opacity-0 group-data-[active]/home:delay-1500 delay-0 group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] absolute scale-150 [--dash-from-color:var(--yellow)] [--dash-to-color:var(--red)] [stroke-dasharray:150_190] animate-[transfer-dash_15s_15s_ease-in-out_infinite]"
                     viewBox="0 0 313 278"
                 >
                     <path d="M156.5,262L300,8" opacity="0.2" fill="none" stroke-width="15" />
@@ -201,23 +205,29 @@
             </section>
             <section
                 id="game-section"
-                class="opacity-0 transition-opacity duration-700 ease-in-out absolute inset-0 flex items-center justify-center gap-16"
+                class="group/game transition-opacity duration-700 ease-in-out absolute inset-0 flex items-center justify-center gap-16"
             >
-                <article class="flex flex-col items-center justify-evenly h-full">
-                    <h2 class="uppercase text-4xl">You Picked</h2>
+                <article
+                    class="flex flex-col items-center justify-evenly h-full group-data-[active]/game:opacity-100 opacity-0 delay-1000 duration-300"
+                >
+                    <h2 class="uppercase text-4xl select-none">You Picked</h2>
                     <div class="flex items-center justify-center rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
                         <div id="user-selection"></div>
                     </div>
                 </article>
                 <div
                     id="outcome"
-                    class="flex max-w-0 duration-1000 ease-in-out transition-[max-width] flex-col gap-6 overflow-hidden whitespace-nowrap"
+                    class="flex group-data-[active]/game:opacity-100 opacity-0 max-w-0 duration-1000 ease-in-out transition-[max-width] flex-col gap-6 overflow-hidden whitespace-nowrap"
                 >
-                    <h1 id="outcome-text" class="uppercase text-5xl">You Lose</h1>
-                    <button id="play-again" class="uppercase rounded-lg bg-neutral-50 text-red-500 py-2 drop-shadow-md">Play Again</button>
+                    <h1 id="outcome-text" class="uppercase text-5xl select-none">You Lose</h1>
+                    <button id="play-again" class="uppercase rounded-lg bg-neutral-50 text-red-500 py-2 drop-shadow-md select-none">
+                        Play Again
+                    </button>
                 </div>
-                <article class="flex flex-col items-center justify-evenly h-full">
-                    <h2 class="uppercase text-4xl">The House Picked</h2>
+                <article
+                    class="flex flex-col items-center justify-evenly h-full group-data-[active]/game:opacity-100 opacity-0 delay-1000 duration-300"
+                >
+                    <h2 class="uppercase text-4xl select-none">The House Picked</h2>
                     <div class="flex items-center justify-center rounded-full aspect-square w-48 h-48 bg-[hsla(0,0%,0%,0.1)]">
                         <div id="house-selection"></div>
                     </div>
@@ -229,7 +239,7 @@
             <button class="py-2 tracking-widest uppercase px-8 ml-auto block border-white border rounded-lg" id="rules-btn">Rules</button>
         </footer>
         <dialog
-            class="flex w-96 h-96 inset-0 fixed backdrop:bg-black backdrop:opacity-40 transition-opacity duration-500 drop-shadow-md [&:not([open])]:animate-dialog-close [&[open]]:z-50 [&[open]]:opacity-1 [&:not([open])]:opacity-0 transition-opacity duration-400 flex-col gap-6 rounded-lg p-6 backdrop:cursor-pointer"
+            class="flex w-96 h-96 inset-0 fixed backdrop:bg-black backdrop:opacity-40 transition-opacity duration-500 drop-shadow-md [&:not([open])]:animate-dialog-close [&[open]]:z-50 [&[open]]:opacity-100 [&:not([open])]:opacity-0 transition-opacity duration-400 flex-col gap-6 rounded-lg p-6 backdrop:cursor-pointer"
         >
             <header class="flex justify-between">
                 <h2 class="text-2xl text-dark font-bold uppercase">Rules</h2>
@@ -268,7 +278,10 @@
                 .replaceAll('--children-length', elementNames.length)
             elementNames.forEach((elName, idx) => {
                 const el = createItem(elName)
-                el.addClass('top-1/4').addClass('absolute').addClass(`[--size:${homeSize}]`)
+                el.addClass('top-1/4')
+                    .addClass('absolute')
+                    .addClass(`[--size:${homeSize}]`)
+                    .addClass('group-data-[active]/home:opacity-100')
                 requestAnimationFrame(() => {
                     el.addClass(translateClass.replaceAll('--child-index', idx))
                 })
@@ -282,12 +295,18 @@
             })
             $('#play-again').on('click', function (e) {
                 togglePageView()
-                $('[data-initial-id]').each(function (i, el) {
-                    const prevId = el.getAttribute('data-initial-id')
-                    const initialEl = document.createElement('div')
-                    initialEl.id = prevId
-                    $(el).replaceWith(initialEl)
-                })
+                $('[data-initial-id]')
+                    .removeClass('delay-500')
+                    .removeClass('delay-1000')
+                    .css('opacity', 0)
+                    .each(function (i, el) {
+                        const prevId = el.getAttribute('data-initial-id')
+                        const initialEl = document.createElement('div')
+                        initialEl.id = prevId
+                        setTimeout(() => {
+                            $(el).replaceWith(initialEl)
+                        }, 1000)
+                    })
                 $('#outcome').removeClass('max-w-[100%]').addClass('max-w-0')
             })
             var score = 0
@@ -320,9 +339,12 @@
                             transform: `translate(${translateX}px,${translateY}px)`,
                         })
                         .off('click')
+                        .removeClass('opacity-0')
                         .removeClass('delay-1000')
                         .addClass('delay-500')
                         .addClass(`[--size:${gameSize}]`)
+                        .addClass('group-data-[active]/game:opacity-100')
+
                         .attr({ 'data-initial-id': destinationId, 'data-selection-id': userSelection, id: '' })
 
                     requestAnimationFrame(() => {
@@ -335,7 +357,7 @@
 
                     togglePageView()
 
-                    setTimeout(() => createHouseSelection(finalTransform), 2000)
+                    setTimeout(() => createHouseSelection(finalTransform), 3000)
                     // console.log({ translateX, translateY })
                 }
             }
@@ -344,6 +366,7 @@
                 houseSelection = elementNames[Date.now() % elementNames.length]
                 const houseEl = createItem(houseSelection)
                 houseEl
+                    .addClass('group-data-[active]/game:opacity-100')
                     .addClass(`[--size:${gameSize}]`)
                     .css({
                         transform: finalTransform,
@@ -410,16 +433,18 @@
             function togglePageView() {
                 const home = $('#home-section')
                 const game = $('#game-section')
-                const isGamePage = home.hasClass('opacity-0')
-                if (isGamePage) {
-                    game.removeClass('z-10').addClass('opacity-0')
+                const isHomePage = Boolean(home[0].hasAttribute('data-active'))
+                if (isHomePage) {
+                    home.removeClass('z-10').removeAttr('data-active')
+                    game.addClass('z-10')
                     setTimeout(() => {
-                        home.addClass('z-10').removeClass('opacity-0')
+                        game.attr('data-active', '')
                     }, 500)
                 } else {
-                    home.removeClass('z-10').addClass('opacity-0')
+                    game.removeClass('z-10').removeAttr('data-active')
+                    home.addClass('z-10')
                     setTimeout(() => {
-                        game.addClass('z-10').removeClass('opacity-0')
+                        home.attr('data-active', '')
                     }, 500)
                 }
             }

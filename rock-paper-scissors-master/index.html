@@ -47,8 +47,9 @@
                     },
                     extend: {
                         backgroundImage: {
-                            ['image-inherit']: 'inherit',
+                            'image-inherit': 'inherit',
                             main: 'radial-gradient(circle at 50% 0%, hsl(214, 47%, 23%), hsl(237, 49%, 15%) 100%)',
+                            'winner-light': 'radial-gradient(circle at 50%, hsla(0,0%,87%,0.4) 0%, hsla(0,0%,24%,0.1) 57%)',
                             scissors: 'radial-gradient(circle at 50% 0%, hsl(39, 89%, 49%), hsl(40, 84%, 53%) 100%)',
                             'scissors-dark': 'radial-gradient(circle at 50% 0%, hsl(39, 89%, 29%), hsl(40, 84%, 33%) 100%)',
                             paper: 'radial-gradient(circle at 50% 0%, hsl(230, 89%, 62%),hsl(230, 89%, 65%) 100%)',
@@ -300,7 +301,7 @@
                         .removeClass('delay-1000')
                         .addClass('delay-500')
                         .addClass(`[--size:${gameSize}]`)
-                        .attr({ 'data-initial-id': destinationId })
+                        .attr({ 'data-initial-id': destinationId, 'data-selection-id': userSelection, id: '' })
 
                     requestAnimationFrame(() => {
                         newEl.css({
@@ -322,7 +323,7 @@
                                 transform: finalTransform,
                                 opacity: 0,
                             })
-                            .attr({ 'data-initial-id': destinationId })
+                            .attr({ 'data-initial-id': destinationId, 'data-selection-id': houseSelection, id: '' })
                         setTimeout(() => {
                             houseEl.css({
                                 opacity: 1,
@@ -355,17 +356,24 @@
             var houseSelection = null
             function showResult() {
                 let text = 'Draw'
+                let winner = userSelection
                 if (BEATING_RULES[userSelection] === houseSelection) {
                     text = 'You Win'
                     score++
+                    winner = userSelection
                 }
                 if (BEATING_RULES[houseSelection] === userSelection) {
                     text = 'You Lose'
+                    winner = houseSelection
                 }
 
                 $('#outcome').addClass('max-w-[100%]').removeClass('max-w-0')
                 $('#outcome-text').text(text)
                 $('#score').text(score)
+                // if (!winner) return
+                // const winnerBackgroundLight =
+                //     "after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:rounded-full after:w-full after:h-full after:bg-winner-light after:z-[-1] after:-translate-x-1/2 after:-translate-y-1/2 after:scale-[2.5]"
+                // $(`[data-selection-id=${winner}][data-initial-id]`).addClass('relative').addClass(winnerBackgroundLight)
             }
             function getCenterOfComparedTo(domRect, domRectContainer) {
                 if (!(domRect instanceof DOMRect) || !(domRectContainer instanceof DOMRect)) return null

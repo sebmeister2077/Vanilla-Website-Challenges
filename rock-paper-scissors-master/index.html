@@ -314,8 +314,8 @@
                     const finalTransform = `scaleX(${scaleX * additionalSizeIncrease}) scaleY(${scaleY * additionalSizeIncrease})`
 
                     userSelection = el[0].id
-                    const newEl = createItem(userSelection)
-                    newEl
+                    const userSelectionEl = createItem(userSelection)
+                    userSelectionEl
                         .css({
                             transform: `translate(${translateX}px,${translateY}px)`,
                         })
@@ -326,36 +326,37 @@
                         .attr({ 'data-initial-id': destinationId, 'data-selection-id': userSelection, id: '' })
 
                     requestAnimationFrame(() => {
-                        newEl.css({
+                        userSelectionEl.css({
                             transform: finalTransform,
                         })
                     })
 
-                    destination.replaceWith(newEl)
+                    destination.replaceWith(userSelectionEl)
 
                     togglePageView()
 
-                    setTimeout(() => {
-                        const destinationId = 'house-selection'
-                        houseSelection = elementNames[Date.now() % elementNames.length]
-                        const houseEl = createItem(houseSelection)
-                        houseEl
-                            .addClass(`[--size:${gameSize}]`)
-                            .css({
-                                transform: finalTransform,
-                                opacity: 0,
-                            })
-                            .attr({ 'data-initial-id': destinationId, 'data-selection-id': houseSelection, id: '' })
-                        setTimeout(() => {
-                            houseEl.css({
-                                opacity: 1,
-                            })
-                        })
-                        setTimeout(showResult, 1000)
-                        $(`#${destinationId}`).replaceWith(houseEl)
-                    }, 2000)
+                    setTimeout(() => createHouseSelection(finalTransform), 2000)
                     // console.log({ translateX, translateY })
                 }
+            }
+            function createHouseSelection(finalTransform) {
+                const destinationId = 'house-selection'
+                houseSelection = elementNames[Date.now() % elementNames.length]
+                const houseEl = createItem(houseSelection)
+                houseEl
+                    .addClass(`[--size:${gameSize}]`)
+                    .css({
+                        transform: finalTransform,
+                        opacity: 0,
+                    })
+                    .attr({ 'data-initial-id': destinationId, 'data-selection-id': houseSelection, id: '' })
+                setTimeout(() => {
+                    houseEl.css({
+                        opacity: 1,
+                    })
+                })
+                setTimeout(showResult, 1000)
+                $(`#${destinationId}`).replaceWith(houseEl)
             }
             function showResult() {
                 let text = 'Draw'

@@ -25,30 +25,6 @@
             referrerpolicy="no-referrer"
         ></script>
         <style>
-            @keyframes toast-popup {
-                0% {
-                    transform: translateY(-100%);
-                }
-                15% {
-                    transform: translateY(20px);
-                }
-                85% {
-                    transform: translateY(20px);
-                }
-                100% {
-                    transform: translateY(-100%);
-                }
-            }
-            .construction-popup {
-                background-color: rgb(250 202 21);
-                padding: 12px 16px;
-                border-radius: 12px;
-                position: fixed;
-                top: 0px;
-                transform: translateY(-100%);
-                animation: toast-popup 6s ease-in-out 1s 1;
-            }
-
             body {
                 margin: 0;
                 height: 100vh;
@@ -101,7 +77,6 @@
     </head>
 
     <body class="bg-neutral-50 font-sans">
-        <header class="construction-popup">This page is under construction</header>
         <nav>
             <ul>
                 <li class="flex items-center gap-2">
@@ -188,6 +163,9 @@
             </ul>
         </nav>
         <script>
+            setTimeout(() => {
+                toastr.warning('This page is under construction')
+            }, 1600)
             const dialog = $('#ip-address-tracker-popover')[0]
             $('#ip-address-tracker-button').on('click', function () {
                 if (!(dialog instanceof HTMLDialogElement)) return

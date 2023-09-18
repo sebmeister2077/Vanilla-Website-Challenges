@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head style="display: block">
+    <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,10 +20,7 @@
             crossorigin="anonymous"
         ></script>
         <script src="https://cdn.tailwindcss.com"></script>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"
-            referrerpolicy="no-referrer"
-        ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js" referrerpolicy="no-referrer"></script>
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
             integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
@@ -44,7 +41,7 @@
         />
 
         <link rel="stylesheet" href="https://loading.io/assets/css-spinner/index.css?v=599062478" />
-        <title>Loading image</title>
+        <title>Preview image loader</title>
         <script>
             tailwind.config = {
                 theme: {
@@ -54,6 +51,10 @@
                 },
             }
             const IS_LOCAL = window.location.hostname === '127.0.0.1'
+            toastr.options = {
+                newestOnTop: true,
+                progressBar: true,
+            }
         </script>
     </head>
     <body class="bg-slate-950 text-stone-300 flex w-screen h-screen p-8 flex-col">
@@ -129,20 +130,31 @@
                     id="img-container"
                     class="w-[700px] h-[700px] bg-no-repeat animate-pulse bg-[url('https://lvvyesdqlcwpoeismoxf.supabase.co/storage/v1/object/public/static/initial_thumb.jpg')] relative bg-cover bg-center rounded-xl overflow-hidden"
                 >
-                    <div
-                        id="spinner"
-                        class="duration-300 opacity-0 inset-1/2 -translate-x-1/2 -translate-y-1/2 absolute lds-ellipsis"
-                    >
+                    <div id="spinner" class="duration-300 opacity-0 inset-1/2 -translate-x-1/2 -translate-y-1/2 absolute lds-ellipsis">
                         <div></div>
                         <div></div>
                         <div></div>
                         <div></div>
                     </div>
+                    <script>
+                        function supabaseIsDown() {
+                            const issuesUrl = new URL('https://github.com/sebmeister2077/Vanilla-Website-Challenges/issues/new')
+                            issuesUrl.searchParams.append('labels', 'help wanted')
+                            issuesUrl.searchParams.append('title', `Supabase is down for '${document.title}'`)
+                            toastr.error(
+                                /*html*/ `
+                            The supabase project seems to be down. Contact the developer or <a href="${issuesUrl}" target="_blank" class="underline text-sky-300">create an issue</a>
+                            `,
+                                'Hosting platform is down',
+                            )
+                        }
+                    </script>
                     <img
                         loading="lazy"
                         id="output"
                         src="https://lvvyesdqlcwpoeismoxf.supabase.co/storage/v1/object/public/static/initial.jpg"
                         class="opacity-0 duration-1000 w-full h-full object-cover object-center"
+                        onerror="supabaseIsDown()"
                     />
                 </div>
             </section>
@@ -211,9 +223,7 @@
                 console.log(data)
                 console.dir(error)
             })
-            toastr.options = {
-                newestOnTop: true,
-            }
+
             const BUCKET_NAME = 'images'
             const bucket = _supabase.storage.from(BUCKET_NAME)
             let userId = localStorage.getItem(UNIQUE_USER_ID_LOCATION)
@@ -301,10 +311,7 @@
 
             $(window).on('beforeunload', function (e) {
                 toastr.warning('Removing images from storage.')
-                localStorage.setItem(
-                    GLASS_POSITION_LOCATION,
-                    JSON.stringify({ top: magGlass.css('top'), left: magGlass.css('left') }),
-                )
+                localStorage.setItem(GLASS_POSITION_LOCATION, JSON.stringify({ top: magGlass.css('top'), left: magGlass.css('left') }))
                 if (filePath || thumbPath) {
                     bucket.remove([filePath, thumbPath])
                     for (let index = 0; index < 999999; index++) {}

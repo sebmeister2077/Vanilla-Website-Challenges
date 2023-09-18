@@ -363,6 +363,7 @@
 
                         .attr({ 'data-initial-id': destinationId, 'data-selection-id': userSelection, id: '' })
 
+                    runAnimationForCreatedElIfNeeded(userSelectionEl, 2300)
                     requestAnimationFrame(() => {
                         userSelectionEl.css({
                             transform: finalTransform,
@@ -381,6 +382,8 @@
                 const destinationId = 'house-selection'
                 houseSelection = elementNames[Date.now() % elementNames.length]
                 const houseEl = createItem(houseSelection)
+
+                runAnimationForCreatedElIfNeeded(houseEl, 1800)
                 houseEl
                     .addClass('group-data-[active]/game:opacity-100')
                     .addClass(`[--size:${gameSize}]`)
@@ -467,6 +470,7 @@
                     .addClass(`data-[disabled=false]:bg-${elName}-dark`)
                     .children('div')
                     .addClass(`group-data-[disabled=false]/item:bg-${elName}`)
+
                 return el
             }
             function togglePageView() {
@@ -496,35 +500,43 @@
                 if (min < 0 || max > Number.MAX_SAFE_INTEGER) throw new Error('U dumbass')
                 return min + ((((Math.random() * Date.now()) / 100000) % max) - min)
             }
-            runEasterEgg()
-            function runEasterEgg() {
+            function runAnimationForCreatedElIfNeeded(el, timeout) {
+                if (el.children(youknowwhatselector).hasClass(youknowwhatclass))
+                    setTimeout(() => {
+                        runSpongeAnimation(el.children(youknowwhatselector)[0])
+                    }, timeout)
+            }
+            function prepareEasterEgg() {
                 const easterEggTarget = { egg: null }
                 window.enable = new Proxy(easterEggTarget, {
                     get(target, property, newValue, receiver) {
-                        console.error(property)
+                        console.log('Easter egg activated!')
+                        setTimeout(() => {
+                            $(youknowwhatselector).each((i, element) => {
+                                runSpongeAnimation(element)
+                            })
+                            $('#hand-template').contents().children(youknowwhatselector).addClass(youknowwhatclass)
+                        }, 3000)
                         document.body.style = '--scale-percentage:115 !important'
                     },
                 })
                 console.log("Write 'enable.egg' for some interesting stuff")
             }
-            setTimeout(() => {
-                console.log($('[class*="[--scale-percentage:102]"] > div'))
-                $('[class*="[--scale-percentage:102]"] > div').each((i, element) => {
-                    element.classList.add('hoveritem')
-                    function runSpongeAnimation(el) {
-                        const hasClass = $(el).toggleClass('haha').hasClass('haha')
-                        setTimeout(() => runSpongeAnimation(el), hasClass ? randomBetween(400, 800) : randomBetween(900, 2200))
-                    }
-                    runSpongeAnimation(element)
-                })
-            }, 400)
+            function runSpongeAnimation(el) {
+                el.classList.add(youknowwhatclass)
+                const hasClass = $(el).toggleClass('force-hover').hasClass('force-hover')
+                setTimeout(() => runSpongeAnimation(el), hasClass ? randomBetween(400, 800) : randomBetween(900, 2200))
+            }
+            var youknowwhatclass = 'easter-egg-target'
+            var youknowwhatselector = '[class*="[--scale-percentage:102]"] > div'
+            prepareEasterEgg()
         </script>
         <style>
-            .hoveritem {
+            .easter-egg-target {
                 transition-timing-function: cubic-bezier(0.46, -0.23, 0.25, 1.63);
             }
-            .hoveritem:hover,
-            .haha {
+            .easter-egg-target:hover,
+            .force-hover {
                 --scale-percentage: 116;
             }
         </style>

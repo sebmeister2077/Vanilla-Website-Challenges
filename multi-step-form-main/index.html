@@ -277,8 +277,7 @@
                 --selected-plan-label: '';
                 --selected-plan: 0;
                 --total: calc(
-                    var(--selected-plan) + var(--extra-customizable-profile) + var(--extra-larger-storage) +
-                        var(--extra-online-service)
+                    var(--selected-plan) + var(--extra-customizable-profile) + var(--extra-larger-storage) + var(--extra-online-service)
                 );
 
                 flex-grow: 1;
@@ -289,6 +288,7 @@
                 --perspective: 200px;
                 perspective: var(--perspective);
                 transform-style: preserve-3d;
+                --navigation-btn-width: 100px;
             }
             /* Set plan value */
             form:has(#arcade:checked) {
@@ -357,15 +357,12 @@
                 width: 100%;
             }
             .navigation-buttons button {
-                width: fit-content;
+                width: var(--navigation-btn-width);
                 height: 40px;
                 padding: 0px;
                 position: relative;
                 border: none;
                 background-color: transparent;
-            }
-            .page .previous-step-btn {
-                justify-self: flex-start;
             }
             .page .previous-step {
                 border-radius: 8px;
@@ -386,7 +383,9 @@
                 padding: 12px 18px;
                 background-color: var(--marine-blue);
                 color: var(--magnolia);
-                width: max-content;
+                width: 100%;
+                white-space: nowrap;
+                display: block;
                 font-weight: 500;
                 cursor: pointer;
             }
@@ -888,12 +887,27 @@
                 .page-overlay {
                     display: none;
                 }
+                .page .next-step-btn {
+                    margin-left: unset;
+                }
+                .page:nth-of-type(1) footer .previous-step-btn {
+                    opacity: 0;
+                    z-index: -1;
+                    pointer-events: none;
+                }
                 .page .navigation-buttons {
                     background-color: white;
-                    margin-left: calc(-1 * var(--page-inline-padding));
-                    margin-bottom: -18px;
+                    position: absolute;
+                    bottom: 0px;
+                    left: 0px;
+                    right: 0px;
+                    --footer-width: 220dvw;
+                    width: var(--footer-width);
+                    display: flex;
                     padding: 10px 20px;
-                    width: 100dvw;
+                    justify-content: center;
+                    transform: translateX(calc((var(--footer-width) - 100dvw) / -2));
+                    gap: calc(100dvw - 2 * var(--navigation-btn-width) - 2 * var(--page-inline-padding));
                 }
                 .content {
                     display: flex;
@@ -1003,9 +1017,7 @@
                                     d="M464.88 433.146c87.31-40.69 133.585-206.525 60.253-246.82-73.333-40.293-82.587 68.465-155.485 109.343-72.898 40.877-118.192 72.245-99.348 126.973 18.845 54.728 107.27 51.194 194.58 10.504Z"
                                 />
                                 <g stroke="#FFF" stroke-linecap="round" stroke-linejoin="bevel" stroke-width="5">
-                                    <path
-                                        d="m367.336 243.125 15.263-15.549M430.872 251.016l-17.995-15.112M399.36 271.751l-9.94 21.293"
-                                    />
+                                    <path d="m367.336 243.125 15.263-15.549M430.872 251.016l-17.995-15.112M399.36 271.751l-9.94 21.293" />
                                 </g>
                             </g>
                         </g>
@@ -1013,15 +1025,7 @@
                 </svg>
                 <svg class="background desktop" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 274 568">
                     <rect width="274" height="568" fill="#483EFF" rx="10" />
-                    <mask
-                        id="a"
-                        width="274"
-                        height="568"
-                        x="0"
-                        y="0"
-                        maskUnits="userSpaceOnUse"
-                        style="mask-type: alpha"
-                    >
+                    <mask id="a" width="274" height="568" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type: alpha">
                         <rect width="274" height="568" fill="#fff" rx="10" />
                     </mask>
                     <g mask="url(#a)">
@@ -1044,10 +1048,7 @@
                             stroke-width="5"
                             d="m165.305 469.097 10.607-10.806M209.461 474.581l-12.506-10.503M187.56 488.991l-6.908 14.798"
                         />
-                        <path
-                            fill="#FFAF7E"
-                            d="M.305 546.891c37.003 0 67-29.997 67-67s-29.997-67-67-67-67 29.997-67 67 29.997 67 67 67Z"
-                        />
+                        <path fill="#FFAF7E" d="M.305 546.891c37.003 0 67-29.997 67-67s-29.997-67-67-67-67 29.997-67 67 29.997 67 67 67Z" />
                     </g>
                 </svg>
                 <div class="step">
@@ -1089,23 +1090,10 @@
 
                         <section class="inputs">
                             <label for="name">Name</label>
-                            <input
-                                required
-                                name="name"
-                                id="name"
-                                type="text"
-                                placeholder="e.g. Stephen King"
-                                pattern="^[a-zA-z ]{3,30}$"
-                            />
+                            <input required name="name" id="name" type="text" placeholder="e.g. Stephen King" pattern="^[a-zA-z ]{3,30}$" />
 
                             <label for="email">Email Address</label>
-                            <input
-                                required
-                                name="email"
-                                id="email"
-                                placeholder="e.g. stephenking@lorem.com"
-                                type="email"
-                            />
+                            <input required name="email" id="email" placeholder="e.g. stephenking@lorem.com" type="email" />
 
                             <label for="phone">Phone Number</label>
                             <input
@@ -1122,6 +1110,9 @@
                     <input type="checkbox" id="try-go-next-page" hidden />
                     <footer class="navigation-buttons">
                         <label for="try-go-next-page"></label>
+                        <button type="button" class="previous-step-btn">
+                            <label for="p1" class="previous-step"></label>
+                        </button>
                         <button type="button" class="next-step-btn">
                             <label for="p2" class="next-step"></label>
                         </button>
@@ -1230,12 +1221,7 @@
                             <label for="online-service">
                                 <div class="checkbox">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="9" viewBox="0 0 12 9">
-                                        <path
-                                            fill="none"
-                                            stroke="#FFF"
-                                            stroke-width="2"
-                                            d="m1 4 3.433 3.433L10.866 1"
-                                        />
+                                        <path fill="none" stroke="#FFF" stroke-width="2" d="m1 4 3.433 3.433L10.866 1" />
                                     </svg>
                                 </div>
                                 <div class="text">
@@ -1248,12 +1234,7 @@
                             <label for="larger-storage">
                                 <div class="checkbox">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="9" viewBox="0 0 12 9">
-                                        <path
-                                            fill="none"
-                                            stroke="#FFF"
-                                            stroke-width="2"
-                                            d="m1 4 3.433 3.433L10.866 1"
-                                        />
+                                        <path fill="none" stroke="#FFF" stroke-width="2" d="m1 4 3.433 3.433L10.866 1" />
                                     </svg>
                                 </div>
                                 <div class="text">
@@ -1266,12 +1247,7 @@
                             <label for="customizable-profile">
                                 <div class="checkbox">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="9" viewBox="0 0 12 9">
-                                        <path
-                                            fill="none"
-                                            stroke="#FFF"
-                                            stroke-width="2"
-                                            d="m1 4 3.433 3.433L10.866 1"
-                                        />
+                                        <path fill="none" stroke="#FFF" stroke-width="2" d="m1 4 3.433 3.433L10.866 1" />
                                     </svg>
                                 </div>
                                 <div class="text">
@@ -1315,13 +1291,7 @@
                         <button type="button" class="previous-step-btn">
                             <label for="p3" class="previous-step"></label>
                         </button>
-                        <button
-                            type="submit"
-                            class="next-step-btn"
-                            formaction="/api/endpoint"
-                            formmethod="post"
-                            formtarget="api-frame"
-                        >
+                        <button type="submit" class="next-step-btn" formaction="/api/endpoint" formmethod="post" formtarget="api-frame">
                             <label for="p5" class="next-step confirm"></label>
                         </button>
                     </footer>
@@ -1343,8 +1313,8 @@
                         </svg>
                         <h2 class="title">Thank you!</h2>
                         <p class="message">
-                            Thanks for confirming your subscription! We hope you have fun using our platform. If you
-                            ever need support, please feel free to email us at support@loremgaming.com.
+                            Thanks for confirming your subscription! We hope you have fun using our platform. If you ever need support,
+                            please feel free to email us at support@loremgaming.com.
                         </p>
                     </main>
                 </div>

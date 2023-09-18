@@ -9,6 +9,8 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+
         <title>IP Address Tracker</title>
         <script
             src="https://code.jquery.com/jquery-3.6.4.min.js"
@@ -57,7 +59,6 @@
             }
             .search-bar {
                 display: flex;
-                border-radius: var(--border-radius);
                 overflow: hidden;
                 height: 42px;
                 align-self: center;
@@ -66,6 +67,7 @@
                 color: var(--dark-gray);
             }
             .search-input {
+                border-radius: var(--border-radius) 0px 0px var(--border-radius);
                 height: 100%;
                 border: none;
                 padding-inline: 12px;
@@ -81,6 +83,11 @@
                 aspect-ratio: 1;
                 fill: var(--white);
                 cursor: pointer;
+                border-radius: 0px var(--border-radius) var(--border-radius) 0px;
+            }
+            .select-accuracy {
+                margin-left: 32px;
+                height: 100%;
             }
             .background {
                 user-select: none;
@@ -178,6 +185,12 @@
                 }
             }
         </style>
+        <script>
+            const ACCURACY_LOCATION = 'accuracy-measurement'
+            const accuracySelect = $('#accuracy-select')
+            var searchValue = ''
+            var accuracy = localStorage.getItem(ACCURACY_LOCATION) || 'country'
+        </script>
     </head>
     <body>
         <header>
@@ -189,6 +202,15 @@
                         <path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path>
                     </svg>
                 </button>
+                <div class="select select-accuracy">
+                    <select id="accuracy-select">
+                        <option value="country">Low accuracy</option>
+                        <option value="country,city">High accuracy</option>
+                    </select>
+                    <script>
+                        $('#accuracy-select').val(accuracy)
+                    </script>
+                </div>
             </form>
             <section class="information-card">
                 <div class="information">
@@ -217,14 +239,7 @@
             <source srcset="./images/pattern-bg-mobile.png" media="(max-width: 600px)" />
             <img src="./images/pattern-bg-desktop.png" alt="Background image" />
         </picture>
-        <iframe
-            class="ip-map"
-            style="border: 0"
-            loading="lazy"
-            allowfullscreen
-            referrerpolicy="no-referrer-when-downgrade"
-        >
-        </iframe>
+        <iframe class="ip-map" style="border: 0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"> </iframe>
         <div class="toast"></div>
         <noscript class="toast" style="background-color: var(--warning)">
             You need to enable javascript to search for ip addresses
@@ -248,11 +263,59 @@
                 //     },
                 //     isp: 'SpaceX Starlink',
                 // })
-                searchIp()
+                const x = {
+                    ip: '8.8.8.8',
+                    location: {
+                        country: 'US',
+                        region: 'California',
+                        city: 'Mountain View',
+                        lat: 32.69922,
+                        lng: -117.11281,
+                        postalCode: '',
+                        timezone: '-07:00',
+                        geonameId: 5375481,
+                    },
+                    domains: ['21vek-3131.21vek-dev.by', 'alemastyk.kz', 'atlascroissance.ma', 'elwadifa.ma', 'm.21vek-3131.21vek-dev.by'],
+                    as: { asn: 15169, name: 'GOOGLE', route: '8.8.8.0\/24', domain: 'https:\/\/about.google\/intl\/en\/', type: 'Content' },
+                    isp: 'Google LLC',
+                }
+                const y = {
+                    ip: '8.8.8.8',
+                    location: {
+                        country: 'US',
+                        region: 'California',
+                        city: 'Mountain View',
+                        lat: 32.69922,
+                        lng: -117.11281,
+                        postalCode: '',
+                        timezone: '-07:00',
+                        geonameId: 5375481,
+                    },
+                    domains: [
+                        '21vek-3102.21vek-dev.by',
+                        '21vek-3121.21vek-dev.by',
+                        '21vek-api-3104.21vek-dev.by',
+                        '21vek-api-3107.21vek-dev.by',
+                        '21vek-api-3110.21vek-dev.by',
+                    ],
+                    as: { asn: 15169, name: 'GOOGLE', route: '8.8.8.0\/24', domain: 'https:\/\/about.google\/intl\/en\/', type: 'Content' },
+                    isp: 'Google LLC',
+                    proxy: { proxy: false, vpn: false, tor: false },
+                }
+
+                console.log('🚀 ~ file: index.html:300 ~ accuracy:', accuracy)
+
+                requestIdleCallback(searchIp)
                 $('.search-bar').on('submit', function (e) {
                     e.preventDefault()
-                    const searchValue = $('input').val().trim()
+                    searchValue = $('input').val().trim()
                     searchIp(searchValue)
+                })
+                accuracySelect.on('change', function (e) {
+                    accuracy = e.target.value
+                    localStorage.setItem(ACCURACY_LOCATION, accuracy)
+                    console.log(accuracy)
+                    // searchIp(searchValue)
                 })
                 $('iframe').on('touchstart', function (e) {
                     $('.information-card').css('opacity', 0)
@@ -264,27 +327,32 @@
                     const MAPS_API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro'
                     const MAP_MODE = 'place'
 
+                    console.log(data)
                     const ispUrl = getIspUrl(data)
                     const isp = $('#isp')
                     isp.text(data.isp)
                     if (Boolean(ispUrl)) isp.attr('href', ispUrl)
                     else isp.removeAttr('href')
                     $('#ip').text(data.ip)
-                    $('#location').text(data.location.region)
+                    $('#location').text(data.location.city)
                     $('#timezone').text('UTC' + data.location.timezone)
+
+                    const locationData =
+                        'lat' in data.location && 'lng' in data.location
+                            ? `center=${data.location.lat},${data.location.lng}`
+                            : `region=${data.location.country}`
                     $('.ip-map').attr(
                         'src',
-                        `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${MAPS_API_KEY}&q=${data.location.region}&region=${data.location.country}`
+                        `https://www.google.com/maps/embed/v1/${MAP_MODE}?key=${MAPS_API_KEY}&q=${data.location.region}&${locationData}`,
                     )
                 }
                 function searchIp(searchText = undefined) {
-                    const ipv4Regex =
-                        /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+                    const ipv4Regex = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
                     const domainRegex = /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/
                     const emailRegex = /^[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
 
                     const GEOIPIFY_API_KEY = 'at_aZBISroXZwa1igtSZ2gNr6jhPaf07'
-                    const url = new URL('https://geo.ipify.org/api/v2/country')
+                    const url = new URL('https://geo.ipify.org/api/v2/country,city')
                     url.searchParams.append('apiKey', GEOIPIFY_API_KEY)
 
                     //will default to the user's ip
@@ -293,18 +361,19 @@
                         if (domainRegex.test(searchText)) url.searchParams.append('domain', searchText)
                         if (emailRegex.test(searchText)) url.searchParams.append('email', searchText)
                     }
-                    $.ajax({
-                        url,
-                        method: 'GET',
-                        crossDomain: true,
-                        headers: {
-                            'Content-Type': 'text/plain',
-                        },
-                        success: applyDataToUI,
-                        error: (e) => {
-                            showToast(e.responseJSON.messages, 'error')
-                        },
-                    })
+                    // $.ajax({
+                    //     url,
+                    //     method: 'GET',
+                    //     crossDomain: true,
+                    //     headers: {
+                    //         'Content-Type': 'text/plain',
+                    //     },
+                    //     success: applyDataToUI,
+                    //     error: (e) => {
+                    //         showToast(e.responseJSON.messages, 'error')
+                    //     },
+                    // })
+                    applyDataToUI()
                 }
                 function showToast(message, type) {
                     $('.toast:not(noscript)')

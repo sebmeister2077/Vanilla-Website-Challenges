@@ -158,7 +158,12 @@
             <img src="./images/logo.svg" alt="Rock paper scissors" />
             <div class="rounded-lg p-2 bg-white h-full flex flex-col aspect-square items-center">
                 <h3 class="text-score text-sm font-bold tracking-widest uppercase">Score</h3>
-                <span class="text-dark text-6xl font-extrabold" id="score">0</span>
+                <div class="relative text-dark text-6xl font-extrabold grow overflow-hidden w-full">
+                    <span class="absolute inset-0 flex justify-center duration-700 transition-transform" id="score">0</span>
+                    <span class="absolute inset-0 translate-y-full duration-700 flex justify-center transition-transform" id="score-new"
+                        >1</span
+                    >
+                </div>
             </div>
         </section>
         <main class="relative flex items-center justify-center grow w-full">
@@ -270,6 +275,8 @@
                 rotation = '90deg',
                 homeSize = '12rem',
                 gameSize = '16rem'
+            const scoreEl = $('#score'),
+                scoreNewEl = $('#score-new')
             const elementNames = ['rock', 'paper', 'scissors']
             const translateTemplate =
                 'translate-x-[calc(cos(360deg/--children-length*--child-index+--rotation)*--radius)] translate-y-[calc(sin(360deg/--children-length*--child-index+--rotation)*--radius)]'
@@ -316,7 +323,7 @@
             var userSelection = null
             var houseSelection = null
 
-            $('#score').text(score)
+            scoreEl.text(score)
             function elementClickListener(el) {
                 return function (e) {
                     const destinationId = 'user-selection'
@@ -389,8 +396,10 @@
             function showResult() {
                 let text = 'Draw'
                 let winner = userSelection
+                let isWinner = false
                 if (BEATING_RULES[userSelection] === houseSelection) {
                     text = 'You Win'
+                    isWinner = true
                     score++
                     winner = userSelection
                 }
@@ -401,7 +410,28 @@
 
                 $('#outcome').addClass('max-w-[100%]').removeClass('max-w-0')
                 $('#outcome-text').text(text)
-                $('#score').text(score)
+                if (!isWinner) return
+
+                console.log(scoreEl[0], scoreNewEl[0])
+                scoreEl.addClass('-translate-y-full')
+                scoreNewEl.text(score).removeClass('translate-y-full')
+                setTimeout(() => {
+                    resetScoresToInitialState(scoreEl, () => {
+                        scoreEl.removeClass('-translate-y-full')
+                    })
+
+                    resetScoresToInitialState(scoreNewEl, () => {
+                        scoreNewEl.addClass('translate-y-full')
+                    })
+
+                    function resetScoresToInitialState(jquery, customFn) {
+                        jquery.text(score).removeClass('transition-transform').removeClass('duration-700')
+                        customFn(jquery)
+                        requestAnimationFrame(() => {
+                            jquery.addClass('transition-transform').addClass('duration-700')
+                        })
+                    }
+                }, 1000)
                 // if (!winner) return
                 // const winnerBackgroundLight =
                 //     "after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:rounded-full after:w-full after:h-full after:bg-winner-light after:z-[-1] after:-translate-x-1/2 after:-translate-y-1/2 after:scale-[2.5]"
@@ -452,6 +482,11 @@
             }
             function saveScore() {
                 localStorage.setItem(SCORE_LOCATION, score.toString())
+            }
+            function swap(a, b) {
+                const aux = a
+                a = b
+                b = aux
             }
         </script>
     </body>

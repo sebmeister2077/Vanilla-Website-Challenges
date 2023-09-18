@@ -2,6 +2,12 @@
 <html lang="en">
     <head>
         <title>Home</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script
+            src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"
+        ></script>
         <style>
             @keyframes toast-popup {
                 0% {
@@ -44,19 +50,36 @@
                 gap: 12px;
                 font-size: 1.25rem;
             }
+            [popover]::backdrop {
+                backdrop-filter: opacity(0.56) blur(2px);
+            }
         </style>
     </head>
 
-    <body>
+    <body class="bg-neutral-50">
         <header class="construction-popup">This page is under construction</header>
         <nav>
             <ul>
                 <li><a href="./multi-step-form-main/">Multi step form (no JS)</a> ✅</li>
                 <li><a href="./rest-countries-api-with-color-theme-switcher-master/">Rest countries</a> ✅</li>
-                <li><a href="./ip-address-tracker-master/">Show my Ip address</a> ✅</li>
+                <li class="flex items-center">
+                    <a href="./ip-address-tracker-master/">Show my Ip address</a> ✅
+                    <button onclick="$('#mypopover')[0].togglePopover()">
+                        <svg class="w-8 fill-gray-400" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                            ></path>
+                        </svg>
+                    </button>
+                    <div id="mypopover" popover class="bg-neutral-200 rounded-md p-6">
+                        <!-- <dialog id="ip-address-tracker-dialog"> -->
+                        This may not work correctly in the future as i have a limited amount of free API calls
+                        <!-- </dialog> -->
+                    </div>
+                </li>
                 <li><a href="./jsfuck/">Js Fuck</a> ✅</li>
                 <li><a href="./preview-image-loader/">Better image loading</a></li>
-                <li><a href="./rock-paper-scissors-master/">Rock paper scissors</a></li>
+                <li><a href="./rock-paper-scissors-master/">Rock paper scissors</a> ✅</li>
                 <!-- <li><a href="./mirror/">Mirror</a></li> -->
             </ul>
         </nav>

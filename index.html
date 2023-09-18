@@ -127,12 +127,12 @@
                             document.writeln(
                                 /*html*/
                                 `
-                                    <a href="${BASE_API_IP_TRACKER_URL}?apiKey=${IP_TRACKER_API_KEY}" target="_blank" class="bg-gray-300 rounded-md p-2">View remaining credits</a>
+                                    <a tabindex="-1" href="${BASE_API_IP_TRACKER_URL}?apiKey=${IP_TRACKER_API_KEY}" target="_blank" class="bg-gray-300 rounded-md p-2">View remaining credits</a>
                             `,
                             )
                         </script>
-                        <form class="contents" method="dialog">
-                            <button type="submit" class="w-8 cursor-pointer absolute top-4 right-4">
+                        <form class="contents" method="dialog" id="close-dialog-form">
+                            <button type="submit" tabindex="-1" class="w-8 cursor-pointer absolute top-4 right-4">
                                 <svg viewBox="0 0 24 24">
                                     <path
                                         d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
@@ -149,12 +149,23 @@
             </ul>
         </nav>
         <script>
+            const dialog = $('#ip-address-tracker-popover')[0]
             $('#ip-address-tracker-button').on('click', function () {
-                const dialog = $('#ip-address-tracker-popover')[0]
                 if (!(dialog instanceof HTMLDialogElement)) return
-                if (dialog.open) dialog.close()
-                else dialog.showModal()
+                dialog.showModal()
+
+                setTabIndexOfDialog(0)
+                $(dialog).on('close', function () {
+                    setTabIndexOfDialog(-1)
+                })
             })
+            $('#close-dialog-form').on('submit', function () {
+                if (!(dialog instanceof HTMLDialogElement)) return
+                setTabIndexOfDialog(-1)
+            })
+            function setTabIndexOfDialog(tabIndex) {
+                $(dialog).find('[tabindex]').attr('tabindex', tabIndex)
+            }
         </script>
     </body>
 </html>

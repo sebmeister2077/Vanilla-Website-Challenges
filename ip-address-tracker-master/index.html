@@ -87,6 +87,11 @@
             }
             .select-accuracy {
                 margin-left: 32px;
+                height: 100% !important;
+                color: var(--very-dark-gray);
+                font-size: 0.9rem;
+            }
+            .select-accuracy select {
                 height: 100%;
             }
             .background {
@@ -187,7 +192,6 @@
         </style>
         <script>
             const ACCURACY_LOCATION = 'accuracy-measurement'
-            const accuracySelect = $('#accuracy-select')
             var searchValue = ''
             var accuracy = localStorage.getItem(ACCURACY_LOCATION) || 'country'
         </script>
@@ -263,49 +267,10 @@
                 //     },
                 //     isp: 'SpaceX Starlink',
                 // })
-                const x = {
-                    ip: '8.8.8.8',
-                    location: {
-                        country: 'US',
-                        region: 'California',
-                        city: 'Mountain View',
-                        lat: 32.69922,
-                        lng: -117.11281,
-                        postalCode: '',
-                        timezone: '-07:00',
-                        geonameId: 5375481,
-                    },
-                    domains: ['21vek-3131.21vek-dev.by', 'alemastyk.kz', 'atlascroissance.ma', 'elwadifa.ma', 'm.21vek-3131.21vek-dev.by'],
-                    as: { asn: 15169, name: 'GOOGLE', route: '8.8.8.0\/24', domain: 'https:\/\/about.google\/intl\/en\/', type: 'Content' },
-                    isp: 'Google LLC',
-                }
-                const y = {
-                    ip: '8.8.8.8',
-                    location: {
-                        country: 'US',
-                        region: 'California',
-                        city: 'Mountain View',
-                        lat: 32.69922,
-                        lng: -117.11281,
-                        postalCode: '',
-                        timezone: '-07:00',
-                        geonameId: 5375481,
-                    },
-                    domains: [
-                        '21vek-3102.21vek-dev.by',
-                        '21vek-3121.21vek-dev.by',
-                        '21vek-api-3104.21vek-dev.by',
-                        '21vek-api-3107.21vek-dev.by',
-                        '21vek-api-3110.21vek-dev.by',
-                    ],
-                    as: { asn: 15169, name: 'GOOGLE', route: '8.8.8.0\/24', domain: 'https:\/\/about.google\/intl\/en\/', type: 'Content' },
-                    isp: 'Google LLC',
-                    proxy: { proxy: false, vpn: false, tor: false },
-                }
 
-                console.log('🚀 ~ file: index.html:300 ~ accuracy:', accuracy)
-
+                const accuracySelect = $('#accuracy-select')
                 requestIdleCallback(searchIp)
+
                 $('.search-bar').on('submit', function (e) {
                     e.preventDefault()
                     searchValue = $('input').val().trim()
@@ -315,7 +280,7 @@
                     accuracy = e.target.value
                     localStorage.setItem(ACCURACY_LOCATION, accuracy)
                     console.log(accuracy)
-                    // searchIp(searchValue)
+                    searchIp(searchValue)
                 })
                 $('iframe').on('touchstart', function (e) {
                     $('.information-card').css('opacity', 0)
@@ -327,19 +292,18 @@
                     const MAPS_API_KEY = 'AIzaSyBDtyoY1di4Js8auinSrOzSSsmXcOMpMro'
                     const MAP_MODE = 'place'
 
-                    console.log(data)
                     const ispUrl = getIspUrl(data)
                     const isp = $('#isp')
                     isp.text(data.isp)
                     if (Boolean(ispUrl)) isp.attr('href', ispUrl)
                     else isp.removeAttr('href')
                     $('#ip').text(data.ip)
-                    $('#location').text(data.location.city)
+                    $('#location').text(data.location.city ?? data.location.region)
                     $('#timezone').text('UTC' + data.location.timezone)
 
                     const locationData =
                         'lat' in data.location && 'lng' in data.location
-                            ? `center=${data.location.lat},${data.location.lng}`
+                            ? `center=${data.location.lat},${data.location.lng}&zoom=12`
                             : `region=${data.location.country}`
                     $('.ip-map').attr(
                         'src',
@@ -352,7 +316,7 @@
                     const emailRegex = /^[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
 
                     const GEOIPIFY_API_KEY = 'at_aZBISroXZwa1igtSZ2gNr6jhPaf07'
-                    const url = new URL('https://geo.ipify.org/api/v2/country,city')
+                    const url = new URL(`https://geo.ipify.org/api/v2/${accuracy}`)
                     url.searchParams.append('apiKey', GEOIPIFY_API_KEY)
 
                     //will default to the user's ip
@@ -361,19 +325,18 @@
                         if (domainRegex.test(searchText)) url.searchParams.append('domain', searchText)
                         if (emailRegex.test(searchText)) url.searchParams.append('email', searchText)
                     }
-                    // $.ajax({
-                    //     url,
-                    //     method: 'GET',
-                    //     crossDomain: true,
-                    //     headers: {
-                    //         'Content-Type': 'text/plain',
-                    //     },
-                    //     success: applyDataToUI,
-                    //     error: (e) => {
-                    //         showToast(e.responseJSON.messages, 'error')
-                    //     },
-                    // })
-                    applyDataToUI()
+                    $.ajax({
+                        url,
+                        method: 'GET',
+                        crossDomain: true,
+                        headers: {
+                            'Content-Type': 'text/plain',
+                        },
+                        success: applyDataToUI,
+                        error: (e) => {
+                            showToast(e.responseJSON.messages, 'error')
+                        },
+                    })
                 }
                 function showToast(message, type) {
                     $('.toast:not(noscript)')

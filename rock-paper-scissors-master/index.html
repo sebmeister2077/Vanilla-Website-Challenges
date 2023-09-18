@@ -46,6 +46,9 @@
                         sans: ['"Barlow Semi Condensed"', 'sans-serif'],
                     },
                     extend: {
+                        transitionDuration: {
+                            4000: '4s',
+                        },
                         transitionDelay: {
                             1500: '1500ms',
                         },
@@ -158,7 +161,9 @@
             <img src="./images/logo.svg" alt="Rock paper scissors" />
             <div class="rounded-lg p-2 bg-white h-full flex flex-col aspect-square items-center">
                 <h3 class="text-score text-sm font-bold tracking-widest uppercase">Score</h3>
-                <div class="relative text-dark text-6xl font-extrabold grow overflow-hidden w-full">
+                <div
+                    class="relative text-dark text-6xl font-extrabold grow overflow-hidden w-full [perspective:100px] [transform-style:preserve-3d]"
+                >
                     <span class="absolute inset-0 flex justify-center duration-700 transition-transform" id="score">0</span>
                     <span class="absolute inset-0 translate-y-full duration-700 flex justify-center transition-transform" id="score-new"
                         >1</span
@@ -407,8 +412,8 @@
                 let isWinner = false
                 if (BEATING_RULES[userSelection] === houseSelection) {
                     text = 'You Win'
-                    isWinner = true
                     score++
+                    isWinner = true
                     winner = userSelection
                 }
                 if (BEATING_RULES[houseSelection] === userSelection) {
@@ -420,26 +425,8 @@
                 $('#outcome-text').text(text)
                 if (!isWinner) return
 
-                console.log(scoreEl[0], scoreNewEl[0])
-                scoreEl.addClass('-translate-y-full')
-                scoreNewEl.text(score).removeClass('translate-y-full')
-                setTimeout(() => {
-                    resetScoresToInitialState(scoreEl, () => {
-                        scoreEl.removeClass('-translate-y-full')
-                    })
+                handleUpdateScore()
 
-                    resetScoresToInitialState(scoreNewEl, () => {
-                        scoreNewEl.addClass('translate-y-full')
-                    })
-
-                    function resetScoresToInitialState(jquery, customFn) {
-                        jquery.text(score).removeClass('transition-transform').removeClass('duration-700')
-                        customFn(jquery)
-                        requestAnimationFrame(() => {
-                            jquery.addClass('transition-transform').addClass('duration-700')
-                        })
-                    }
-                }, 1000)
                 // if (!winner) return
                 // const winnerBackgroundLight =
                 //     "after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:rounded-full after:w-full after:h-full after:bg-winner-light after:z-[-1] after:-translate-x-1/2 after:-translate-y-1/2 after:scale-[2.5]"
@@ -489,6 +476,40 @@
                     }, 500)
                 }
             }
+            function handleUpdateScore() {
+                if (isEasterEggActive) {
+                    scoreEl
+                        .removeClass('duration-700')
+                        .addClass('duration-4000')
+                        .addClass('transition-rotate')
+                        .addClass('scale-75')
+                        .toggleClass(`rotate-score`)
+                    setTimeout(() => {
+                        scoreEl.text(score).removeClass('scale-75')
+                    }, 1600)
+                    scoreNewEl.remove()
+                    return
+                }
+                scoreEl.addClass('-translate-y-full')
+                scoreNewEl.text(score).removeClass('translate-y-full')
+                setTimeout(() => {
+                    resetScoresToInitialState(scoreEl.text(score), () => {
+                        scoreEl.removeClass('-translate-y-full')
+                    })
+
+                    resetScoresToInitialState(scoreNewEl, () => {
+                        scoreNewEl.addClass('translate-y-full')
+                    })
+
+                    function resetScoresToInitialState(jquery, customFn) {
+                        jquery.removeClass('transition-transform').removeClass('duration-700')
+                        customFn(jquery)
+                        requestAnimationFrame(() => {
+                            jquery.addClass('transition-transform').addClass('duration-700')
+                        })
+                    }
+                }, 1000)
+            }
             function saveScore() {
                 localStorage.setItem(SCORE_LOCATION, score.toString())
             }
@@ -502,21 +523,25 @@
                 return min + ((((Math.random() * Date.now()) / 100000) % max) - min)
             }
             function runAnimationForCreatedElIfNeeded(el, timeout) {
-                if (el.children(youknowwhatselector).hasClass(youknowwhatclass))
-                    setTimeout(() => {
-                        runSpongeAnimation(el.children(youknowwhatselector)[0])
-                    }, timeout)
+                if (!isEasterEggActive) return
+                setTimeout(() => {
+                    const children = el.children(youknowwhatselector)[0]
+                    children.classList.add(youknowwhatclass)
+                    runSpongeAnimation(children)
+                }, timeout)
             }
             function prepareEasterEgg() {
                 const easterEggTarget = { egg: null }
                 window.enable = new Proxy(easterEggTarget, {
                     get(target, property, newValue, receiver) {
                         console.log('Easter egg activated!')
+                        isEasterEggActive = true
                         setTimeout(() => {
                             $(youknowwhatselector).each((i, element) => {
+                                element.classList.add(youknowwhatclass)
+
                                 runSpongeAnimation(element)
                             })
-                            $('#hand-template').contents().children(youknowwhatselector).addClass(youknowwhatclass)
                         }, 3000)
                         document.body.style = '--scale-percentage:115 !important'
                     },
@@ -524,15 +549,22 @@
                 console.log("Write 'enable.egg' for some interesting stuff")
             }
             function runSpongeAnimation(el) {
-                el.classList.add(youknowwhatclass)
                 const hasClass = $(el).toggleClass('force-hover').hasClass('force-hover')
                 setTimeout(() => runSpongeAnimation(el), hasClass ? randomBetween(400, 800) : randomBetween(900, 2200))
             }
+            var isEasterEggActive = false
             var youknowwhatclass = 'easter-egg-target'
             var youknowwhatselector = '[class*="[--scale-percentage:102]"] > div'
             prepareEasterEgg()
         </script>
         <style>
+            .rotate-score {
+                rotate: y 8turn;
+            }
+            .transition-rotate {
+                will-change: rotate, transform;
+                transition-property: rotate, transform;
+            }
             .easter-egg-target {
                 transition-timing-function: cubic-bezier(0.46, -0.23, 0.25, 1.63);
             }

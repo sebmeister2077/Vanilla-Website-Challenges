@@ -172,10 +172,11 @@
                 data-active
                 class="absolute group/home z-10 transition-opacity duration-700 ease-in-out inset-0 flex items-center justify-center"
             >
+                <!-- Triangle -->
                 <svg width="313" height="278" class="scale-150 absolute group-data-[active]/home:opacity-100 opacity-0 delay-1000">
                     <path
                         stroke="black"
-                        class="group-[:has([data-item-button]:hover)]/body:[animation-play-state:paused] [stroke-dasharray:1800] [stroke-dashoffset:-1800] animate-[dash_2s_1s_ease-in-out_forwards]"
+                        class="[stroke-dasharray:1800] [stroke-dashoffset:-1800] animate-[dash_2s_1s_ease-in-out_forwards]"
                         stroke-width="15"
                         fill="none"
                         opacity=".2"
@@ -183,6 +184,7 @@
                     />
                 </svg>
 
+                <!-- From red to blue -->
                 <svg
                     width="313"
                     height="278"
@@ -191,6 +193,7 @@
                 >
                     <path d="M13,8L156.5,262" opacity="0.2" fill="none" stroke-width="15" />
                 </svg>
+                <!-- From blue to yellow -->
                 <svg
                     width="313"
                     height="278"
@@ -199,6 +202,7 @@
                 >
                     <path d="M300,8L13,8" opacity="0.2" fill="none" stroke-width="15" />
                 </svg>
+                <!-- From yellow to red -->
                 <svg
                     width="313"
                     height="278"

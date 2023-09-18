@@ -79,34 +79,7 @@
                     </label>
                     <input id="file-input" type="file" accept="image/*" hidden />
                 </form>
-                <div id="mag-glass" data-dev class="fixed opacity-0 top-6 left-6 z-40">
-                    <div
-                        id="mag-glass-handle"
-                        class="absolute cursor-pointer bottom-0 right-0 w-6 h-14 -rotate-45 translate-y-0 -translate-x-4 z-30"
-                    ></div>
-                    <div
-                        class="absolute outline-neutral-400 outline-4 top-3.5 left-3.5 aspect-square w-[84.4px] backdrop-invert-[.85] z-20 rounded-full"
-                    ></div>
 
-                    <svg
-                        class="fill-neutral-400 w-36 h-36"
-                        version="1.1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                        viewBox="0 0 30.239 30.239"
-                        xml:space="preserve"
-                    >
-                        <g>
-                            <path
-                                d="M20.194,3.46c-4.613-4.613-12.121-4.613-16.734,0c-4.612,4.614-4.612,12.121,0,16.735
-		c4.108,4.107,10.506,4.547,15.116,1.34c0.097,0.459,0.319,0.897,0.676,1.254l6.718,6.718c0.979,0.977,2.561,0.977,3.535,0
-		c0.978-0.978,0.978-2.56,0-3.535l-6.718-6.72c-0.355-0.354-0.794-0.577-1.253-0.674C24.743,13.967,24.303,7.57,20.194,3.46z
-		 M18.073,18.074c-3.444,3.444-9.049,3.444-12.492,0c-3.442-3.444-3.442-9.048,0-12.492c3.443-3.443,9.048-3.443,12.492,0
-		C21.517,9.026,21.517,14.63,18.073,18.074z"
-                            />
-                        </g>
-                    </svg>
-                </div>
                 <button id="function-button" data-dev>Call function</button>
                 <details class="absolute top-[65%] w-full p-6">
                     <summary class="list-none font-bold cursor-pointer text-2xl mb-6">
@@ -160,18 +133,9 @@
             </section>
         </section>
         <script>
-            if (!IS_LOCAL) $('[data-dev]').remove()
             const { v4: uuidv4 } = uuid
             const { createClient } = supabase
-            const GLASS_POSITION_LOCATION = 'glass-location'
             const UNIQUE_USER_ID_LOCATION = 'user-id'
-
-            const magGlass = $('#mag-glass')
-            const saved = JSON.parse(localStorage.getItem(GLASS_POSITION_LOCATION) || '{}')
-            magGlass.css({
-                top: saved.top || '2em',
-                left: saved.left || '2em',
-            })
 
             const supabaseUrl = 'https://lvvyesdqlcwpoeismoxf.supabase.co'
             //public anon key
@@ -231,7 +195,6 @@
                 userId = 'user_' + uuidv4()
                 localStorage.setItem(UNIQUE_USER_ID_LOCATION, userId)
             }
-            dragElement(magGlass)
             const spinner = $('#spinner')
             const input = $('#file-input')
             $("[for='file-input']").on('keydown', function (e) {
@@ -346,39 +309,6 @@
                 l.setAttribute('download', '')
                 l.click()
                 URL.revokeObjectURL(l.href)
-            }
-            function dragElement() {
-                const element = $(arguments[0][0])
-
-                let pos1 = 0,
-                    pos2 = 0,
-                    pos3 = 0,
-                    pos4 = 0
-                const handle = $('#mag-glass-handle')
-                handle.on('mousedown', dragMouseDown)
-                function dragMouseDown(e) {
-                    e.preventDefault()
-                    pos3 = e.clientX
-                    pos4 = e.clientY
-                    $(document).on('mouseup', closeDragElement)
-                    $(document).on('mousemove', elementDrag)
-                }
-
-                function elementDrag(e) {
-                    e.preventDefault()
-                    pos1 = pos3 - e.clientX
-                    pos2 = pos4 - e.clientY
-                    pos3 = e.clientX
-                    pos4 = e.clientY
-                    element.css({
-                        top: element[0].offsetTop - pos2 + 'px',
-                        left: element[0].offsetLeft - pos1 + 'px',
-                    })
-                }
-
-                function closeDragElement() {
-                    $(document).off('mouseup').off('mousemove')
-                }
             }
         </script>
     </body>

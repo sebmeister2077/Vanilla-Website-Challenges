@@ -112,10 +112,10 @@
                 data-type=""
                 data-small="false"
                 data-disabled="false"
-                class="aspect-square z-10 opacity-0 [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 translate-x-2 transition delay-1000 duration-1000 group/item data-[disabled=true]:bg-none rounded-full w-[var(--size)] data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
+                class="aspect-square z-10 opacity-0 [--scale-percentage:102] scale-y-[calc(var(--scale-percentage)/100)] scale-x-[calc(100/var(--scale-percentage))] outline-0 translate-x-2 transition-transform delay-1000 duration-1000 group/item data-[disabled=true]:bg-none rounded-full w-[var(--size)] data-[small=true]:w-28 data-[disabled=false]:cursor-pointer data-[disabled=true]:bg-gray-400"
             >
                 <div
-                    class="flex items-center justify-center -translate-y-[calc(var(--scale-percentage)*1px/20)] scale-y-[calc(100/var(--scale-percentage))] scale-x-[calc(var(--scale-percentage)/100)] rounded-full w-full h-full border-full"
+                    class="flex items-center justify-center -translate-y-[calc(var(--scale-percentage)*1px/20)] scale-y-[calc(100/var(--scale-percentage))] scale-x-[calc(var(--scale-percentage)/100)] transition-transform duration-200 rounded-full w-full h-full border-full"
                 >
                     <div
                         class="flex items-center justify-center aspect-square relative rounded-full w-3/4 border-0 border-neutral-300 group-data-[disabled=false]/item:bg-white group-data-[disabled=false]/item:border-t-4 group-data-[disabled=true]/item:border-t-0 group-data-[disabled=true]/item:bg-slate-200"
@@ -492,6 +492,41 @@
                 a = b
                 b = aux
             }
+            function randomBetween(min, max) {
+                if (min < 0 || max > Number.MAX_SAFE_INTEGER) throw new Error('U dumbass')
+                return min + ((((Math.random() * Date.now()) / 100000) % max) - min)
+            }
+            runEasterEgg()
+            function runEasterEgg() {
+                const easterEggTarget = { egg: null }
+                window.enable = new Proxy(easterEggTarget, {
+                    get(target, property, newValue, receiver) {
+                        console.error(property)
+                        document.body.style = '--scale-percentage:115 !important'
+                    },
+                })
+                console.log("Write 'enable.egg' for some interesting stuff")
+            }
+            setTimeout(() => {
+                console.log($('[class*="[--scale-percentage:102]"] > div'))
+                $('[class*="[--scale-percentage:102]"] > div').each((i, element) => {
+                    element.classList.add('hoveritem')
+                    function runSpongeAnimation(el) {
+                        const hasClass = $(el).toggleClass('haha').hasClass('haha')
+                        setTimeout(() => runSpongeAnimation(el), hasClass ? randomBetween(400, 800) : randomBetween(900, 2200))
+                    }
+                    runSpongeAnimation(element)
+                })
+            }, 400)
         </script>
+        <style>
+            .hoveritem {
+                transition-timing-function: cubic-bezier(0.46, -0.23, 0.25, 1.63);
+            }
+            .hoveritem:hover,
+            .haha {
+                --scale-percentage: 116;
+            }
+        </style>
     </body>
 </html>

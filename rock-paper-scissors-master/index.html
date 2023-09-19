@@ -9,8 +9,12 @@
             src="https://code.jquery.com/jquery-3.7.0.min.js"
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
             crossorigin="anonymous"
+            onerror="reloadResource('script','https:\/\/code.jquery.com/jquery-3.7.0.min.js')"
         ></script>
-        <script src="https://cdn.tailwindcss.com"></script>
+        <script
+            src="https://cdn.tailwindcss.com"
+            onerror="$(document).ready(()=>reloadResource('script','https\:\/\/cdn.tailwindcss.com'))"
+        ></script>
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
             integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
@@ -40,6 +44,7 @@
         </style>
 
         <script>
+            var tailwind = tailwind || {}
             tailwind.config = {
                 theme: {
                     fontFamily: {
@@ -104,6 +109,10 @@
                         },
                     },
                 },
+            }
+            var toastr = toastr || {}
+            toastr.options = {
+                progressBar: true,
             }
             const IS_LOCAL = window.location.hostname === '127.0.0.1'
         </script>
@@ -572,6 +581,23 @@
                     children.classList.add(youknowwhatclass)
                     runSpongeAnimation(children)
                 }, timeout)
+            }
+            const MAX_RETRIES_COUNT = 3
+            var retriesCount = {}
+            function reloadResource(elTag, url, attr = {}) {
+                toastr.error('Resource failed to load, retrying...')
+                if (Number.isInteger(retriesCount[elTag]) && retriesCount[elTag] >= MAX_RETRIES_COUNT) return
+                retriesCount[elTag] |= 0
+                retriesCount[elTag]++
+                const el = document.createElement(elTag)
+                for (const key of Object.keys(attr)) el.setAttribute(key, attr[key])
+                if (el instanceof HTMLScriptElement) {
+                    el.src = url
+                    el.onerror = () => reloadResource(elTag, url)
+                    setTimeout(() => {
+                        document.body.append(el)
+                    }, Math.pow(3, retriesCount[elTag]) * 1000)
+                }
             }
             function dragElement() {
                 const element = $(arguments[0][0])

@@ -333,9 +333,9 @@
                     .addClass('absolute')
                     .addClass(`[--size:${homeSize}]`)
                     .addClass('group-data-[active]/home:opacity-100')
-                requestAnimationFrame(() => {
+                setTimeout(() => {
                     el.addClass(translateClass.replaceAll('--child-index', idx))
-                })
+                }, 100)
                 el.on('click', elementClickListener(el))
                 $('#home-section').append(el)
             })

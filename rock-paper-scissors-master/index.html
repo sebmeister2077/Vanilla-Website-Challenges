@@ -345,6 +345,7 @@
                 setTimeout(() => {
                     el.addClass(translateClass.replaceAll('--child-index', idx))
                 }, 100)
+                removeSlowAnimationsFromItemWhenNeeded(el)
                 el.on('click', elementClickListener(el))
                 $('#home-section').append(el)
             })
@@ -387,6 +388,7 @@
 
             function elementClickListener(el) {
                 return function (e) {
+                    addSlowAnimationsFromItem($('#home-section [data-item-button]'))
                     const destinationId = 'user-selection'
                     const destination = $(`#${destinationId}`)
                     //need center point of this shit
@@ -403,7 +405,12 @@
                     const currentSizeIncrease = window.getComputedStyle(el[0])
                     const { scaleX, scaleY } = getXYScaleFromMatrix(currentSizeIncrease.transform)
                     const additionalSizeIncrease = parseInt(gameSize.replace('rem')) / parseInt(homeSize.replace('rem'))
-                    const finalTransform = `scaleX(${scaleX * additionalSizeIncrease}) scaleY(${scaleY * additionalSizeIncrease})`
+
+                    const finalTransform = `scaleX(calc(${
+                        ((scaleX + scaleY) / 2) * additionalSizeIncrease
+                    } * var(--scale-percentage) / 100)) scaleY(calc(${
+                        ((scaleX + scaleY) / 2) * additionalSizeIncrease
+                    } * var(--scale-percentage) / 100 ))`
 
                     userSelection = el[0].id
                     const userSelectionEl = createItem(userSelection)
@@ -420,6 +427,7 @@
 
                         .attr({ 'data-initial-id': destinationId, 'data-selection-id': userSelection, id: '' })
 
+                    removeSlowAnimationsFromItemWhenNeeded(userSelectionEl, 3200)
                     runAnimationForCreatedElIfNeeded(userSelectionEl, 2300)
                     requestAnimationFrame(() => {
                         userSelectionEl.css({
@@ -434,6 +442,14 @@
                     setTimeout(() => createHouseSelection(finalTransform), 3000)
                     // console.log({ translateX, translateY })
                 }
+            }
+            function removeSlowAnimationsFromItemWhenNeeded(item, delay = 1200) {
+                setTimeout(() => {
+                    item.removeClass('duration-1000').removeClass('delay-1500').removeClass('delay-1000').addClass('duration-200')
+                }, delay)
+            }
+            function addSlowAnimationsFromItem(item) {
+                item.addClass('duration-1000').addClass('delay-1000').removeClass('duration-200')
             }
             function createHouseSelection(finalTransform) {
                 const destinationId = 'house-selection'
@@ -456,6 +472,7 @@
                         opacity: 1,
                     })
                 }, 20)
+                removeSlowAnimationsFromItemWhenNeeded(houseEl)
                 setTimeout(showResult, 1000)
             }
             function showResult() {
@@ -577,7 +594,7 @@
             function runAnimationForCreatedElIfNeeded(el, timeout) {
                 if (!isEasterEggActive) return
                 setTimeout(() => {
-                    const children = el.children(youknowwhatselector)[0]
+                    const children = el[0] //.children(youknowwhatselector)[0]
                     children.classList.add(youknowwhatclass)
                     runSpongeAnimation(children)
                 }, timeout)
@@ -652,11 +669,11 @@
             }
             function runSpongeAnimation(el) {
                 const hasClass = $(el).toggleClass('force-hover').hasClass('force-hover')
-                setTimeout(() => runSpongeAnimation(el), hasClass ? randomBetween(400, 800) : randomBetween(900, 2200))
+                setTimeout(() => runSpongeAnimation(el), hasClass ? randomBetween(300, 500) : randomBetween(1200, 2500))
             }
             var isEasterEggActive = false
             var youknowwhatclass = 'easter-egg-target'
-            var youknowwhatselector = '[class*="[--scale-percentage:102]"] > div'
+            var youknowwhatselector = 'button[data-item-button]' // '[class*="[--scale-percentage:102]"] > div'
             prepareEasterEgg()
         </script>
         <style>

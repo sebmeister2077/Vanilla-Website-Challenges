@@ -128,14 +128,7 @@
         </fieldset>
         <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background" />
         <template id="cursor">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="bubble"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                fill="none"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" class="bubble" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
                 <g clip-path="url(#clip0_429_11096)">
                     <path
                         d="M11 20.9999L4 3.99994L21 10.9999L14.7353 13.6848C14.2633 13.8871 13.8872 14.2632 13.6849 14.7353L11 20.9999Z"
@@ -161,17 +154,11 @@
                 ></div>
                 <div
                     class="cube-face"
-                    style="
-                        transform: rotateY(90deg)
-                            translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount));
-                    "
+                    style="transform: rotateY(90deg) translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"
                 ></div>
                 <div
                     class="cube-face"
-                    style="
-                        transform: rotateY(90deg) rotateX(90deg)
-                            translate3d(0px, 0px, calc(2 * var(--transform-amount)));
-                    "
+                    style="transform: rotateY(90deg) rotateX(90deg) translate3d(0px, 0px, calc(2 * var(--transform-amount)))"
                 ></div>
                 <div
                     class="cube-face"
@@ -224,8 +211,9 @@
             const performance = getPerformance(app)
             const db = getDatabase(app, 'https://chatroom-000-default-rtdb.europe-west1.firebasedatabase.app/')
 
+            const IS_DEBUG = window.location.hostname === '127.0.0.1'
             const DATABASE_ROUTES = new (class {
-                #BASE_ROUTE = 'env/' + 'test'
+                #BASE_ROUTE = 'env/' + (IS_DEBUG ? 'development' : window.location.host)
                 Cube = this.#BASE_ROUTE + '/cube'
                 AllUsers = this.#BASE_ROUTE + '/users'
                 OneUser(uid) {
@@ -261,7 +249,9 @@
                         return
                     }
                     currentCubeData = snapshot.val()
-                    rotateCube(currentCubeData.rotation, currentCubeData.color || DEFAULT_COLOR)
+
+                    if (!currentCubeData.rotation) setCubeData({ ...currentCubeData, rotation: { x: 0, y: 0 } })
+                    else rotateCube(currentCubeData.rotation, currentCubeData.color || DEFAULT_COLOR)
                 })
 
                 const currentValueKeys = []
@@ -272,9 +262,7 @@
                     const OFFSET = 60_000
                     const { origin } = location
 
-                    const keys = Object.keys(data).filter(
-                        (k) => data[k].environment === origin && data[k].lastActiveAt > NOW - OFFSET
-                    )
+                    const keys = Object.keys(data).filter((k) => data[k].environment === origin && data[k].lastActiveAt > NOW - OFFSET)
                     const minWindow = getMinWindow(keys, data)
                     $('fieldset').css({
                         height: `${minWindow.height - 6}px`,
@@ -333,7 +321,7 @@
                         setUserData({
                             window: { height: window.innerHeight, width: window.innerWidth },
                         })
-                    }, 200)
+                    }, 200),
                 )
 
                 var startPosition = {}
@@ -342,10 +330,7 @@
                     .addEventListener(
                         'mousedown',
                         function (e) {
-                            if (
-                                !auth.currentUser ||
-                                (currentCubeData.movingUserId !== currentUserData.uid && currentCubeData.movingUserId)
-                            )
+                            if (!auth.currentUser || (currentCubeData.movingUserId !== currentUserData.uid && currentCubeData.movingUserId))
                                 return
                             e.stopPropagation()
                             startPosition.x = e.clientX
@@ -355,7 +340,7 @@
                                 color: currentUserData.color,
                             })
                         },
-                        true
+                        true,
                     )
                 $('.cube-glass').on('mouseup', function (e) {
                     if (currentCubeData.movingUserId === currentUserData.uid && currentUserData.uid) return
@@ -367,11 +352,7 @@
                         startPosition.x = e.clientX
                         startPosition.y = e.clientY
                     }
-                    if (
-                        currentCubeData.movingUserId !== currentUserData.uid ||
-                        !currentCubeData.movingUserId ||
-                        !currentUserData.uid
-                    )
+                    if (currentCubeData.movingUserId !== currentUserData.uid || !currentCubeData.movingUserId || !currentUserData.uid)
                         return
 
                     if (e.buttons === 0) {
@@ -409,9 +390,7 @@
                 if (!currentUserData.uid) return
                 update(ref(db), { [DATABASE_ROUTES.OneUser(currentUserData.uid)]: currentUserData })
             }
-            const cubeWidth = parseInt(
-                getComputedStyle($('main')[0]).getPropertyValue('--cube-vertice').replace('px', '')
-            )
+            const cubeWidth = parseInt(getComputedStyle($('main')[0]).getPropertyValue('--cube-vertice').replace('px', ''))
             function rotateCube({ x, y }, color) {
                 const translateY = (cubeWidth * 0.5 * Math.cos((Math.PI * x) / 180)).toFixed(1)
                 const translateZ = (cubeWidth * 0.5 * Math.sin((Math.PI * x) / 180)).toFixed(1)

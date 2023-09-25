@@ -62,13 +62,6 @@
                 padding: 12px;
             }
 
-            fieldset {
-                position: fixed;
-                margin: 0px;
-                top: 0px;
-                left: 0px;
-                padding: 0px;
-            }
             main {
                 display: flex;
                 align-items: center;
@@ -123,9 +116,6 @@
         <header>
             <div class="info">Online friends:...</div>
         </header>
-        <fieldset>
-            <legend>Min user screen size</legend>
-        </fieldset>
         <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background" />
         <template id="cursor">
             <svg xmlns="http://www.w3.org/2000/svg" class="bubble" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
@@ -263,11 +253,6 @@
                     const { origin } = location
 
                     const keys = Object.keys(data).filter((k) => data[k].environment === origin && data[k].lastActiveAt > NOW - OFFSET)
-                    const minWindow = getMinWindow(keys, data)
-                    $('fieldset').css({
-                        height: `${minWindow.height - 6}px`,
-                        width: `${minWindow.width - 6}px`,
-                    })
 
                     currentValueKeys.filter((ck) => !keys.includes(ck)).forEach((key) => $(`[key=${key}]`).remove())
                     keys.forEach((key) => {
@@ -435,14 +420,6 @@
                     shouldWait = true
                     setTimeout(timeoutFunc, delay)
                 }
-            }
-            function getMinWindow(keys, data) {
-                const minWindow = data[keys[0]].window
-                keys.slice(1).forEach((k) => {
-                    if (data[k].window.height < minWindow.height) minWindow.height = data[k].window.height
-                    if (data[k].window.width < minWindow.width) minWindow.width = data[k].window.width
-                })
-                return minWindow
             }
         </script>
     </body>

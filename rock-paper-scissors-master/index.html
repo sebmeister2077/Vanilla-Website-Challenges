@@ -163,7 +163,8 @@
                         class="flex items-center justify-center aspect-square relative rounded-full w-3/4 border-0 border-neutral-300 group-data-[disabled=false]/item:bg-white group-data-[disabled=false]/item:border-t-4 group-data-[disabled=true]/item:border-t-0 group-data-[disabled=true]/item:bg-slate-200"
                     >
                         <svg
-                            class="hidden group-data-[type=paper]/item:block group-hover/item:scale-125 group-focus/item:scale-125 group-active/item:scale-110 scale-[1.40] group-data-[small=true]/item:scale-[.85] group-data-[disabled=true]/item:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
+                            data-type="paper"
+                            class="group-hover/item:scale-125 group-focus/item:scale-125 group-active/item:scale-110 scale-[1.40] group-data-[small=true]/item:scale-[.85] group-data-[disabled=true]/item:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
                             width="49"
                             height="59"
                         >
@@ -173,7 +174,8 @@
                             />
                         </svg>
                         <svg
-                            class="hidden group-data-[type=rock]/item:block group-hover/item:scale-125 group-focus/item:scale-125 group-active/item:scale-110 scale-[1.40] group-data-[small=true]/item:scale-[.85] group-data-[disabled=true]/item:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
+                            data-type="rock"
+                            class="group-hover/item:scale-125 group-focus/item:scale-125 group-active/item:scale-110 scale-[1.40] group-data-[small=true]/item:scale-[.85] group-data-[disabled=true]/item:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
                             width="48"
                             height="48"
                         >
@@ -183,7 +185,8 @@
                             />
                         </svg>
                         <svg
-                            class="hidden group-data-[type=scissors]/item:block group-hover/item:scale-125 group-focus/item:scale-125 group-active/item:scale-110 scale-[1.40] group-data-[small=true]/item:scale-[.85] group-data-[disabled=true]/item:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
+                            data-type="scissors"
+                            class="group-hover/item:scale-125 group-focus/item:scale-125 group-active/item:scale-110 scale-[1.40] group-data-[small=true]/item:scale-[.85] group-data-[disabled=true]/item:text-slate-500 text-dark duration-300 transition-transform ease-in-out will-change-transform"
                             width="51"
                             height="58"
                         >
@@ -528,6 +531,8 @@
                     .children('div')
                     .addClass(`group-data-[disabled=false]/item:bg-${elName}`)
 
+                //remove useless svgs
+                el[0].querySelectorAll(`svg:not([data-type=${elName}])`).forEach((uselessSvg, i) => uselessSvg.remove())
                 return el
             }
             function togglePageView() {

@@ -234,7 +234,6 @@
                         lastActiveAt: Date.now(),
                         color: getRandomColor(),
                         environment: location.origin,
-                        window: { height: window.innerHeight, width: window.innerWidth },
                     })
                 })
 
@@ -263,7 +262,8 @@
 
                     currentValueKeys.filter((ck) => !keys.includes(ck)).forEach((key) => $(`[key=${key}]`).remove())
                     keys.forEach((key) => {
-                        const newText = 'Online friends:' + keys.length
+                        const maxConnectionLimit = 100
+                        const newText = 'Online friends:' + keys.length + '/' + maxConnectionLimit
                         const info = $('.info')
                         if (info.text() !== newText) info.text(newText)
                         if (currentValueKeys.includes(key)) {
@@ -307,14 +307,6 @@
                 }, 70)
                 $(document).on('mousemove', throttled)
                 $(document).on('touchmove', throttled)
-                $(window).on(
-                    'resize',
-                    throttleFunction(function (e) {
-                        setUserData({
-                            window: { height: window.innerHeight, width: window.innerWidth },
-                        })
-                    }, 200),
-                )
 
                 var startPosition = {}
                 $('.cube-glass')

@@ -140,6 +140,11 @@
             </svg>
         </template>
         <main>
+            <script>
+                function getRandomImageUrl() {
+                    return faker.image.abstract(64, 64).replace('http://', 'https://').replace('lorempixel', 'loremflickr')
+                }
+            </script>
             <aside class="w-96 bg-gray-200 bg-opacity-30 backdrop-blur gap-4 flex flex-col p-4">
                 <header class="w-full border-b border-slate-50/[.50]">
                     <div class="info">Online friends:...</div>
@@ -151,7 +156,14 @@
                     <article id="messages" class="flex flex-col grow">
                         <div class="flex">
                             <div>
-                                <img />
+                                <script>
+                                    document.writeln(
+                                        /*html*/
+                                        `
+                                        <img src=${getRandomImageUrl()}/>
+                                        `,
+                                    )
+                                </script>
                             </div>
                         </div>
                     </article>
@@ -234,6 +246,7 @@
                     if (!uid) throw Error('Uid is not defined')
                     return this.AllUsers + '/' + uid
                 }
+                Chat = this.#BASE_ROUTE + '/chat'
             })()
 
             $(function () {
@@ -245,17 +258,18 @@
                     }
                     localStorage.setItem(USER_ID_LOCATION, user.uid)
                     get(child(ref(db), DATABASE_ROUTES.OneUser(user.uid))).then((snapshot) => {
+                        var val = {}
                         if (snapshot.exists()) {
-                            const val = snapshot.val()
-                            currentUserData.color = val.color ?? getRandomColor()
+                            val = snapshot.val()
                         }
+                        currentUserData.color = val.color ?? getRandomColor()
+                        currentUserData.photoURL = val.photoURL ?? getRandomImageUrl()
+                        currentUserData.name = val.name ?? user.displayName ?? faker.internet.userName()
                         setUserData({
                             uid: user.uid,
-                            name: user.displayName ?? 'Anonym',
                             coords: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
                             lastActiveAt: Date.now(),
                             environment: location.origin,
-                            photoURL: getRandomImageUrl(),
                         })
                     })
                 })
@@ -423,9 +437,7 @@
                     .join(`%, ${Math.max(Math.min(alpha, 1), 0)})`)
                     .replace('hsl', 'hsla')
             }
-            function getRandomImageUrl() {
-                return faker.image.abstract().replace('http://', 'https://').replace('lorempixel', 'loremflickr')
-            }
+
             const throttleFunction = (cb, delay = 250) => {
                 let shouldWait = false
                 let waitingArgs

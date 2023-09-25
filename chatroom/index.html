@@ -12,6 +12,8 @@
             integrity="sha256-dWvV84T6BhzO4vG6gWhsWVKVoa4lVmLnpBOZh/CAHU4="
             crossorigin="anonymous"
         ></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+
         <title>Chat Room</title>
         <style>
             body {
@@ -64,11 +66,12 @@
 
             main {
                 display: flex;
-                align-items: center;
-                justify-content: center;
+                align-items: stretch;
                 height: 100%;
                 flex-grow: 1;
                 width: 100%;
+            }
+            main section {
                 perspective: 200px;
                 perspective-origin: center;
                 --cube-vertice: 100px;
@@ -113,10 +116,7 @@
     </head>
 
     <body>
-        <header>
-            <div class="info">Online friends:...</div>
-        </header>
-        <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background" />
+        <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background fixed inset-0 h-screen w-screen" />
         <template id="cursor">
             <svg xmlns="http://www.w3.org/2000/svg" class="bubble" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
                 <g clip-path="url(#clip0_429_11096)">
@@ -136,37 +136,44 @@
             </svg>
         </template>
         <main>
-            <div class="cube-glass"></div>
-            <div class="cube">
-                <div
-                    class="cube-face"
-                    style="transform: translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"
-                ></div>
-                <div
-                    class="cube-face"
-                    style="transform: rotateY(90deg) translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"
-                ></div>
-                <div
-                    class="cube-face"
-                    style="transform: rotateY(90deg) rotateX(90deg) translate3d(0px, 0px, calc(2 * var(--transform-amount)))"
-                ></div>
-                <div
-                    class="cube-face"
-                    style="
-                        transform: rotateY(180deg) rotateZ(90deg)
-                            translate3d(calc(-1 * var(--transform-amount)), 0px, var(--transform-amount));
-                    "
-                ></div>
-                <div
-                    class="cube-face"
-                    style="
-                        transform: rotateY(-90deg) rotateZ(90deg)
-                            translate3d(calc(-1 * var(--transform-amount)), 0px, var(--transform-amount));
-                    "
-                ></div>
-                <div class="cube-face" style="transform: rotateX(-90deg) translateZ(0px)">Top</div>
-            </div>
-            <aside class="shortcuts">Shortcuts</aside>
+            <aside class="w-96 bg-gray-200 bg-opacity-30 backdrop-blur">
+                <header>
+                    <div class="info">Online friends:...</div>
+                </header>
+                Chat
+            </aside>
+            <section class="flex items-center justify-center grow">
+                <div class="cube-glass"></div>
+                <div class="cube">
+                    <div
+                        class="cube-face"
+                        style="transform: translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"
+                    ></div>
+                    <div
+                        class="cube-face"
+                        style="transform: rotateY(90deg) translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"
+                    ></div>
+                    <div
+                        class="cube-face"
+                        style="transform: rotateY(90deg) rotateX(90deg) translate3d(0px, 0px, calc(2 * var(--transform-amount)))"
+                    ></div>
+                    <div
+                        class="cube-face"
+                        style="
+                            transform: rotateY(180deg) rotateZ(90deg)
+                                translate3d(calc(-1 * var(--transform-amount)), 0px, var(--transform-amount));
+                        "
+                    ></div>
+                    <div
+                        class="cube-face"
+                        style="
+                            transform: rotateY(-90deg) rotateZ(90deg)
+                                translate3d(calc(-1 * var(--transform-amount)), 0px, var(--transform-amount));
+                        "
+                    ></div>
+                    <div class="cube-face" style="transform: rotateX(-90deg) translateZ(0px)">Top</div>
+                </div>
+            </section>
         </main>
         <script type="module" defer>
             import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js'

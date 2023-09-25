@@ -362,6 +362,8 @@
                 $('[data-initial-id]')
                     .removeClass('delay-1500')
                     .removeClass('delay-1000')
+                    .removeClass('duration-200')
+                    .addClass('duration-700')
                     .css('opacity', 0)
                     .each(function (i, el) {
                         const prevId = el.getAttribute('data-initial-id')
@@ -371,6 +373,8 @@
                             $(el).replaceWith(initialEl)
                         }, 1000)
                     })
+
+                removeSlowAnimationsFromItemWhenNeeded($('[data-item-button]'))
                 $('#outcome').removeClass('max-w-[100%]').addClass('max-w-0')
             })
             $(window).on('beforeunload', saveScore)

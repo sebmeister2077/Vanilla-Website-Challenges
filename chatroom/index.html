@@ -254,7 +254,7 @@
             const USER_ID_LOCATION = 'chatroom_user_uid'
             const IS_DEBUG = window.location.hostname === '127.0.0.1'
             const DATABASE_ROUTES = new (class {
-                #BASE_ROUTE = 'env/' + (IS_DEBUG ? 'development' : window.location.hostname)
+                #BASE_ROUTE = 'env/' + (IS_DEBUG ? 'development' : window.location.hostname.replace(/./g, '_'))
                 Cube = this.#BASE_ROUTE + '/cube'
                 AllUsers = this.#BASE_ROUTE + '/users'
                 OneUser(uid) {

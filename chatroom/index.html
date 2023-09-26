@@ -231,6 +231,11 @@
                 onChildAdded,
                 onChildRemoved,
                 onChildChanged,
+                query,
+                orderByValue,
+                orderByKey,
+                orderByChild,
+                limitToLast,
             } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js'
 
             const firebaseConfig = {
@@ -375,7 +380,7 @@
                 //     { onlyOnce: true },
                 // )
                 //listen for new messages
-                onChildAdded(messagesListRef, (data) => {
+                onChildAdded(query(messagesListRef, orderByChild('timestamp'), limitToLast(20)), (data) => {
                     const val = data.val()
                     createDomMessage(val)
                 })

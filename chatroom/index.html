@@ -152,17 +152,26 @@
                         <template id="message-template">
                             <div data-uid class="flex w-full gap-4">
                                 <img data-image class="rounded-full w-10 h-10" />
-                                <div data-messages class="flex flex-col grow gap-2">
+                                <div data-messages class="flex flex-col grow gap-2 pr-2">
                                     <div data-username class="text-sm"></div>
-                                    <div data-message class="rounded-xl bg-slate-50/[.60] p-4"></div>
+                                    <div data-message class="rounded-xl bg-slate-50/[.60] p-4 shadow-sm"></div>
                                 </div>
                             </div>
                         </template>
                     </article>
                     <footer class="w-full">
-                        <form id="message-form" class="w-full flex justify-between px-4 py-2">
-                            <input placeholder="Type to chat..." name="message" type="text" />
-                            <button type="submit">Send</button>
+                        <form id="message-form" class="w-full flex justify-between items-center px-2 py-2 relative">
+                            <input
+                                placeholder="Type to chat..."
+                                name="message"
+                                type="text"
+                                class="shadow-md outline-0 w-full px-6 py-3 rounded-xl"
+                            />
+                            <button type="submit" class="absolute right-5">
+                                <svg class="fill-slate-400 w-6 h-6" viewBox="0 0 24 24">
+                                    <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"></path>
+                                </svg>
+                            </button>
                         </form>
                     </footer>
                 </section>

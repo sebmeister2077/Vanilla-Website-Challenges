@@ -140,7 +140,7 @@
                     return url
                 }
             </script>
-            <aside class="w-96 bg-gray-200 bg-opacity-30 backdrop-blur gap-4 flex flex-col p-4 h-full cursor-auto">
+            <aside class="z-30 w-96 bg-gray-200 bg-opacity-30 backdrop-blur gap-4 flex flex-col p-4 h-full cursor-auto">
                 <header class="w-full border-b border-slate-50/[.50] flex">
                     <div class="info">Online friends:...</div>
                 </header>
@@ -167,8 +167,11 @@
                                 type="text"
                                 class="shadow-md outline-0 w-full px-6 py-3 rounded-xl"
                             />
-                            <button type="submit" class="absolute right-5">
-                                <svg class="fill-slate-400 w-6 h-6" viewBox="0 0 24 24">
+                            <button
+                                type="submit"
+                                class="absolute right-5 text-slate-400 hover:text-sky-400 focus:text-sky-400 transition-colors duration-300 outline-0"
+                            >
+                                <svg class="fill-current w-6 h-6" viewBox="0 0 24 24">
                                     <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"></path>
                                 </svg>
                             </button>
@@ -375,7 +378,8 @@
                     if (!auth.currentUser) return
 
                     const cursorSvg = $(`svg[key=${currentUserData.uid}]`)
-                    const isInChat = isUnderElement('aside', e)
+                    //because aside is now higher z-index
+                    const isInChat = false && isUnderElement('aside', e)
                     if (isInChat) {
                         cursorSvg.css('opacity', 0)
                         return

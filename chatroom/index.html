@@ -109,6 +109,13 @@
                 opacity: 0.56;
                 transition: background-color 0.8s ease-in-out;
             }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
         </style>
     </head>
 
@@ -148,7 +155,7 @@
                     <header>
                         <h2 class="text-3xl">Chat Messages</h2>
                     </header>
-                    <article id="messages" class="flex flex-col grow gap-6 overflow-auto px-2">
+                    <article id="messages" class="flex flex-col grow gap-6 overflow-auto px-2 scroll-smooth scrollbar-hide">
                         <template id="message-template">
                             <div data-uid class="flex w-full gap-2">
                                 <img data-image class="rounded-full w-10 h-10" />

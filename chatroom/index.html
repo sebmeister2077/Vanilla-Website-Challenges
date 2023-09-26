@@ -222,7 +222,12 @@
         <script type="module" defer>
             import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js'
             import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-analytics.js'
-            import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js'
+            import {
+                getAuth,
+                signInAnonymously,
+                setPersistence,
+                indexedDBLocalPersistence,
+            } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js'
             import { getPerformance } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-performance.js'
             import {
                 getDatabase,
@@ -258,7 +263,7 @@
             // Initialize Firebase
             const app = initializeApp(firebaseConfig)
             const auth = getAuth(app)
-            console.log(auth)
+            setPersistence(auth, indexedDBLocalPersistence)
             const analytics = getAnalytics(app)
             const performance = getPerformance(app)
             const db = getDatabase(app, 'https://chatroom-000-default-rtdb.europe-west1.firebasedatabase.app/')
@@ -544,7 +549,6 @@
                 const el = template.contents().clone(true, true)
 
                 if (userId === currentUserData.uid) {
-                    console.log(el)
                     reverseMessageDirection(el)
                 }
                 el.attr('data-uid', userId)

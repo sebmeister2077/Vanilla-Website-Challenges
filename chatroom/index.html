@@ -344,7 +344,7 @@
                     if (!snapshot.exists()) return
                     const data = snapshot.val()
                     const NOW = Date.now()
-                    const OFFSET = 60_000
+                    const OFFSET = 60_000 // 1 min
                     const { origin } = location
 
                     const keys = Object.keys(data).filter((k) => data[k].environment === origin && data[k].isOnline)
@@ -394,7 +394,7 @@
                 //     { onlyOnce: true },
                 // )
                 //listen for new messages
-                onChildAdded(query(messagesListRef, orderByChild('timestamp'), limitToLast(20)), (data) => {
+                onChildAdded(query(messagesListRef, orderByChild('timestamp'), limitToLast(100)), (data) => {
                     const val = data.val()
                     createDomMessage(val)
                 })

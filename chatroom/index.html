@@ -141,8 +141,10 @@
         </template>
         <main>
             <script>
-                function getRandomImageUrl() {
-                    return faker.image.abstract(40, 40).replace('http://', 'https://').replace('lorempixel', 'loremflickr')
+                async function getRandomImageUrl() {
+                    const fakerImg = faker.image.abstract(40, 40).replace('http://', 'https://').replace('lorempixel', 'loremflickr')
+                    const { url } = await fetch(fakerImg, { mode: 'cors' })
+                    return url
                 }
             </script>
             <aside class="w-96 bg-gray-200 bg-opacity-30 backdrop-blur gap-4 flex flex-col p-4 h-full">
@@ -154,367 +156,22 @@
                         <h2 class="text-3xl">Chat Messages</h2>
                     </header>
                     <article id="messages" class="flex flex-col grow gap-6 overflow-auto">
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
+                        <template id="message-template">
+                            <div class="flex w-full gap-4">
+                                <img data-image class="rounded-full w-10 h-10" />
+                                <div class="flex flex-col grow gap-1">
+                                    <div data-username class="text-sm"></div>
+                                    <div data-message class="rounded-xl bg-slate-50/[.60] p-4"></div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex w-full gap-4">
-                            <div>
-                                <script>
-                                    document.writeln(
-                                        /*html*/
-                                        `
-                                        <img src=${getRandomImageUrl()} class="rounded-full w-10 h-10"/>
-                                        `,
-                                    )
-                                </script>
-                            </div>
-                            <div class="flex flex-col grow gap-1">
-                                <div data-username class="text-sm">
-                                    <script>
-                                        document.writeln(faker.internet.userName())
-                                    </script>
-                                </div>
-                                <div data-message class="rounded-xl bg-slate-50/[.60] p-4">
-                                    <script>
-                                        document.writeln(faker.lorem.sentence())
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
+                        </template>
                     </article>
+                    <footer>
+                        <form id="message-form">
+                            <input placeholder="Type to chat..." name="message" type="text" />
+                            <button type="submit">Send</button>
+                        </form>
+                    </footer>
                 </section>
             </aside>
             <section class="flex items-center justify-center grow">
@@ -603,6 +260,11 @@
                 Chat = this.#BASE_ROUTE + '/chat'
             })()
 
+            var randomImg = null
+            const imgPromise = getRandomImageUrl().then((val) => {
+                randomImg = val
+                return val
+            })
             $(function () {
                 auth.onAuthStateChanged((user) => {
                     if (!user) {
@@ -611,13 +273,13 @@
                         return
                     }
                     localStorage.setItem(USER_ID_LOCATION, user.uid)
-                    get(child(ref(db), DATABASE_ROUTES.OneUser(user.uid))).then((snapshot) => {
+                    get(child(ref(db), DATABASE_ROUTES.OneUser(user.uid))).then(async (snapshot) => {
                         var val = {}
                         if (snapshot.exists()) {
                             val = snapshot.val()
                         }
                         currentUserData.color = val.color ?? getRandomColor()
-                        currentUserData.photoURL = val.photoURL ?? getRandomImageUrl()
+                        currentUserData.photoURL = val.photoURL ?? randomImg ?? (await imgPromise)
                         currentUserData.name = val.name ?? user.displayName ?? faker.internet.userName()
                         setUserData({
                             uid: user.uid,
@@ -752,7 +414,14 @@
                         color: currentUserData.color,
                     })
                 }, 80)
-
+                $('#message-form').on('submit', (e) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    const formData = new FormData(e.target)
+                    const message = formData.get('message')
+                    console.log('🚀 ~ file: index.html:766 ~ $ ~ message:', message)
+                    pushToChat(message)
+                })
                 $('.cube-glass').on('mousemove', throttleMove)
             })
             var currentUserData = {}
@@ -766,6 +435,17 @@
                 Object.assign(currentUserData, data)
                 if (!currentUserData.uid) return
                 update(ref(db), { [DATABASE_ROUTES.OneUser(currentUserData.uid)]: currentUserData })
+            }
+            const messagesListRef = ref(db, DATABASE_ROUTES.Chat)
+            function pushToChat(message) {
+                if (!currentUserData.uid) return
+                const newMessageRef = push(messagesListRef)
+                set(newMessageRef, {
+                    username: currentUserData.name,
+                    photoURL: currentUserData.photoURL,
+                    message,
+                    timestamp: serverTimestamp(),
+                })
             }
             const cubeWidth = parseInt(getComputedStyle($('main')[0]).getPropertyValue('--cube-vertice').replace('px', ''))
             function rotateCube({ x, y }, color) {

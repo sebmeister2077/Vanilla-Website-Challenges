@@ -148,9 +148,9 @@
                     <header>
                         <h2 class="text-3xl">Chat Messages</h2>
                     </header>
-                    <article id="messages" class="flex flex-col grow gap-6 overflow-auto">
+                    <article id="messages" class="flex flex-col grow gap-6 overflow-auto px-2">
                         <template id="message-template">
-                            <div data-uid class="flex w-full gap-4">
+                            <div data-uid class="flex w-full gap-2">
                                 <img data-image class="rounded-full w-10 h-10" />
                                 <div data-messages class="flex flex-col grow gap-2 pr-2">
                                     <div data-username class="text-sm"></div>
@@ -293,7 +293,7 @@
                             lastActiveAt: serverTimestamp(),
                             environment: location.origin,
                         })
-
+                        $(`#messages > [data-uid=${user.uid}]`).addClass('flex-row-reverse')
                         onDisconnect(ref(db, DATABASE_ROUTES.LastOnline(user.uid))).set(serverTimestamp())
                     })
                 })
@@ -351,24 +351,23 @@
                     })
                 })
 
-                //initial messages render
-                onValue(
-                    messagesListRef,
-                    (snapshot) => {
-                        if (!snapshot.exists()) return
-                        const values = snapshot.val()
-                        const messages = Object.keys(values)
-                            .map((k) => values[k])
-                            .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
-                        // .forEach(createDomMessage)
-                    },
-                    { onlyOnce: true },
-                )
+                // //initial messages render
+                // onValue(
+                //     messagesListRef,
+                //     (snapshot) => {
+                //         if (!snapshot.exists()) return
+                //         const values = snapshot.val()
+                //         const messages = Object.keys(values)
+                //             .map((k) => values[k])
+                //             .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
+                //         // .forEach(createDomMessage)
+                //     },
+                //     { onlyOnce: true },
+                // )
                 //listen for new messages
                 onChildAdded(messagesListRef, (data) => {
                     const val = data.val()
                     createDomMessage(val)
-                    // console.log('🚀 ~ file: index.html:361 ~ onChildAdded ~ val:', val)
                 })
 
                 const throttledCursorMove = throttleFunction(function (e) {
@@ -520,6 +519,7 @@
                 const template = $('#message-template')
                 const el = template.contents().clone(true, true)
 
+                if (userId === currentUserData.uid) el.addClass('flex-row-reverse')
                 el.attr('data-uid', userId)
                 $('[data-image]', el).attr('src', photoURL)
                 $('[data-username]', el).text(username)

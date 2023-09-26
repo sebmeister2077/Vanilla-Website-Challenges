@@ -151,7 +151,7 @@
                 <header class="w-full border-b border-slate-50/[.50] flex">
                     <div class="info">Online friends:...</div>
                 </header>
-                <section class="flex flex-col grow gap-6 overflow-hidden">
+                <section class="flex flex-col grow gap-2 overflow-hidden">
                     <header>
                         <h2 class="text-3xl">Chat Messages</h2>
                     </header>
@@ -220,6 +220,7 @@
             </section>
         </main>
         <script type="module" defer>
+            import autoAnimate from './scripts/autoAnimate.js'
             import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js'
             import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-analytics.js'
             import {
@@ -288,6 +289,7 @@
                 Chat = this.#BASE_ROUTE + '/chat'
             })()
 
+            // autoAnimate($('#messages')[0])
             var randomImg = null
             const imgPromise = getRandomImageUrl().then((val) => {
                 randomImg = val
@@ -316,7 +318,7 @@
                             coords: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
                             environment: location.origin,
                         })
-                        reverseMessageDirection($(`#messages > [data-uid=${user.uid}]`))
+                        applyCurrentUserChatStyles($(`#messages > [data-uid=${user.uid}]`))
 
                         onDisconnect(ref(db, DATABASE_ROUTES.LastOnline(user.uid))).set(serverTimestamp())
                         onDisconnect(ref(db, DATABASE_ROUTES.OnlineStatus(user.uid))).set(false)
@@ -549,7 +551,7 @@
                 const el = template.contents().clone(true, true)
 
                 if (userId === currentUserData.uid) {
-                    reverseMessageDirection(el)
+                    applyCurrentUserChatStyles(el)
                 }
                 el.attr('data-uid', userId)
                 $('[data-image]', el).attr('src', photoURL)
@@ -573,8 +575,13 @@
                 }, 10)
                 messageContainer.append(el)
             }
-            function reverseMessageDirection(jqueryEl) {
-                jqueryEl.addClass('flex-row-reverse').children('[data-messages]').removeClass('items-start').addClass('items-end')
+            function applyCurrentUserChatStyles(jqueryEl) {
+                jqueryEl
+                    .addClass('flex-row-reverse')
+                    .children('[data-messages]')
+                    .removeClass('items-start')
+                    .addClass('items-end')
+                    .children('[data-username]')
             }
             function isUnderElement(elem, e) {
                 const elemWidth = $(elem).width()

@@ -478,8 +478,9 @@
                     e.stopPropagation()
                     e.preventDefault()
                     const formData = new FormData(e.target)
+                    const message = formData.get('message').trim()
+                    if (!message) return
                     e.target.reset()
-                    const message = formData.get('message')
                     pushToChat(message)
                 })
                 $('.cube-glass').on('mousemove', throttleMove)

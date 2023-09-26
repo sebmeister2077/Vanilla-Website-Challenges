@@ -141,7 +141,7 @@
                 }
             </script>
             <aside class="w-96 bg-gray-200 bg-opacity-30 backdrop-blur gap-4 flex flex-col p-4 h-full cursor-auto">
-                <header class="w-full border-b border-slate-50/[.50]">
+                <header class="w-full border-b border-slate-50/[.50] flex">
                     <div class="info">Online friends:...</div>
                 </header>
                 <section class="flex flex-col grow gap-6 overflow-hidden">
@@ -150,9 +150,9 @@
                     </header>
                     <article id="messages" class="flex flex-col grow gap-6 overflow-auto">
                         <template id="message-template">
-                            <div class="flex w-full gap-4">
+                            <div data-uid class="flex w-full gap-4">
                                 <img data-image class="rounded-full w-10 h-10" />
-                                <div class="flex flex-col grow gap-1">
+                                <div data-messages class="flex flex-col grow gap-2">
                                     <div data-username class="text-sm"></div>
                                     <div data-message class="rounded-xl bg-slate-50/[.60] p-4"></div>
                                 </div>
@@ -216,6 +216,9 @@
                 get,
                 serverTimestamp,
                 onDisconnect,
+                onChildAdded,
+                onChildRemoved,
+                onChildChanged,
             } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js'
 
             const firebaseConfig = {
@@ -258,6 +261,7 @@
                 randomImg = val
                 return val
             })
+            const messagesListRef = ref(db, DATABASE_ROUTES.Chat)
             $(function () {
                 auth.onAuthStateChanged((user) => {
                     if (!user) {
@@ -277,9 +281,10 @@
                         setUserData({
                             uid: user.uid,
                             coords: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
-                            lastActiveAt: Date.now(),
+                            lastActiveAt: serverTimestamp(),
                             environment: location.origin,
                         })
+
                         onDisconnect(ref(db, DATABASE_ROUTES.LastOnline(user.uid))).set(serverTimestamp())
                     })
                 })
@@ -336,8 +341,20 @@
                         $(document.body).append(newItem)
                     })
                 })
+                onValue(
+                    messagesListRef,
+                    (snapshot) => {
+                        if (!snapshot.exists()) return
+                        const values = snapshot.val()
+                        const messages = Object.keys(values)
+                            .map((k) => values[k])
+                            .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
+                            .forEach(createDomMessage)
+                    },
+                    { onlyOnce: true },
+                )
 
-                const throttled = throttleFunction(function (e) {
+                const throttledCursorMove = throttleFunction(function (e) {
                     e.stopPropagation()
                     if (!auth.currentUser) return
 
@@ -363,8 +380,8 @@
                     })
                 }, 70)
                 $(document).on({
-                    mousemove: throttled,
-                    touchmove: throttled,
+                    mousemove: throttledCursorMove,
+                    touchmove: throttledCursorMove,
                 })
 
                 var startPosition = {}
@@ -422,8 +439,8 @@
                     e.stopPropagation()
                     e.preventDefault()
                     const formData = new FormData(e.target)
+                    e.target.reset()
                     const message = formData.get('message')
-                    console.log('🚀 ~ file: index.html:766 ~ $ ~ message:', message)
                     pushToChat(message)
                 })
                 $('.cube-glass').on('mousemove', throttleMove)
@@ -440,15 +457,22 @@
                 if (!currentUserData.uid) return
                 update(ref(db), { [DATABASE_ROUTES.OneUser(currentUserData.uid)]: currentUserData })
             }
-            const messagesListRef = ref(db, DATABASE_ROUTES.Chat)
             function pushToChat(message) {
                 if (!currentUserData.uid) return
                 const newMessageRef = push(messagesListRef)
-                set(newMessageRef, {
+                const data = {
+                    userId: currentUserData.uid,
                     username: currentUserData.name,
                     photoURL: currentUserData.photoURL,
                     message,
+                }
+                set(newMessageRef, {
+                    ...data,
                     timestamp: serverTimestamp(),
+                })
+                createDomMessage({
+                    ...data,
+                    timestamp: Date.now(),
                 })
             }
             const cubeWidth = parseInt(getComputedStyle($('main')[0]).getPropertyValue('--cube-vertice').replace('px', ''))
@@ -475,12 +499,31 @@
                     .join(`%, ${Math.max(Math.min(alpha, 1), 0)})`)
                     .replace('hsl', 'hsla')
             }
+            function createDomMessage({ message, photoURL, username, timestamp, userId }) {
+                const template = $('#message-template')
+                const el = template.contents().clone(true, true)
 
+                el.attr('data-uid', userId)
+                $('[data-image]', el).attr('src', photoURL)
+                $('[data-username]', el).text(username)
+                $('[data-message]', el).text(message)
+                const messageContainer = $('#messages')
+                const lastMessage = messageContainer.children('[data-uid]').last()
+                console.log(lastMessage[0])
+
+                const lastUserId = lastMessage.attr('data-uid')
+
+                if (lastUserId === userId) {
+                    lastMessage.children('[data-messages]').append($('[data-message]', el)[0])
+                    return
+                }
+                messageContainer.append(el)
+            }
             function isUnderElement(elem, e) {
-                var elemWidth = $(elem).width()
-                var elemHeight = $(elem).height()
-                var elemPosition = $(elem).offset()
-                var elemPosition2 = new Object()
+                const elemWidth = $(elem).width()
+                const elemHeight = $(elem).height()
+                const elemPosition = $(elem).offset()
+                const elemPosition2 = {}
                 elemPosition2.top = elemPosition.top + elemHeight
                 elemPosition2.left = elemPosition.left + elemWidth
 

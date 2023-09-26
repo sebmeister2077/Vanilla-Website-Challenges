@@ -564,6 +564,8 @@
                 child,
                 update,
                 get,
+                serverTimestamp,
+                onDisconnect,
             } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js'
 
             const firebaseConfig = {
@@ -594,6 +596,10 @@
                     if (!uid) throw Error('Uid is not defined')
                     return this.AllUsers + '/' + uid
                 }
+                LastOnline(uid) {
+                    return this.OneUser(uid) + '/lastActiveAt'
+                }
+                InfoConnected = '.info/connected'
                 Chat = this.#BASE_ROUTE + '/chat'
             })()
 
@@ -619,6 +625,7 @@
                             lastActiveAt: Date.now(),
                             environment: location.origin,
                         })
+                        onDisconnect(ref(db, DATABASE_ROUTES.LastOnline(user.uid))).set(serverTimestamp())
                     })
                 })
 
@@ -689,7 +696,6 @@
                     }
                     setUserData({
                         coords,
-                        lastActiveAt: Date.now(),
                     })
                 }, 70)
                 $(document).on('mousemove', throttled)

@@ -541,9 +541,16 @@
                 const lastUserId = lastMessage.attr('data-uid')
 
                 if (lastUserId === userId) {
-                    lastMessage.children('[data-messages]').append($('[data-message]', el)[0])
+                    const textEl = $('[data-message]', el)
+                    lastMessage.children('[data-messages]').append(textEl)
+                    setTimeout(() => {
+                        textEl[0].scrollIntoView()
+                    }, 10)
                     return
                 }
+                setTimeout(() => {
+                    el[1]?.scrollIntoView()
+                }, 10)
                 messageContainer.append(el)
             }
             function isUnderElement(elem, e) {

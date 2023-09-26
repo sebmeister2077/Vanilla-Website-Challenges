@@ -109,13 +109,6 @@
                 opacity: 0.56;
                 transition: background-color 0.8s ease-in-out;
             }
-            .shortcuts {
-                position: absolute;
-                bottom: 0px;
-                right: 0px;
-                padding: 20px;
-                color: white;
-            }
         </style>
     </head>
 
@@ -147,7 +140,7 @@
                     return url
                 }
             </script>
-            <aside class="w-96 bg-gray-200 bg-opacity-30 backdrop-blur gap-4 flex flex-col p-4 h-full">
+            <aside class="w-96 bg-gray-200 bg-opacity-30 backdrop-blur gap-4 flex flex-col p-4 h-full cursor-auto">
                 <header class="w-full border-b border-slate-50/[.50]">
                     <div class="info">Online friends:...</div>
                 </header>
@@ -166,8 +159,8 @@
                             </div>
                         </template>
                     </article>
-                    <footer>
-                        <form id="message-form">
+                    <footer class="w-full">
+                        <form id="message-form" class="w-full flex justify-between px-4 py-2">
                             <input placeholder="Type to chat..." name="message" type="text" />
                             <button type="submit">Send</button>
                         </form>
@@ -347,7 +340,16 @@
                 const throttled = throttleFunction(function (e) {
                     e.stopPropagation()
                     if (!auth.currentUser) return
-                    $(`svg[key=${currentUserData.uid}]`).css({
+
+                    const cursorSvg = $(`svg[key=${currentUserData.uid}]`)
+                    const isInChat = isUnderElement('aside', e)
+                    if (isInChat) {
+                        cursorSvg.css('opacity', 0)
+                        return
+                    }
+
+                    cursorSvg.css({
+                        opacity: 1,
                         translate: `${e.clientX}px ${e.clientY}px`,
                     })
                     const coords = { x: e.clientX, y: e.clientY }
@@ -360,8 +362,10 @@
                         coords,
                     })
                 }, 70)
-                $(document).on('mousemove', throttled)
-                $(document).on('touchmove', throttled)
+                $(document).on({
+                    mousemove: throttled,
+                    touchmove: throttled,
+                })
 
                 var startPosition = {}
                 $('.cube-glass')
@@ -472,6 +476,18 @@
                     .replace('hsl', 'hsla')
             }
 
+            function isUnderElement(elem, e) {
+                var elemWidth = $(elem).width()
+                var elemHeight = $(elem).height()
+                var elemPosition = $(elem).offset()
+                var elemPosition2 = new Object()
+                elemPosition2.top = elemPosition.top + elemHeight
+                elemPosition2.left = elemPosition.left + elemWidth
+
+                return (
+                    e.pageX > elemPosition.left && e.pageX < elemPosition2.left && e.pageY > elemPosition.top && e.pageY < elemPosition2.top
+                )
+            }
             const throttleFunction = (cb, delay = 250) => {
                 let shouldWait = false
                 let waitingArgs

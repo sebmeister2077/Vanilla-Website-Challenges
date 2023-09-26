@@ -147,7 +147,7 @@
                     return url
                 }
             </script>
-            <aside class="z-30 w-96 bg-gray-200 bg-opacity-30 backdrop-blur gap-4 flex flex-col p-4 h-full cursor-auto">
+            <aside class="z-30 w-96 bg-gray-200 bg-opacity-10 shadow-sm backdrop-blur-sm gap-4 flex flex-col p-4 h-full cursor-auto">
                 <header class="w-full border-b border-slate-50/[.50] flex">
                     <div class="info">Online friends:...</div>
                 </header>
@@ -158,10 +158,10 @@
                     <article id="messages" class="flex flex-col grow gap-6 overflow-auto px-2 scroll-smooth scrollbar-hide">
                         <template id="message-template">
                             <div data-uid class="flex w-full gap-2">
-                                <img data-image class="rounded-full w-10 h-10" />
-                                <div data-messages class="flex flex-col grow gap-2 pr-2">
-                                    <div data-username class="text-sm"></div>
-                                    <div data-message class="rounded-xl bg-slate-50/[.60] p-4 shadow-sm"></div>
+                                <img data-image class="rounded-full w-10 h-10 mt-2" />
+                                <div data-messages class="flex flex-col grow gap-2 pr-2 items-start">
+                                    <span data-username class="text-sm w-fit"></span>
+                                    <div data-message class="rounded-xl bg-slate-50/[.60] p-4 shadow-md"></div>
                                 </div>
                             </div>
                         </template>
@@ -311,7 +311,7 @@
                             coords: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
                             environment: location.origin,
                         })
-                        $(`#messages > [data-uid=${user.uid}]`).addClass('flex-row-reverse')
+                        reverseMessageDirection($(`#messages > [data-uid=${user.uid}]`))
 
                         onDisconnect(ref(db, DATABASE_ROUTES.LastOnline(user.uid))).set(serverTimestamp())
                         onDisconnect(ref(db, DATABASE_ROUTES.OnlineStatus(user.uid))).set(false)
@@ -543,7 +543,10 @@
                 const template = $('#message-template')
                 const el = template.contents().clone(true, true)
 
-                if (userId === currentUserData.uid) el.addClass('flex-row-reverse')
+                if (userId === currentUserData.uid) {
+                    console.log(el)
+                    reverseMessageDirection(el)
+                }
                 el.attr('data-uid', userId)
                 $('[data-image]', el).attr('src', photoURL)
                 $('[data-username]', el).text(username)
@@ -565,6 +568,9 @@
                     el[1]?.scrollIntoView()
                 }, 10)
                 messageContainer.append(el)
+            }
+            function reverseMessageDirection(jqueryEl) {
+                jqueryEl.addClass('flex-row-reverse').children('[data-messages]').removeClass('items-start').addClass('items-end')
             }
             function isUnderElement(elem, e) {
                 const elemWidth = $(elem).width()

@@ -264,6 +264,9 @@
                 LastOnline(uid) {
                     return this.OneUser(uid) + '/lastActiveAt'
                 }
+                OnlineStatus(uid) {
+                    return this.OneUser(uid) + '/isOnline'
+                }
                 InfoConnected = '.info/connected'
                 Chat = this.#BASE_ROUTE + '/chat'
             })()
@@ -291,13 +294,15 @@
                         currentUserData.photoURL = val.photoURL ?? randomImg ?? (await imgPromise)
                         currentUserData.name = val.name ?? user.displayName ?? faker.internet.userName()
                         setUserData({
+                            isOnline: true,
                             uid: user.uid,
                             coords: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
-                            lastActiveAt: serverTimestamp(),
                             environment: location.origin,
                         })
                         $(`#messages > [data-uid=${user.uid}]`).addClass('flex-row-reverse')
+
                         onDisconnect(ref(db, DATABASE_ROUTES.LastOnline(user.uid))).set(serverTimestamp())
+                        onDisconnect(ref(db, DATABASE_ROUTES.OnlineStatus(user.uid))).set(false)
                     })
                 })
 
@@ -323,14 +328,16 @@
                     const OFFSET = 60_000
                     const { origin } = location
 
-                    const keys = Object.keys(data).filter((k) => data[k].environment === origin && data[k].lastActiveAt > NOW - OFFSET)
+                    const keys = Object.keys(data).filter((k) => data[k].environment === origin && data[k].isOnline)
 
                     currentValueKeys.filter((ck) => !keys.includes(ck)).forEach((key) => $(`[key=${key}]`).remove())
+
+                    const maxConnectionLimit = 100
+                    const newText = 'Online friends:' + keys.length + '/' + maxConnectionLimit
+                    const info = $('.info')
+                    if (info.text() !== newText) info.text(newText)
+
                     keys.forEach((key) => {
-                        const maxConnectionLimit = 100
-                        const newText = 'Online friends:' + keys.length + '/' + maxConnectionLimit
-                        const info = $('.info')
-                        if (info.text() !== newText) info.text(newText)
                         if (currentValueKeys.includes(key)) {
                             $(`svg[key=${key}]`).css({
                                 translate: `${data[key].coords.x}px ${data[key].coords.y}px`,

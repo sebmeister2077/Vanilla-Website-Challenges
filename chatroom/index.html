@@ -15,6 +15,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js" referrerpolicy="no-referrer"></script>
+
         <title>Chat Room</title>
         <style>
             * {
@@ -250,6 +251,16 @@
                 orderByChild,
                 limitToLast,
             } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js'
+            import {
+                CustomProvider,
+                ReCaptchaEnterpriseProvider,
+                ReCaptchaV3Provider,
+                getLimitedUseToken,
+                getToken,
+                initializeAppCheck,
+                onTokenChanged,
+                setTokenAutoRefreshEnabled,
+            } from './scripts/appCheck.js'
 
             const firebaseConfig = {
                 apiKey: 'AIzaSyBbn4bnhT_c3j2gwaOWUoMI7iSo3qvFYu0',
@@ -298,6 +309,7 @@
             const messagesListRef = ref(db, DATABASE_ROUTES.Chat)
             $(function () {
                 auth.onAuthStateChanged((user) => {
+                    console.log('🚀 ~ file: index.html:301 ~ auth.onAuthStateChanged ~ user:', user)
                     if (!user) {
                         if (localStorage.getItem(USER_ID_LOCATION)) return
                         signInAnonymously(auth)

@@ -148,17 +148,21 @@
                     return url
                 }
             </script>
-            <aside class="z-30 w-96 bg-gray-200 bg-opacity-10 shadow-sm backdrop-blur-sm gap-4 flex flex-col p-4 h-full cursor-auto">
-                <header class="w-full border-b border-slate-50/[.50] flex">
-                    <div class="info">Online friends:...</div>
+            <aside
+                class="z-30 bg-gray-200 bg-opacity-10 shadow-sm backdrop-blur-sm gap-4 flex flex-col p-3 h-full cursor-auto w-20 md:w-96 overflow-hidden transition-[width] duration-1000"
+            >
+                <header class="w-full border-b border-slate-50/[.50] flex-row-reverse gap-8 flex justify-between">
+                    <div class="info w-max whitespace-nowrap order-2">Online friends:...</div>
+                    <button class="md:opacity-0 order-1 transition-opacity duration-500">Menu</button>
                 </header>
+
                 <section class="flex flex-col grow gap-2 overflow-hidden">
-                    <header>
-                        <h2 class="text-3xl">Chat Messages</h2>
+                    <header class="w-full">
+                        <h2 class="text-3xl w-full whitespace-nowrap min-w-[300px]">Chat Messages</h2>
                     </header>
                     <article id="messages" class="flex flex-col grow gap-6 overflow-auto px-2 scroll-smooth scrollbar-hide">
                         <template id="message-template">
-                            <div data-uid class="flex w-full gap-2">
+                            <div data-uid class="flex w-full gap-3">
                                 <img data-image class="rounded-full w-10 h-10 mt-2" />
                                 <div data-messages class="flex flex-col grow gap-2 pr-2 items-start">
                                     <span data-username class="text-sm w-fit"></span>
@@ -327,6 +331,7 @@
                             uid: user.uid,
                             coords: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
                             environment: location.origin,
+                            lastActiveAt: Date.now(),
                         })
                         applyCurrentUserChatStyles($(`#messages > [data-uid=${user.uid}]`))
 
@@ -576,7 +581,13 @@
                 el.attr('data-uid', userId)
                 $('[data-image]', el).attr('src', photoURL)
                 $('[data-username]', el).text(username)
-                $('[data-message]', el).text(message)
+
+                const messageEl = $('[data-message]', el)
+                messageEl.text(message)
+                const NR_CHARACTERS_ON_ONE_ROW = 28
+                if (message.length >= NR_CHARACTERS_ON_ONE_ROW) messageEl.addClass(`min-w-[${NR_CHARACTERS_ON_ONE_ROW}ch]`)
+                else messageEl.addClass('min-w-max')
+
                 const messageContainer = $('#messages')
                 const lastMessage = messageContainer.children('[data-uid]').last()
 

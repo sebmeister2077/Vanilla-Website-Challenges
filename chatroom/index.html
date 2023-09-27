@@ -170,8 +170,8 @@
                     </header>
                     <article id="messages" class="flex flex-col grow gap-6 overflow-auto px-2 scroll-smooth scrollbar-hide">
                         <template id="message-template">
-                            <div data-uid class="flex w-full gap-3">
-                                <img data-image class="rounded-full w-10 h-10 mt-2" />
+                            <div data-uid class="flex w-full gap-3 relative">
+                                <img data-image class="rounded-full w-10 h-10 mt-2 sticky top-0" />
                                 <div
                                     data-messages
                                     class="flex flex-col grow gap-2 pr-2 items-start opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"

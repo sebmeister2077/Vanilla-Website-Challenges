@@ -222,15 +222,15 @@
         </main>
         <script type="module" defer>
             import autoAnimate from './scripts/autoAnimate.js'
-            import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js'
-            import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-analytics.js'
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js'
+            import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js'
             import {
                 getAuth,
                 signInAnonymously,
                 setPersistence,
                 indexedDBLocalPersistence,
-            } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js'
-            import { getPerformance } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-performance.js'
+            } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
+            import { getPerformance } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-performance.js'
             import {
                 getDatabase,
                 ref,
@@ -250,38 +250,27 @@
                 orderByKey,
                 orderByChild,
                 limitToLast,
-            } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js'
-            import {
-                CustomProvider,
-                ReCaptchaEnterpriseProvider,
-                ReCaptchaV3Provider,
-                getLimitedUseToken,
-                getToken,
-                initializeAppCheck,
-                onTokenChanged,
-                setTokenAutoRefreshEnabled,
-            } from './scripts/appCheck.js'
+            } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
 
-            const firebaseConfig = {
+            import {
+                initializeAppCheck,
+                ReCaptchaV3Provider,
+                getToken,
+            } from 'https://cdnjs.cloudflare.com/ajax/libs/firebase/10.4.0/firebase-app-check.min.js'
+
+            const firebaseConfig = Object.freeze({
                 apiKey: 'AIzaSyBbn4bnhT_c3j2gwaOWUoMI7iSo3qvFYu0',
-                authDomain: 'chatroom-000.firebaseapp.com',
                 projectId: 'chatroom-000',
-                storageBucket: 'chatroom-000.appspot.com',
-                messagingSenderId: '55067342796',
                 appId: '1:55067342796:web:9488295327025826df8f69',
-                measurementId: 'G-DS9YNWPK0C',
-            }
+            })
+            const appCheckPublicId = '6LdkVlcoAAAAAFgaHecRfj1tr5R58czFim3D77QB'
+            const databaseLocation = Object.freeze('https://chatroom-000-default-rtdb.europe-west1.firebasedatabase.app/')
+            const IS_DEBUG = window.location.hostname === '127.0.0.1'
 
             // Initialize Firebase
             const app = initializeApp(firebaseConfig)
-            const auth = getAuth(app)
-            setPersistence(auth, indexedDBLocalPersistence)
-            const analytics = getAnalytics(app)
-            const performance = getPerformance(app)
-            const db = getDatabase(app, 'https://chatroom-000-default-rtdb.europe-west1.firebasedatabase.app/')
 
             const USER_ID_LOCATION = 'chatroom_user_uid'
-            const IS_DEBUG = window.location.hostname === '127.0.0.1'
             const DATABASE_ROUTES = new (class {
                 #BASE_ROUTE = 'env/' + (IS_DEBUG ? 'development' : window.location.hostname.replace(/\./g, '_'))
                 Cube = this.#BASE_ROUTE + '/cube'
@@ -306,8 +295,24 @@
                 randomImg = val
                 return val
             })
-            const messagesListRef = ref(db, DATABASE_ROUTES.Chat)
-            $(function () {
+
+            $(async function () {
+                const token = IS_DEBUG
+                    ? (await import('./env.local.json', { assert: { type: 'json' } })).default.LOCAL_RECAPTCHA_DEBUG_TOKEN
+                    : appCheckPublicId
+                try {
+                    const appCheck = getAppCheck(token)
+                    getToken(appCheck).then(console.log)
+                } catch (e) {
+                    console.dir(e)
+                }
+
+                const performance = getPerformance(app)
+                const analytics = getAnalytics(app)
+                const auth = getAuth(app)
+                setPersistence(auth, indexedDBLocalPersistence)
+                const db = getDatabase(app, databaseLocation)
+                const messagesListRef = ref(db, DATABASE_ROUTES.Chat)
                 auth.onAuthStateChanged((user) => {
                     console.log('🚀 ~ file: index.html:301 ~ auth.onAuthStateChanged ~ user:', user)
                     if (!user) {
@@ -616,6 +621,12 @@
                 return (
                     e.pageX > elemPosition.left && e.pageX < elemPosition2.left && e.pageY > elemPosition.top && e.pageY < elemPosition2.top
                 )
+            }
+            function getAppCheck(token) {
+                return initializeAppCheck(app, {
+                    provider: new ReCaptchaV3Provider(token),
+                    isTokenAutoRefreshEnabled: true,
+                })
             }
             const throttleFunction = (cb, delay = 250) => {
                 let shouldWait = false

@@ -172,7 +172,10 @@
                         <template id="message-template">
                             <div data-uid class="flex w-full gap-3">
                                 <img data-image class="rounded-full w-10 h-10 mt-2" />
-                                <div data-messages class="flex flex-col grow gap-2 pr-2 items-start">
+                                <div
+                                    data-messages
+                                    class="flex flex-col grow gap-2 pr-2 items-start opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
+                                >
                                     <span data-username class="text-sm w-fit"></span>
                                     <div data-message class="rounded-xl bg-slate-50/[.60] p-4 shadow-md"></div>
                                 </div>
@@ -180,7 +183,10 @@
                         </template>
                     </article>
                     <footer class="w-full">
-                        <form id="message-form" class="w-full flex justify-between items-center px-2 py-2 relative">
+                        <form
+                            id="message-form"
+                            class="w-full flex justify-between items-center px-2 py-2 relative opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
+                        >
                             <input
                                 placeholder="Type to chat..."
                                 name="message"

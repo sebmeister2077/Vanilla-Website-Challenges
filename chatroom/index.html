@@ -120,7 +120,7 @@
         </style>
     </head>
 
-    <body>
+    <body class="overflow-hidden">
         <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background fixed inset-0 h-screen w-screen" />
         <template id="cursor">
             <svg xmlns="http://www.w3.org/2000/svg" class="bubble" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
@@ -149,11 +149,19 @@
                 }
             </script>
             <aside
-                class="z-30 bg-gray-200 bg-opacity-10 shadow-sm backdrop-blur-sm gap-4 flex flex-col p-3 h-full cursor-auto w-20 md:w-96 overflow-hidden transition-[width] duration-1000"
+                id="chat"
+                class="group/chat z-30 bg-gray-200 bg-opacity-10 shadow-sm backdrop-blur-sm gap-4 flex flex-col p-3 h-full cursor-auto w-20 data-[open=true]:w-96 md:w-96 overflow-hidden transition-[width] duration-1000"
             >
                 <header class="w-full border-b border-slate-50/[.50] flex-row-reverse gap-8 flex justify-between">
                     <div class="info w-max whitespace-nowrap order-2">Online friends:...</div>
-                    <button class="md:opacity-0 order-1 transition-opacity duration-500">Menu</button>
+                    <button
+                        class="md:opacity-0 order-1 transition-opacity duration-500"
+                        onclick="const chat = $('#chat');if(chat[0].hasAttribute('data-open')) chat.removeAttr('data-open'); else chat.attr('data-open','true');"
+                    >
+                        <svg class="fill-slate-50/[80] w-8 h-8" viewBox="0 0 24 24">
+                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+                        </svg>
+                    </button>
                 </header>
 
                 <section class="flex flex-col grow gap-2 overflow-hidden">

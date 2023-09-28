@@ -345,7 +345,6 @@
                             isOnline: true,
                             uid: user.uid,
                             coords: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
-                            environment: location.origin,
                             lastActiveAt: Date.now(),
                         })
                         applyCurrentUserChatStyles($(`#messages > [data-uid=${user.uid}]`))
@@ -377,7 +376,7 @@
                     const OFFSET = 60_000 // 1 min
                     const { origin } = location
 
-                    const keys = Object.keys(data).filter((k) => data[k].environment === origin && data[k].isOnline)
+                    const keys = Object.keys(data).filter((k) => data[k].isOnline)
 
                     currentValueKeys.filter((ck) => !keys.includes(ck)).forEach((key) => $(`[key=${key}]`).remove())
 

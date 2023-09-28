@@ -324,9 +324,10 @@
                 return val
             })
             const messagesListRef = ref(db, DATABASE_ROUTES.Chat)
-
+            var lastActiveAtInterval = null
             $(function () {
                 auth.onAuthStateChanged((user) => {
+                    if (lastActiveAtInterval) clearInterval(lastActiveAtInterval)
                     if (!user) {
                         if (localStorage.getItem(USER_ID_LOCATION)) return
                         signInAnonymously(auth)
@@ -351,6 +352,10 @@
 
                         onDisconnect(ref(db, DATABASE_ROUTES.LastOnline(user.uid))).set(serverTimestamp())
                         onDisconnect(ref(db, DATABASE_ROUTES.OnlineStatus(user.uid))).set(false)
+                        lastActiveAtInterval = setInterval(() => {
+                            currentUserData.lastActiveAt = Date.now()
+                            //1hour
+                        }, 3600000)
                     })
                 })
 

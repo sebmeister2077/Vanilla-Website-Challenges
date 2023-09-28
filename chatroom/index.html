@@ -191,11 +191,11 @@
                                 placeholder="Type to chat..."
                                 name="message"
                                 type="text"
-                                class="shadow-md outline-0 w-full px-6 py-3 rounded-xl"
+                                class="peer/message-input shadow-md outline-0 w-full px-6 py-3 rounded-xl"
                             />
                             <button
                                 type="submit"
-                                class="absolute right-5 text-slate-400 hover:text-sky-400 focus:text-sky-400 transition-colors duration-300 outline-0"
+                                class="peer-placeholder-shown/message-input:scale-0 absolute right-5 text-slate-400 hover:text-sky-400 focus:text-sky-400 transition duration-300 outline-0"
                             >
                                 <svg class="fill-current w-6 h-6" viewBox="0 0 24 24">
                                     <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"></path>
@@ -291,6 +291,7 @@
             const performance = getPerformance(app)
             const analytics = getAnalytics(app)
 
+            //If you get lots of errors in console you have to paste the new id in the firebase console / app check section
             const appCheck = getAppCheck(appCheckPublicId)
             getToken(appCheck)
             const auth = getAuth(app)

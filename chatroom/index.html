@@ -118,6 +118,17 @@
                 scrollbar-width: none;
             }
         </style>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        backgroundImage: {
+                            chat: 'linear-gradient(320deg, rgba(55,103,102,0.56) 0%, rgba(26,213,131,0.5) 100%)',
+                        },
+                    },
+                },
+            }
+        </script>
     </head>
 
     <body class="overflow-hidden">
@@ -150,7 +161,7 @@
             </script>
             <aside
                 id="chat"
-                class="group/chat z-30 bg-gray-200 bg-opacity-10 shadow-sm backdrop-blur-sm gap-4 flex flex-col p-3 h-full cursor-auto w-20 data-[open=true]:w-96 md:w-96 overflow-hidden transition-[width] duration-1000"
+                class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col p-3 h-full cursor-auto w-20 data-[open=true]:w-96 md:w-96 overflow-hidden transition-[width] duration-1000"
             >
                 <header class="w-full border-b border-slate-50/[.50] flex-row-reverse gap-8 flex justify-between">
                     <div class="info w-max whitespace-nowrap order-2">Online friends:...</div>
@@ -177,7 +188,7 @@
                                     class="flex flex-col grow gap-2 pr-2 items-start opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
                                 >
                                     <span data-username class="text-sm w-fit"></span>
-                                    <div data-message class="rounded-xl bg-slate-50/[.60] p-4 shadow-md"></div>
+                                    <div data-message class="rounded-xl bg-slate-50/[.60] px-4 py-2 shadow-md"></div>
                                 </div>
                             </div>
                         </template>

@@ -164,7 +164,7 @@
                 class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col p-3 h-full cursor-auto w-20 data-[open=true]:w-96 md:w-96 overflow-hidden transition-[width] duration-1000"
             >
                 <header class="w-full border-b border-slate-50/[.50] flex-row-reverse gap-8 flex justify-between">
-                    <div class="info w-max whitespace-nowrap order-2">Online friends:...</div>
+                    <div class="info w-max whitespace-nowrap order-2 text-neutral-800">Online friends:...</div>
                     <button
                         class="md:opacity-0 order-1 transition-opacity duration-500"
                         onclick="const chat = $('#chat');if(chat[0].hasAttribute('data-open')) chat.removeAttr('data-open'); else chat.attr('data-open','true');"
@@ -177,18 +177,18 @@
 
                 <section class="flex flex-col grow gap-2 overflow-hidden">
                     <header class="w-full">
-                        <h2 class="text-3xl w-full whitespace-nowrap min-w-[300px]">Chat Messages</h2>
+                        <h2 class="text-3xl w-full whitespace-nowrap min-w-[300px] text-neutral-800">Chat Messages</h2>
                     </header>
                     <article id="messages" class="flex flex-col grow gap-6 overflow-auto px-2 scroll-smooth scrollbar-hide">
                         <template id="message-template">
-                            <div data-uid class="flex w-full gap-3 relative">
-                                <img data-image class="rounded-full w-10 h-10 mt-2 sticky top-0" />
+                            <div data-uid class="flex w-full gap-1 relative">
+                                <img data-image class="rounded-full w-10 h-10 sticky top-0 shadow-sm" />
                                 <div
                                     data-messages
-                                    class="flex flex-col grow gap-2 pr-2 items-start opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
+                                    class="flex flex-col grow gap-2 pr-2 text-neutral-800 items-start opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
                                 >
                                     <span data-username class="text-sm w-fit"></span>
-                                    <div data-message class="rounded-xl bg-slate-50/[.60] px-4 py-2 shadow-md"></div>
+                                    <div data-message class="rounded-xl bg-neutral-50/[.85] px-4 py-2 shadow-md"></div>
                                 </div>
                             </div>
                         </template>
@@ -202,11 +202,11 @@
                                 placeholder="Type to chat..."
                                 name="message"
                                 type="text"
-                                class="peer/message-input shadow-md outline-0 w-full px-6 py-3 rounded-xl"
+                                class="peer/message-input bg-neutral-50/[.85] text-neutral-800 shadow-md outline-0 w-full px-6 py-3 rounded-xl"
                             />
                             <button
                                 type="submit"
-                                class="peer-placeholder-shown/message-input:scale-0 absolute right-5 text-slate-400 hover:text-sky-400 focus:text-sky-400 transition duration-300 outline-0"
+                                class="peer-placeholder-shown/message-input:scale-0 absolute right-5 text-amber-400 hover:scale-110 focus:scale-110 transition-transform duration-300 outline-0"
                             >
                                 <svg class="fill-current w-6 h-6" viewBox="0 0 24 24">
                                     <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"></path>
@@ -642,7 +642,8 @@
                     .children('[data-messages]')
                     .removeClass('items-start')
                     .addClass('items-end')
-                    .children('[data-username]')
+                    .children('[data-message]')
+                    .addClass('bg-yellow-400/[.85]')
             }
             function isUnderElement(elem, e) {
                 const elemWidth = $(elem).width()

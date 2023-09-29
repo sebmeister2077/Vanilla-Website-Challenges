@@ -169,7 +169,18 @@
                     >
                         <template id="message-template">
                             <div data-uid class="flex w-full gap-1 relative">
-                                <img data-image class="rounded-full w-10 h-10 sticky top-0 shadow-sm" alt="User image" />
+                                <div class="rounded-full overflow-hidden w-10 h-10 sticky top-0 relative shadow-sm">
+                                    <img data-image class="w-full" loading="lazy" />
+                                    <svg
+                                        data-loading-image
+                                        class="absolute z-10 fill-neutral-400 top-0 bg-neutral-200 p-2 w-full duration-500 transition-opacity"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M18.39 14.56C16.71 13.7 14.53 13 12 13s-4.71.7-6.39 1.56C4.61 15.07 4 16.1 4 17.22V20h16v-2.78c0-1.12-.61-2.15-1.61-2.66zM9.78 12h4.44c1.21 0 2.14-1.06 1.98-2.26l-.32-2.45C15.57 5.39 13.92 4 12 4S8.43 5.39 8.12 7.29L7.8 9.74c-.16 1.2.77 2.26 1.98 2.26z"
+                                        ></path>
+                                    </svg>
+                                </div>
                                 <div
                                     data-messages
                                     class="flex flex-col grow gap-2 pr-2 text-neutral-800 items-start opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
@@ -242,7 +253,7 @@
                 </section>
                 <footer class="flex w-full justify-end z-10">
                     <a href="https://firebase.google.com" target="_blank">
-                        <img src="./assets/firebaseLogo.svg" alt="Built with Firebase logo" />
+                        <img src="./assets/firebaseLogo.svg" alt="Built with Firebase logo" loading="lazy" />
                     </a>
                 </footer>
             </section>
@@ -603,7 +614,12 @@
                 el.attr('data-uid', userId)
 
                 const userNameId = crypto.randomUUID()
-                $('[data-image]', el).attr('src', photoURL)
+                $('[data-image]', el).attr('src', photoURL)[0].onload = () => {
+                    const loader = $('[data-loading-image]', el).css('opacity', 0)
+                    setTimeout(() => {
+                        loader.remove()
+                    }, 500)
+                }
                 $('[data-username]', el).text(username).attr('id', userNameId)
 
                 const messageEl = $('[data-message]', el).text(message).attr('aria-labelledby', `${userNameId} said`)

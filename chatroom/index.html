@@ -101,7 +101,15 @@
     <body class="overflow-hidden cursor-none flex w-full h-screen select-none">
         <img src="https://wallpaperaccess.com/full/3787594.jpg" class="z-[-1] fixed inset-0 h-screen w-screen" />
         <template id="cursor">
-            <svg xmlns="http://www.w3.org/2000/svg" class="bubble" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="bubble"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-label="Custom cursor"
+            >
                 <g clip-path="url(#clip0_429_11096)">
                     <path
                         d="M11 20.9999L4 3.99994L21 10.9999L14.7353 13.6848C14.2633 13.8871 13.8872 14.2632 13.6849 14.7353L11 20.9999Z"
@@ -221,7 +229,7 @@
                 </section>
                 <footer class="flex w-full justify-end z-10">
                     <a href="https://firebase.google.com" target="_blank">
-                        <img src="./assets/firebaseLogo.svg" />
+                        <img src="./assets/firebaseLogo.svg" alt="Built with Firebase logo" />
                     </a>
                 </footer>
             </section>
@@ -386,10 +394,13 @@
                             return
                         }
                         currentValueKeys.push(key)
-                        const newNode = document.getElementById('cursor').content.cloneNode(true).querySelector('svg')
-                        const newItem = $(newNode).attr('key', key).css({ opacity: 1 })
+                        const newNode = $('#cursor')
+                            .html((i, old) => old.trim())
+                            .contents()
+                            .clone(true, true)
+                        newNode.attr('key', key).css({ opacity: 1 })
                         if (key === currentUserData.uid) {
-                            newItem
+                            newNode
                                 .css({
                                     translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
                                     transition: 'translate 0.2s cubic-bezier(0, 0, 0, 1.1), transform .3s',
@@ -397,8 +408,8 @@
                                 })
                                 .addClass('show-cursor')
                         }
-                        $(newItem).children('g').children('path').attr('stroke', data[key].color)
-                        $(document.body).append(newItem)
+                        newNode.children('g').children('path').attr('stroke', data[key].color)
+                        $(document.body).append(newNode)
                     })
                 })
 
@@ -568,7 +579,10 @@
             }
             function createDomMessage({ message, photoURL, username, timestamp, userId }) {
                 const template = $('#message-template')
-                const el = template.contents().clone(true, true)
+                const el = template
+                    .html((i, old) => old.trim())
+                    .contents()
+                    .clone(true, true)
 
                 if (userId === currentUserData.uid) {
                     applyCurrentUserChatStyles(el)
@@ -597,7 +611,7 @@
                     return
                 }
                 setTimeout(() => {
-                    el[1]?.scrollIntoView()
+                    el[0]?.scrollIntoView()
                 }, 10)
                 messageContainer.append(el)
             }

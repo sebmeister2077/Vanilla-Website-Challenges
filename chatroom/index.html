@@ -22,13 +22,6 @@
                 font-family: 'Roboto', sans-serif;
             }
             body {
-                cursor: none;
-                height: 100vh;
-                margin: 0px;
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-                user-select: none;
                 font-family: Roboto Slab;
             }
 
@@ -54,32 +47,6 @@
                 to {
                     stroke-dashoffset: 0;
                 }
-            }
-
-            .background {
-                position: fixed;
-                inset: 0px;
-                z-index: -1;
-            }
-
-            header {
-                position: relative;
-                display: flex;
-                justify-content: flex-end;
-                padding: 12px;
-            }
-
-            main {
-                display: flex;
-                align-items: stretch;
-                height: 100%;
-                flex-grow: 1;
-                width: 100%;
-            }
-            main section[cube-container] {
-                perspective: 200px;
-                perspective-origin: center;
-                --cube-vertice: 100px;
             }
             .cube {
                 transform: scale(0);
@@ -131,8 +98,8 @@
         </script>
     </head>
 
-    <body class="overflow-hidden">
-        <img src="https://wallpaperaccess.com/full/3787594.jpg" class="background fixed inset-0 h-screen w-screen" />
+    <body class="overflow-hidden cursor-none flex w-full h-screen select-none">
+        <img src="https://wallpaperaccess.com/full/3787594.jpg" class="z-[-1] fixed inset-0 h-screen w-screen" />
         <template id="cursor">
             <svg xmlns="http://www.w3.org/2000/svg" class="bubble" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
                 <g clip-path="url(#clip0_429_11096)">
@@ -151,7 +118,7 @@
                 </defs>
             </svg>
         </template>
-        <main>
+        <main class="flex items-stretch h-full grow w-full">
             <script>
                 async function getRandomImageUrl() {
                     const fakerImg = faker.image.abstract(40, 40).replace('http://', 'https://').replace('lorempixel', 'loremflickr')
@@ -163,7 +130,7 @@
                 id="chat"
                 class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col p-3 h-full cursor-auto w-20 data-[open=true]:w-96 md:w-96 overflow-hidden transition-[width] duration-1000"
             >
-                <header class="w-full border-b border-slate-50/[.50] flex-row-reverse gap-8 flex justify-between">
+                <header class="w-full p-2 border-b border-slate-50/[.50] flex-row-reverse gap-8 flex justify-between">
                     <div class="info w-max whitespace-nowrap order-2 text-neutral-800">Online friends:...</div>
                     <button
                         class="md:opacity-0 order-1 transition-opacity duration-500"
@@ -176,7 +143,7 @@
                 </header>
 
                 <section class="flex flex-col grow gap-2 overflow-hidden">
-                    <header class="w-full">
+                    <header class="w-full p-1">
                         <h2 class="text-3xl w-full whitespace-nowrap min-w-[300px] text-neutral-800">Chat Messages</h2>
                     </header>
                     <article id="messages" class="flex flex-col grow gap-6 overflow-auto px-2 scroll-smooth scrollbar-hide">
@@ -217,7 +184,10 @@
                 </section>
             </aside>
             <section class="flex items-center flex-col justify-center grow">
-                <section cube-container class="flex items-center justify-center grow w-full">
+                <section
+                    cube-container
+                    class="flex items-center justify-center grow w-full [perspective:200px] [perspective-origin:center] [--cube-vertice:150px]"
+                >
                     <div class="cube-glass"></div>
                     <div class="cube">
                         <div

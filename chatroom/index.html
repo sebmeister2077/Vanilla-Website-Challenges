@@ -76,7 +76,7 @@
                 flex-grow: 1;
                 width: 100%;
             }
-            main > section {
+            main section[cube-container] {
                 perspective: 200px;
                 perspective-origin: center;
                 --cube-vertice: 100px;
@@ -188,7 +188,7 @@
                                     class="flex flex-col grow gap-2 pr-2 text-neutral-800 items-start opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
                                 >
                                     <span data-username class="text-sm w-fit"></span>
-                                    <div data-message class="rounded-xl bg-neutral-50/[.85] px-4 py-2 shadow-md"></div>
+                                    <div data-message class="rounded-xl bg-neutral-50/[.85] relative px-4 py-2 shadow-md"></div>
                                 </div>
                             </div>
                         </template>
@@ -216,37 +216,44 @@
                     </footer>
                 </section>
             </aside>
-            <section class="flex items-center justify-center grow">
-                <div class="cube-glass"></div>
-                <div class="cube">
-                    <div
-                        class="cube-face"
-                        style="transform: translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"
-                    ></div>
-                    <div
-                        class="cube-face"
-                        style="transform: rotateY(90deg) translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"
-                    ></div>
-                    <div
-                        class="cube-face"
-                        style="transform: rotateY(90deg) rotateX(90deg) translate3d(0px, 0px, calc(2 * var(--transform-amount)))"
-                    ></div>
-                    <div
-                        class="cube-face"
-                        style="
-                            transform: rotateY(180deg) rotateZ(90deg)
-                                translate3d(calc(-1 * var(--transform-amount)), 0px, var(--transform-amount));
-                        "
-                    ></div>
-                    <div
-                        class="cube-face"
-                        style="
-                            transform: rotateY(-90deg) rotateZ(90deg)
-                                translate3d(calc(-1 * var(--transform-amount)), 0px, var(--transform-amount));
-                        "
-                    ></div>
-                    <div class="cube-face" style="transform: rotateX(-90deg) translateZ(0px)">Top</div>
-                </div>
+            <section class="flex items-center flex-col justify-center grow">
+                <section cube-container class="flex items-center justify-center grow w-full">
+                    <div class="cube-glass"></div>
+                    <div class="cube">
+                        <div
+                            class="cube-face"
+                            style="transform: translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"
+                        ></div>
+                        <div
+                            class="cube-face"
+                            style="transform: rotateY(90deg) translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"
+                        ></div>
+                        <div
+                            class="cube-face"
+                            style="transform: rotateY(90deg) rotateX(90deg) translate3d(0px, 0px, calc(2 * var(--transform-amount)))"
+                        ></div>
+                        <div
+                            class="cube-face"
+                            style="
+                                transform: rotateY(180deg) rotateZ(90deg)
+                                    translate3d(calc(-1 * var(--transform-amount)), 0px, var(--transform-amount));
+                            "
+                        ></div>
+                        <div
+                            class="cube-face"
+                            style="
+                                transform: rotateY(-90deg) rotateZ(90deg)
+                                    translate3d(calc(-1 * var(--transform-amount)), 0px, var(--transform-amount));
+                            "
+                        ></div>
+                        <div class="cube-face" style="transform: rotateX(-90deg) translateZ(0px)">Top</div>
+                    </div>
+                </section>
+                <footer class="flex w-full justify-end z-10">
+                    <a href="https://firebase.google.com" target="_blank">
+                        <img src="./assets/firebaseLogo.svg" />
+                    </a>
+                </footer>
             </section>
         </main>
         <script type="module" defer>
@@ -645,6 +652,7 @@
                     .addClass('items-end')
                     .children('[data-message]')
                     .addClass('bg-yellow-400/[.85]')
+                    .attr('data-currentuser', '')
             }
             function isUnderElement(elem, e) {
                 const elemWidth = $(elem).width()

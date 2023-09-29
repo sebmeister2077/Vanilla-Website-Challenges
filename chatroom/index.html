@@ -606,8 +606,7 @@
                 $('[data-image]', el).attr('src', photoURL)
                 $('[data-username]', el).text(username).attr('id', userNameId)
 
-                const messageEl = $('[data-message]', el).attr('aria-labelledby', `${userNameId} said`)
-
+                const messageEl = $('[data-message]', el).text(message).attr('aria-labelledby', `${userNameId} said`)
                 const NR_CHARACTERS_ON_ONE_ROW = 28
                 if (message.length >= NR_CHARACTERS_ON_ONE_ROW) messageEl.addClass(`min-w-[${NR_CHARACTERS_ON_ONE_ROW}ch]`)
                 else messageEl.addClass('min-w-max')

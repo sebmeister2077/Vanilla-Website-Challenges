@@ -99,7 +99,11 @@
     </head>
 
     <body class="overflow-hidden cursor-none flex w-full h-screen select-none">
-        <img src="https://wallpaperaccess.com/full/3787594.jpg" class="z-[-1] fixed inset-0 h-screen w-screen" />
+        <img
+            src="https://wallpaperaccess.com/full/3787594.jpg"
+            class="z-[-1] fixed inset-0 h-screen w-screen"
+            alt="Generic background with a lighsource in the center"
+        />
         <template id="cursor">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -109,6 +113,7 @@
                 viewBox="0 0 24 24"
                 fill="none"
                 aria-label="Custom cursor"
+                aria-live="off"
             >
                 <g clip-path="url(#clip0_429_11096)">
                     <path
@@ -135,14 +140,17 @@
                 }
             </script>
             <aside
+                aria-label="Chat"
                 id="chat"
                 class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col p-3 h-full cursor-auto w-20 data-[open=true]:w-96 md:w-96 overflow-hidden transition-[width] duration-1000"
             >
                 <header class="w-full p-2 border-b border-slate-50/[.50] flex-row-reverse gap-8 flex justify-between">
-                    <div class="info w-max whitespace-nowrap order-2 text-neutral-800">Online friends:...</div>
+                    <div class="info w-max whitespace-nowrap order-2 text-neutral-800" aria-live="polite">Online friends:...</div>
                     <button
+                        aria-label="Chat Menu"
+                        aria-description="Open the Chat on smaller screens"
                         class="md:opacity-0 order-1 transition-opacity duration-500"
-                        onclick="const chat = $('#chat');if(chat[0].hasAttribute('data-open')) chat.removeAttr('data-open'); else chat.attr('data-open','true');"
+                        onclick="const chat = $('#chat');if(chat[0].hasAttribute('data-open')) chat.removeAttr('data-open').attr('aria-hidden','true'); else chat.attr('data-open','true').attr('aria-hidden','false');"
                     >
                         <svg class="fill-slate-50/[80] w-8 h-8" viewBox="0 0 24 24">
                             <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
@@ -154,10 +162,14 @@
                     <header class="w-full p-1">
                         <h2 class="text-3xl w-full whitespace-nowrap min-w-[300px] text-neutral-800">Chat Messages</h2>
                     </header>
-                    <article id="messages" class="flex flex-col grow gap-6 overflow-auto px-2 scroll-smooth scrollbar-hide">
+                    <article
+                        aria-label="Chat messages"
+                        id="messages"
+                        class="flex flex-col grow gap-6 overflow-auto px-2 scroll-smooth scrollbar-hide"
+                    >
                         <template id="message-template">
                             <div data-uid class="flex w-full gap-1 relative">
-                                <img data-image class="rounded-full w-10 h-10 sticky top-0 shadow-sm" />
+                                <img data-image class="rounded-full w-10 h-10 sticky top-0 shadow-sm" alt="User image" />
                                 <div
                                     data-messages
                                     class="flex flex-col grow gap-2 pr-2 text-neutral-800 items-start opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
@@ -180,6 +192,7 @@
                                 class="peer/message-input bg-neutral-50/[.85] text-neutral-800 shadow-md outline-0 w-full px-6 py-3 rounded-xl"
                             />
                             <button
+                                aria-label="Send message"
                                 type="submit"
                                 class="peer-placeholder-shown/message-input:scale-0 absolute right-5 text-amber-400 hover:scale-110 focus:scale-110 transition-transform duration-300 outline-0"
                             >
@@ -588,11 +601,13 @@
                     applyCurrentUserChatStyles(el)
                 }
                 el.attr('data-uid', userId)
-                $('[data-image]', el).attr('src', photoURL)
-                $('[data-username]', el).text(username)
 
-                const messageEl = $('[data-message]', el)
-                messageEl.text(message)
+                const userNameId = crypto.randomUUID()
+                $('[data-image]', el).attr('src', photoURL)
+                $('[data-username]', el).text(username).attr('id', userNameId)
+
+                const messageEl = $('[data-message]', el).attr('aria-labelledby', `${userNameId} said`)
+
                 const NR_CHARACTERS_ON_ONE_ROW = 28
                 if (message.length >= NR_CHARACTERS_ON_ONE_ROW) messageEl.addClass(`min-w-[${NR_CHARACTERS_ON_ONE_ROW}ch]`)
                 else messageEl.addClass('min-w-max')

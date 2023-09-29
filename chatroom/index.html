@@ -614,12 +614,15 @@
                 el.attr('data-uid', userId)
 
                 const userNameId = crypto.randomUUID()
-                $('[data-image]', el).attr('src', photoURL)[0].onload = () => {
+                function removeLoader() {
                     const loader = $('[data-loading-image]', el).css('opacity', 0)
                     setTimeout(() => {
                         loader.remove()
                     }, 500)
                 }
+                const imageEl = $('[data-image]', el).attr('src', photoURL)[0]
+                imageEl.onload = removeLoader
+                if (imageEl instanceof HTMLImageElement && imageEl.complete) removeLoader()
                 $('[data-username]', el).text(username).attr('id', userNameId)
 
                 const messageEl = $('[data-message]', el).text(message).attr('aria-labelledby', `${userNameId} said`)

@@ -589,18 +589,6 @@
                     backgroundColor: addAlphaToHsl(color, 0.8),
                 })
             }
-            function getRandomColor() {
-                const hue = Math.floor(Math.random() * 361)
-                const saturation = 100
-                const lightness = Math.floor(Math.random() * 41) + 15
-                return `hsl(${hue},${saturation}%,${lightness}%)`
-            }
-            function addAlphaToHsl(hsl, alpha) {
-                return hsl
-                    .split('%)')
-                    .join(`%, ${Math.max(Math.min(alpha, 1), 0)})`)
-                    .replace('hsl', 'hsla')
-            }
             function createDomMessage({ message, photoURL, username, timestamp, userId }) {
                 const template = $('#message-template')
                 const el = template.contents().clone(true, true)
@@ -635,6 +623,19 @@
                     el[1]?.scrollIntoView()
                 }, 10)
                 messageContainer.append(el)
+            }
+            window.f = getRandomColor
+            function getRandomColor() {
+                const hue = Math.floor(Math.random() * 361)
+                const saturation = 100
+                const lightness = Math.floor(Math.random() * 41) + 15
+                return `hsl(${hue},${saturation}%,${lightness}%)`
+            }
+            function addAlphaToHsl(hsl, alpha) {
+                return hsl
+                    .split('%)')
+                    .join(`%, ${Math.max(Math.min(alpha, 1), 0)})`)
+                    .replace('hsl', 'hsla')
             }
             function applyCurrentUserChatStyles(jqueryEl) {
                 jqueryEl

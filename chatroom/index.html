@@ -91,6 +91,7 @@
                     extend: {
                         backgroundImage: {
                             chat: 'linear-gradient(320deg, rgba(15,173,142,0.36) 0%, rgba(26,283,131,0.5) 100%)',
+                            'chat-header': 'linear-gradient(2deg, rgba(135,223,144,0) 0%, rgba(26,213,65,0.32) 100%);',
                         },
                     },
                 },
@@ -105,20 +106,10 @@
             alt="Generic background with a lighsource in the center"
         />
         <template id="cursor">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="bubble"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-label="Custom cursor"
-                aria-live="off"
-            >
+            <svg class="bubble" width="24px" height="24px" viewBox="0 0 24 24" fill="none" aria-label="Custom cursor" aria-live="off">
                 <g clip-path="url(#clip0_429_11096)">
                     <path
                         d="M11 20.9999L4 3.99994L21 10.9999L14.7353 13.6848C14.2633 13.8871 13.8872 14.2632 13.6849 14.7353L11 20.9999Z"
-                        stroke="#292929"
                         stroke-width="2.5"
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -142,26 +133,26 @@
             <aside
                 aria-label="Chat"
                 id="chat"
-                class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col p-3 h-full cursor-auto w-20 data-[open=true]:w-96 md:w-96 overflow-hidden transition-[width] duration-1000"
+                class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col h-full cursor-auto w-20 data-[open=true]:w-96 md:w-96 overflow-hidden transition-[width] duration-1000"
             >
-                <header class="w-full p-2 border-b border-slate-50/[.50] flex-row-reverse gap-8 flex justify-between">
-                    <div class="info w-max whitespace-nowrap order-2 text-neutral-800" aria-live="polite">Online friends:0/100</div>
-                    <button
-                        aria-label="Chat Menu"
-                        aria-description="Open the Chat on smaller screens"
-                        class="md:opacity-0 order-1 transition-opacity duration-500"
-                        onclick="const chat = $('#chat');if(chat[0].hasAttribute('data-open')) chat.removeAttr('data-open').attr('aria-hidden','true'); else chat.attr('data-open','true').attr('aria-hidden','false');"
-                    >
-                        <svg class="fill-slate-50/[80] w-8 h-8" viewBox="0 0 24 24">
-                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
-                        </svg>
-                    </button>
+                <header class="w-full p-5 bg-chat-header flex-col gap-2 flex justify-between">
+                    <div class="flex flex-row-reverse gap-8 justify-between border-b border-slate-50/[.50]">
+                        <div class="info w-max whitespace-nowrap order-2 text-neutral-800" aria-live="polite">Online friends:0/100</div>
+                        <button
+                            aria-label="Chat Menu"
+                            aria-description="Open the Chat on smaller screens"
+                            class="md:opacity-0 order-1 transition-opacity duration-500"
+                            onclick="const chat = $('#chat');if(chat[0].hasAttribute('data-open')) chat.removeAttr('data-open').attr('aria-hidden','true'); else chat.attr('data-open','true').attr('aria-hidden','false');"
+                        >
+                            <svg class="fill-slate-50/[80] w-8 h-8" viewBox="0 0 24 24">
+                                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <h2 class="text-3xl w-full whitespace-nowrap min-w-[300px] text-neutral-800">Chat Messages</h2>
                 </header>
 
-                <section class="flex flex-col grow gap-2 overflow-hidden">
-                    <header class="w-full p-1">
-                        <h2 class="text-3xl w-full whitespace-nowrap min-w-[300px] text-neutral-800">Chat Messages</h2>
-                    </header>
+                <section class="flex flex-col grow gap-2 p-3 overflow-hidden">
                     <article
                         aria-label="Chat messages"
                         id="messages"
@@ -191,10 +182,10 @@
                             </div>
                         </template>
                     </article>
-                    <footer class="w-full">
+                    <footer class="w-full flex justify-between items-center">
                         <form
                             id="message-form"
-                            class="w-full flex justify-between items-center px-2 py-2 relative opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
+                            class="grow flex justify-between items-center px-2 py-2 relative opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
                         >
                             <input
                                 placeholder="Type to chat..."
@@ -212,6 +203,13 @@
                                 </svg>
                             </button>
                         </form>
+                        <button
+                            id="change-color"
+                            class="hover:scale-110 focus:scale-110 transition-transform duration-300 outline-0"
+                            title="Change color"
+                        >
+                            <img class="w-10 h-10" src="https://img.icons8.com/fluency/48/rgb-circle-2.png" alt="rgb circle 2" />
+                        </button>
                     </footer>
                 </section>
             </aside>
@@ -300,9 +298,9 @@
                 apiKey: 'AIzaSyBbn4bnhT_c3j2gwaOWUoMI7iSo3qvFYu0',
                 projectId: 'chatroom-000',
                 appId: '1:55067342796:web:9488295327025826df8f69',
+                databaseURL: 'https://chatroom-000-default-rtdb.europe-west1.firebasedatabase.app/',
             })
             const appCheckPublicId = '6LdkVlcoAAAAAFgaHecRfj1tr5R58czFim3D77QB'
-            const databaseLocation = Object.freeze('https://chatroom-000-default-rtdb.europe-west1.firebasedatabase.app/')
             const IS_DEBUG = window.location.hostname === '127.0.0.1'
 
             if (IS_DEBUG) self.FIREBASE_APPCHECK_DEBUG_TOKEN = true
@@ -316,7 +314,7 @@
             getToken(appCheck)
             const auth = getAuth(app)
             setPersistence(auth, indexedDBLocalPersistence)
-            const db = getDatabase(app, databaseLocation)
+            const db = getDatabase(app)
 
             const USER_ID_LOCATION = 'chatroom_user_uid'
             const DATABASE_ROUTES = new (class {
@@ -416,9 +414,14 @@
 
                     keys.forEach((key) => {
                         if (currentValueKeys.includes(key)) {
-                            $(`svg[key=${key}]`).css({
-                                translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
-                            })
+                            console.log(data[key].color)
+                            $(`svg[key=${key}]`)
+                                .css({
+                                    translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
+                                })
+                                .children('g')
+                                .children('path')
+                                .attr('stroke', data[key].color)
                             return
                         }
                         currentValueKeys.push(key)
@@ -563,7 +566,11 @@
                     pushToChat(message)
                 })
                 $('.cube-glass').on('mousemove', throttleCubeRotate)
+                $('#change-color').on('click', function () {
+                    setUserData({ color: getRandomColor() })
+                })
             })
+
             var currentUserData = {}
             var currentCubeData = {}
             function setCubeData(data) {
@@ -653,7 +660,6 @@
                 }, 10)
                 messageContainer.append(el)
             }
-            window.f = getRandomColor
             function getRandomColor() {
                 const hue = Math.floor(Math.random() * 361)
                 const saturation = 100

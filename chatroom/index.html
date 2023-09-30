@@ -392,15 +392,15 @@
                 const cubeRef = ref(db, DATABASE_ROUTES.Cube)
                 onValue(cubeRef, (snapshot) => {
                     const DEFAULT_COLOR = 'hsl(0, 0%, 100%)'
-
+                    const DEFAULT_ROTATION = { x: 125, y: 0 }
                     if (!snapshot.exists()) {
-                        setCubeData({ movingUserId: '', rotation: { x: 0, y: 0 }, color: DEFAULT_COLOR })
+                        setCubeData({ movingUserId: '', rotation: DEFAULT_ROTATION, color: DEFAULT_COLOR })
                         return
                     }
                     currentCubeData = snapshot.val()
 
                     if (!currentCubeData.rotation) {
-                        setCubeData({ ...currentCubeData, rotation: { x: 0, y: 0 } })
+                        setCubeData({ ...currentCubeData, rotation: DEFAULT_ROTATION })
                         return
                     }
                     rotateCube(currentCubeData.rotation, currentCubeData.color || DEFAULT_COLOR)

@@ -76,6 +76,18 @@
                 aspect-ratio: 1;
                 opacity: 0.56;
                 transition: background-color 0.8s ease-in-out;
+                scale: 0;
+                transform: none;
+                animation: cube-animation 2.1s cubic-bezier(0.42, 0, 0.35, 1.25) 1s 1 forwards;
+            }
+            @keyframes cube-animation {
+                from {
+                    scale: 0;
+                    transform: translate3d(0, 0, 0);
+                }
+                to {
+                    scale: 1;
+                }
             }
             .scrollbar-hide::-webkit-scrollbar {
                 display: none;
@@ -219,7 +231,7 @@
                     class="flex items-center justify-center grow w-full [perspective:200px] [perspective-origin:center] [--cube-vertice:150px]"
                 >
                     <div class="cube-glass"></div>
-                    <div class="cube transform-gpu">
+                    <div class="cube">
                         <div
                             class="cube-face"
                             style="transform: translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"

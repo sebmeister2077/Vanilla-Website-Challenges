@@ -414,7 +414,6 @@
 
                     keys.forEach((key) => {
                         if (currentValueKeys.includes(key)) {
-                            console.log(data[key].color)
                             $(`svg[key=${key}]`)
                                 .css({
                                     translate: `${data[key].coords.x}px ${data[key].coords.y}px`,

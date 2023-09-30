@@ -145,7 +145,7 @@
                 class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col p-3 h-full cursor-auto w-20 data-[open=true]:w-96 md:w-96 overflow-hidden transition-[width] duration-1000"
             >
                 <header class="w-full p-2 border-b border-slate-50/[.50] flex-row-reverse gap-8 flex justify-between">
-                    <div class="info w-max whitespace-nowrap order-2 text-neutral-800" aria-live="polite">Online friends:...</div>
+                    <div class="info w-max whitespace-nowrap order-2 text-neutral-800" aria-live="polite">Online friends:0/100</div>
                     <button
                         aria-label="Chat Menu"
                         aria-description="Open the Chat on smaller screens"
@@ -221,7 +221,7 @@
                     class="flex items-center justify-center grow w-full [perspective:200px] [perspective-origin:center] [--cube-vertice:150px]"
                 >
                     <div class="cube-glass"></div>
-                    <div class="cube">
+                    <div class="cube transform-gpu">
                         <div
                             class="cube-face"
                             style="transform: translate3d(0px, calc(-1 * var(--transform-amount)), var(--transform-amount))"
@@ -382,14 +382,18 @@
                 const cubeRef = ref(db, DATABASE_ROUTES.Cube)
                 onValue(cubeRef, (snapshot) => {
                     const DEFAULT_COLOR = 'hsl(0, 0%, 100%)'
+
                     if (!snapshot.exists()) {
                         setCubeData({ movingUserId: '', rotation: { x: 0, y: 0 }, color: DEFAULT_COLOR })
                         return
                     }
                     currentCubeData = snapshot.val()
 
-                    if (!currentCubeData.rotation) setCubeData({ ...currentCubeData, rotation: { x: 0, y: 0 } })
-                    else rotateCube(currentCubeData.rotation, currentCubeData.color || DEFAULT_COLOR)
+                    if (!currentCubeData.rotation) {
+                        setCubeData({ ...currentCubeData, rotation: { x: 0, y: 0 } })
+                        return
+                    }
+                    rotateCube(currentCubeData.rotation, currentCubeData.color || DEFAULT_COLOR)
                 })
 
                 const currentValueKeys = []
@@ -519,7 +523,7 @@
                     if (currentCubeData.movingUserId === currentUserData.uid && currentUserData.uid) return
                     setCubeData({ movingUserId: '', color: '' })
                 })
-                const throttleMove = throttleFunction((e) => {
+                const throttleCubeRotate = throttleFunction((e) => {
                     if (e.buttons !== 0 && !currentCubeData.movingUserId && auth.currentUser) {
                         setCubeData({ movingUserId: currentUserData.uid })
                         startPosition.x = e.clientX
@@ -541,6 +545,7 @@
                     const currentRotation = currentCubeData.rotation
                     const deltaX = startPosition.x - clientX
                     const deltaY = startPosition.y - clientY
+
                     currentRotation.x = (parseFloat(currentRotation.x) + deltaY * SENSITIVITY).toFixed(2)
                     currentRotation.y = (parseFloat(currentRotation.y) + deltaX * SENSITIVITY).toFixed(2)
                     setCubeData({
@@ -557,14 +562,14 @@
                     e.target.reset()
                     pushToChat(message)
                 })
-                $('.cube-glass').on('mousemove', throttleMove)
+                $('.cube-glass').on('mousemove', throttleCubeRotate)
             })
             var currentUserData = {}
             var currentCubeData = {}
             function setCubeData(data) {
                 Object.assign(currentCubeData, data)
-                if (Object.keys(currentCubeData).length === 0 || !db) return
-                update(ref(db), { [DATABASE_ROUTES.Cube]: { ...currentCubeData, ...data } })
+                if (currentCubeData.color === undefined || currentCubeData.movingUserId === undefined || !db) return
+                update(ref(db), { [DATABASE_ROUTES.Cube]: currentCubeData })
             }
             function setUserData(data) {
                 Object.assign(currentUserData, data)

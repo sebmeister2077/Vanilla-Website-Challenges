@@ -1,0 +1,27 @@
+import { changeColorClick } from './changeColorClick.js'
+import { messageSubmit } from './messageSubmit.js'
+import { throttleCubeRotate } from './cubeRotateMousemove.js'
+import { cubeMouseup } from './cubeMouseup.js'
+import { cubeMousedown } from './cubeMousedown.js'
+import { throttledCursorMove } from './cursorMove.js'
+
+export function initDOMListeners() {
+    $('#change-color').on('click', changeColorClick)
+    $('#message-form').on('submit', messageSubmit)
+    $('.cube-glass').on('mousemove', throttleCubeRotate)
+    $('.cube-glass').on('mouseup', cubeMouseup)
+    $('.cube-glass').get(0).addEventListener('mousedown', cubeMousedown, true)
+
+    var startPosition = {}
+
+    $(document).on({
+        mousemove: throttledCursorMove,
+        touchmove: throttledCursorMove,
+        mousedown: function () {
+            $(`svg[key=${window.currentUserData.uid}]`).addClass('scale-150')
+        },
+        mouseup: function () {
+            $(`svg[key=${window.currentUserData.uid}]`).removeClass('scale-150')
+        },
+    })
+}

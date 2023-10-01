@@ -18,6 +18,7 @@ import {
     orderByChild,
     limitToLast,
     startAt,
+    equalTo,
 } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
 import { DATABASE_ROUTES } from '../../../global-vars/index.js'
 import { updateOnlineFriends } from '../../../dom-manipulation/updateOnlineFriends.js'
@@ -25,11 +26,10 @@ import { updateOnlineFriends } from '../../../dom-manipulation/updateOnlineFrien
 export function initUserlistListener(db) {
     const currentOnlineUserUids = new Set()
 
-    const usersListRef = query(ref(db, DATABASE_ROUTES.AllUsers))
+    const usersListRef = ref(db, DATABASE_ROUTES.AllUsers)
 
-    //current user will show as offline
     onValue(
-        usersListRef,
+        query(usersListRef, orderByChild('isOnline'), equalTo(true)),
         (snapshot) => {
             if (!snapshot.exists()) return
             const data = snapshot.val()

@@ -44,7 +44,7 @@ export function initUserlistListener(db) {
     })
 
     function handleData(data) {
-        const svgEl = $(`.bubble[key=${data.uid}]`)
+        const svgEl = $(`[data-cursor][key=${data.uid}]`)
 
         if (!data.isOnline && currentOnlineUserUids.has(data.uid)) {
             svgEl.remove()

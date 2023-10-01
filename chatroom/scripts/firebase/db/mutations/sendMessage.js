@@ -18,6 +18,7 @@ import {
     orderByChild,
     limitToLast,
 } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
+import { DATABASE_ROUTES } from '../../../global-vars/index.js'
 
 export function pushToChat(db, message) {
     const messagesListRef = ref(db, DATABASE_ROUTES.Chat)

@@ -18,7 +18,8 @@ import {
     orderByChild,
     limitToLast,
 } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
-import { DATABASE_ROUTES } from '../../../global-vars.js'
+import { DATABASE_ROUTES } from '../../../global-vars/index.js'
+import { createDomMessage } from '../../../dom-manipulation/createMessage.js'
 
 export function initChatMessagesListener(db) {
     const messagesListRef = ref(db, DATABASE_ROUTES.Chat)

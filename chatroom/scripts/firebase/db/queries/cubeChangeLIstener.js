@@ -20,6 +20,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
 import { setCubeData } from '../../setGlobalData.js'
 import { rotateCube } from '../../../dom-manipulation/rotateCube.js'
+import { DATABASE_ROUTES } from '../../../global-vars/index.js'
 
 export function initCubeChangeListener(db) {
     const cubeRef = ref(db, DATABASE_ROUTES.Cube)

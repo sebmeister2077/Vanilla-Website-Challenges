@@ -30,4 +30,4 @@ export const throttledCursorMove = throttleFunction(function (e) {
     setUserData({
         coords,
     })
-}, 670)
+}, 70)

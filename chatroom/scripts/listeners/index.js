@@ -8,11 +8,11 @@ import { throttledCursorMove } from './cursorMove.js'
 export function initDOMListeners() {
     $('#change-color').on('click', changeColorClick)
     $('#message-form').on('submit', messageSubmit)
-    $('.cube-glass').on('mousemove', throttleCubeRotate)
-    $('.cube-glass').on('mouseup', cubeMouseup)
-    $('.cube-glass').get(0).addEventListener('mousedown', cubeMousedown, true)
 
-    var startPosition = {}
+    const startPosition = {}
+    $('.cube-glass').on('mousemove', throttleCubeRotate(startPosition))
+    $('.cube-glass').on('mouseup', cubeMouseup)
+    $('.cube-glass').get(0).addEventListener('mousedown', cubeMousedown(startPosition), true)
 
     $(document).on({
         mousemove: throttledCursorMove,

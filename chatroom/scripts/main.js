@@ -4,12 +4,14 @@ import { userConnectionMade } from './firebase/db/mutations/userConnectionMade.j
 
 import { initDOMListeners } from './listeners/index.js'
 import { USER_ID_LOCATION } from './global-vars/index.js'
+import { initDatabaseListeners } from './firebase/db/queries/index.js'
 
 $(function () {
-    var { analytics, appCheck, auth, db, performance } = initFirebase()
+    const { analytics, appCheck, auth, db, performance } = initFirebase()
     window.db = db
+    window.auth = auth
 
-    var lastActiveAtInterval = null
+    let lastActiveAtInterval = null
     auth.onAuthStateChanged((user) => {
         if (lastActiveAtInterval) clearInterval(lastActiveAtInterval)
         if (!user) {
@@ -19,6 +21,7 @@ $(function () {
         }
         localStorage.setItem(USER_ID_LOCATION, user.uid)
         userConnectionMade(db, user)
+        initDatabaseListeners(db)
         lastActiveAtInterval = setInterval(() => {
             window.currentUserData.lastActiveAt = Date.now()
             //1hour

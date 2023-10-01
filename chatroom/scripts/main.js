@@ -5,6 +5,7 @@ import { userConnectionMade } from './firebase/db/mutations/userConnectionMade.j
 import { initDOMListeners } from './listeners/index.js'
 import { USER_ID_LOCATION } from './global-vars/index.js'
 import { initDatabaseListeners } from './firebase/db/queries/index.js'
+import { HOUR_MS } from './constants/time.js'
 
 $(function () {
     const { analytics, appCheck, auth, db, performance } = initFirebase()
@@ -25,7 +26,7 @@ $(function () {
         lastActiveAtInterval = setInterval(() => {
             window.currentUserData.lastActiveAt = Date.now()
             //1hour
-        }, 3600000)
+        }, 1 * HOUR_MS)
     })
 
     initDOMListeners()

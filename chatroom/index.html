@@ -25,7 +25,7 @@
                 font-family: Roboto Slab;
             }
 
-            .bubble {
+            .cursor-svg {
                 position: fixed;
                 top: 0px;
                 left: 0px;
@@ -118,7 +118,7 @@
             alt="Generic background with a lighsource in the center"
         />
         <template id="cursor">
-            <svg class="bubble" width="24px" height="24px" viewBox="0 0 24 24" fill="none" aria-label="Custom cursor" aria-live="off">
+            <svg class="cursor-svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" aria-label="Custom cursor" aria-live="off">
                 <g clip-path="url(#clip0_429_11096)">
                     <path
                         d="M11 20.9999L4 3.99994L21 10.9999L14.7353 13.6848C14.2633 13.8871 13.8872 14.2632 13.6849 14.7353L11 20.9999Z"
@@ -219,6 +219,7 @@
                 </section>
             </aside>
             <section class="flex items-center flex-col justify-center grow">
+                <header data-online-users class="flex justify-end"></header>
                 <section
                     cube-container
                     class="flex items-center justify-center grow w-full [perspective:200px] [perspective-origin:center] [--cube-vertice:150px]"

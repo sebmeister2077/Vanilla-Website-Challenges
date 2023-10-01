@@ -17,56 +17,72 @@ import {
     orderByKey,
     orderByChild,
     limitToLast,
+    startAt,
 } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
-import { DATABASE_ROUTES, MAX_USERS_CONNECTION_LIMIT } from '../../../global-vars/index.js'
-import { MINUTE_MS } from '../../../constants/time.js'
+import { DATABASE_ROUTES } from '../../../global-vars/index.js'
+import { updateOnlineFriends } from '../../../dom-manipulation/updateOnlineFriends.js'
 
 export function initUserlistListener(db) {
-    const currentValueKeys = []
-    const usersListRef = ref(db, DATABASE_ROUTES.AllUsers)
-    onValue(usersListRef, (snapshot) => {
-        if (!snapshot.exists()) return
-        const data = snapshot.val()
-        const NOW = Date.now()
-        const OFFSET = 1 * MINUTE_MS // 1 min
-        const { origin } = location
+    const currentOnlineUserUids = new Set()
 
-        const keys = Object.keys(data).filter((k) => data[k].isOnline)
+    const usersListRef = query(ref(db, DATABASE_ROUTES.AllUsers))
 
-        currentValueKeys.filter((ck) => !keys.includes(ck)).forEach((key) => $(`[key=${key}]`).remove())
-
-        const newText = 'Online friends:' + keys.length + '/' + MAX_USERS_CONNECTION_LIMIT
-        const info = $('.info')
-        if (info.text() !== newText) info.text(newText)
-
-        keys.forEach((key) => {
-            if (currentValueKeys.includes(key)) {
-                $(`svg[key=${key}]`)
-                    .css({
-                        translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
-                    })
-                    .children('g')
-                    .children('path')
-                    .attr('stroke', data[key].color)
-                return
-            }
-            currentValueKeys.push(key)
-            const newNode = $('#cursor')
-                .html((i, old) => old.trim())
-                .contents()
-                .clone(true, true)
-            newNode.attr('key', key).css({ opacity: 1 })
-            if (key === window.currentUserData.uid) {
-                newNode
-                    .css({
-                        translate: `${data[key].coords.x}px ${data[key].coords.y}px`,
-                        transition: 'translate 0.2s cubic-bezier(0, 0, 0, 1.1), transform .3s',
-                        animation: 'none',
-                    })
-                    .addClass('show-cursor')
-            }
-            newNode.children('g').children('path').attr('stroke', data[key].color)
-            $(document.body).append(newNode)
-        })
+    //current user will show as offline
+    onValue(
+        usersListRef,
+        (snapshot) => {
+            if (!snapshot.exists()) return
+            const data = snapshot.val()
+            Object.keys(data).forEach((key) => {
+                handleData(data[key])
+            })
+        },
+        { onlyOnce: true },
+    )
+    onChildChanged(usersListRef, (snapshot) => {
+        handleData(snapshot.val())
     })
+
+    function handleData(data) {
+        const svgEl = $(`.bubble[key=${data.uid}]`)
+
+        if (!data.isOnline && currentOnlineUserUids.has(data.uid)) {
+            svgEl.remove()
+            currentOnlineUserUids.delete(data.uid)
+            updateOnlineFriends(currentOnlineUserUids.size)
+            return
+        }
+        if (!data.isOnline) return
+
+        if (currentOnlineUserUids.has(data.uid)) {
+            svgEl
+                .css({
+                    translate: `${data.coords.x}px ${data.coords.y}px`,
+                })
+                .children('g')
+                .children('path')
+                .attr('stroke', data.color)
+            return
+        }
+
+        currentOnlineUserUids.add(data.uid)
+        updateOnlineFriends(currentOnlineUserUids.size)
+
+        const newNode = $('#cursor')
+            .html((i, old) => old.trim())
+            .contents()
+            .clone(true, true)
+        newNode.attr('key', data.uid).css({ opacity: 1 })
+        if (svgEl === window.currentUserData.uid) {
+            newNode
+                .css({
+                    translate: `${data.coords.x}px ${data.coords.y}px`,
+                    transition: 'translate 0.2s cubic-bezier(0, 0, 0, 1.1), transform .3s',
+                    animation: 'none',
+                })
+                .addClass('show-cursor')
+        }
+        newNode.children('g').children('path').attr('stroke', data.color)
+        $(document.body).append(newNode)
+    }
 }

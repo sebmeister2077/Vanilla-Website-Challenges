@@ -48,8 +48,9 @@ export function scrollBackChatMessages(db) {
                 if (!snapshot.exists()) return
                 const objectValues = snapshot.val()
 
-                // const container = $("#messages").get(0);
-                // const {scrollHeight } = container;
+                const container = $('#messages').removeClass('scroll-smooth')
+                const containerEl = container.get(0)
+                const { scrollHeight, scrollTop } = containerEl
 
                 const prepend = true
                 Object.values(objectValues)
@@ -58,7 +59,18 @@ export function scrollBackChatMessages(db) {
                         createDomMessage(data, prepend)
                         window.oldestMessageTimeStamp = Math.min(window.oldestMessageTimeStamp ?? Number.MAX_SAFE_INTEGER, data.timestamp)
                     })
-                setTimeout(resolve, 300)
+
+                const { scrollHeight: newScrollHeight, scrollTop: newScrollTop } = containerEl
+                const top = newScrollHeight - scrollHeight - scrollTop
+
+                //seamlessly scroll to the current view without user noticing
+                containerEl.scrollTo({
+                    top,
+                    left: 0,
+                    behaviour: 'instant',
+                })
+                container.addClass('scroll-smooth')
+                setTimeout(resolve, 100)
             },
             {
                 onlyOnce: true,

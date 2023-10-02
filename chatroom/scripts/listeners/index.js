@@ -4,6 +4,7 @@ import { throttleCubeRotate } from './cubeRotateMousemove.js'
 import { cubeMouseup } from './cubeMouseup.js'
 import { cubeMousedown } from './cubeMousedown.js'
 import { throttledCursorMove } from './cursorMove.js'
+import { testClick } from './chatScrollListener.js'
 
 export function initDOMListeners() {
     $('#change-color').on('click', changeColorClick)
@@ -24,4 +25,6 @@ export function initDOMListeners() {
             $(`svg[key=${window.currentUserData.uid}]`).removeClass('scale-150')
         },
     })
+
+    $('#test').on('click', testClick)
 }

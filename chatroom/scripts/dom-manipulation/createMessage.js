@@ -1,4 +1,8 @@
-export function createDomMessage({ message, photoURL, username, timestamp, userId }) {
+var scrollTimeout = null
+export function createDomMessage({ message, photoURL, username, timestamp, userId }, prepend = false) {
+    if (scrollTimeout) clearTimeout(scrollTimeout)
+    scrollTimeout = null
+
     const template = $('#message-template')
     const el = template
         .html((i, old) => old.trim())
@@ -8,7 +12,7 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     if (userId === window.currentUserData.uid) {
         applyCurrentUserChatStyles(el)
     }
-    el.attr('data-uid', userId)
+    el.attr('data-uid', userId).attr('data-timestamp', timestamp)
 
     const userNameId = crypto.randomUUID()
     function removeLoader() {
@@ -28,21 +32,33 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
 
     const messageContainer = $('#messages')
     const lastMessage = messageContainer.children('[data-uid]').last()
+    const firstMessage = messageContainer.children('[data-uid]').first()
 
+    const firstUserId = firstMessage.attr('data-uid')
     const lastUserId = lastMessage.attr('data-uid')
 
-    if (lastUserId === userId) {
+    if (lastUserId === userId && !prepend) {
         const textEl = $('[data-message]', el)
         lastMessage.children('[data-messages]').append(textEl)
-        setTimeout(() => {
-            textEl[0].scrollIntoView()
-        }, 10)
+        setScroll(textEl)
         return
     }
-    setTimeout(() => {
-        el[0]?.scrollIntoView()
-    }, 10)
-    messageContainer.append(el)
+    if (firstUserId === userId && prepend) {
+        const textEl = $('[data-message]', el)
+        firstMessage.children('[data-messages]').children('[data-username]').after(textEl)
+        setScroll(textEl)
+        return
+    }
+
+    setScroll(el)
+    function setScroll(el) {
+        scrollTimeout = setTimeout(() => {
+            el[0]?.scrollIntoView()
+        }, 100)
+    }
+
+    if (prepend) messageContainer.prepend(el)
+    else messageContainer.append(el)
 }
 
 export function applyCurrentUserChatStyles(jqueryEl) {

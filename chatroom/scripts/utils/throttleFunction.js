@@ -1,22 +1,22 @@
-export const throttleFunction = (cb, delay = 250) => {
+export function throttleFunction(cb, delay = 250) {
     let shouldWait = false
     let waitingArgs
-    const timeoutFunc = () => {
+    function timeoutFunc() {
         if (waitingArgs == null) {
             shouldWait = false
             return
         }
-        cb(...waitingArgs)
+        cb.call(this, ...waitingArgs)
         waitingArgs = null
-        setTimeout(timeoutFunc, delay)
+        setTimeout(timeoutFunc.bind(this), delay)
     }
-    return (...args) => {
+    return function (...args) {
         if (shouldWait) {
             waitingArgs = args
             return
         }
-        cb(...args)
+        cb.call(this, ...args)
         shouldWait = true
-        setTimeout(timeoutFunc, delay)
+        setTimeout(timeoutFunc.bind(this), delay)
     }
 }

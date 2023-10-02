@@ -3,8 +3,9 @@ import { throttleFunction } from '../utils/throttleFunction.js'
 
 let isFetching = false
 let prevTop = 0
+let moreData = true
 export const chatScrollListener = function (e) {
-    if (!window.db || isFetching) return
+    if (!window.db || isFetching || !moreData) return
 
     const { scrollHeight, scrollTop, clientHeight } = this
     const isScrollingDown = prevTop <= scrollTop
@@ -16,7 +17,8 @@ export const chatScrollListener = function (e) {
     if (!isScrolledToTop) return
 
     isFetching = true
-    scrollBackChatMessages(window.db).then(() => {
+    scrollBackChatMessages(window.db).then((hasMore) => {
         isFetching = false
+        moreData = hasMore
     })
 }

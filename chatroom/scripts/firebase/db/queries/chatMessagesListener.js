@@ -45,7 +45,7 @@ export function scrollBackChatMessages(db) {
         onValue(
             query(messagesListRef, orderByChild('timestamp'), endBefore(window.oldestMessageTimeStamp), limitToLast(PAGE_SIZE)),
             (snapshot) => {
-                if (!snapshot.exists()) return
+                if (!snapshot.exists()) return resolve(false)
                 const objectValues = snapshot.val()
 
                 const container = $('#messages').removeClass('scroll-smooth')
@@ -70,7 +70,7 @@ export function scrollBackChatMessages(db) {
                     behaviour: 'instant',
                 })
                 container.addClass('scroll-smooth')
-                setTimeout(resolve, 100)
+                resolve(true)
             },
             {
                 onlyOnce: true,

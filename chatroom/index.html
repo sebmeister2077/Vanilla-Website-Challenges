@@ -155,7 +155,7 @@
                         <button
                             aria-label="Chat Menu"
                             aria-description="Open the Chat on smaller screens"
-                            class="md:opacity-0 order-1 transition-opacity duration-500"
+                            class="md:opacity-0 order-1 transition-opacity duration-500 md:pointer-events-none"
                             onclick="const chat = $('#chat');if(chat[0].hasAttribute('data-open')) chat.removeAttr('data-open').attr('aria-hidden','true'); else chat.attr('data-open','true').attr('aria-hidden','false');"
                         >
                             <svg class="fill-slate-50/[80] w-8 h-8" viewBox="0 0 24 24">
@@ -163,7 +163,11 @@
                             </svg>
                         </button>
                     </div>
-                    <h2 class="text-3xl w-full whitespace-nowrap min-w-[300px] text-neutral-800">Chat Messages</h2>
+                    <h2
+                        class="text-3xl opacity-0 md:[opacity:1_!important] group-data-[open=true]/chat:[opacity:1_!important] transform-opacity duration-500 w-full whitespace-nowrap min-w-[300px] text-neutral-800"
+                    >
+                        Chat Messages
+                    </h2>
                 </header>
                 <section class="flex flex-col grow gap-2 p-3 overflow-hidden">
                     <article

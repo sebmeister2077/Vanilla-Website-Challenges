@@ -18,4 +18,4 @@ export const DATABASE_ROUTES = new (class {
     Chat = this.#BASE_ROUTE + '/chat'
 })()
 export const MAX_USERS_CONNECTION_LIMIT = 100
-export const PAGE_SIZE = 5
+export const PAGE_SIZE = 20

@@ -4,7 +4,7 @@ import { throttleCubeRotate } from './cubeRotateMousemove.js'
 import { cubeMouseup } from './cubeMouseup.js'
 import { cubeMousedown } from './cubeMousedown.js'
 import { throttledCursorMove } from './cursorMove.js'
-import { testClick } from './chatScrollListener.js'
+import { chatScrollListener } from './chatScrollListener.js'
 
 export function initDOMListeners() {
     $('#change-color').on('click', changeColorClick)
@@ -26,5 +26,7 @@ export function initDOMListeners() {
         },
     })
 
-    $('#test').on('click', testClick)
+    $('#messages').on('scroll', function (e) {
+        chatScrollListener.call(this, e)
+    })
 }

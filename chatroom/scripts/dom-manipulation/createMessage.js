@@ -40,20 +40,20 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     if (lastUserId === userId && !prepend) {
         const textEl = $('[data-message]', el)
         lastMessage.children('[data-messages]').append(textEl)
-        setScroll(textEl)
+        setScroll()
         return
     }
     if (firstUserId === userId && prepend) {
         const textEl = $('[data-message]', el)
         firstMessage.children('[data-messages]').children('[data-username]').after(textEl)
-        setScroll(textEl)
+        // setScroll(textEl)
         return
     }
 
-    setScroll(el)
-    function setScroll(el) {
+    setScroll()
+    function setScroll() {
         scrollTimeout = setTimeout(() => {
-            el[0]?.scrollIntoView()
+            messageContainer.get(0).scrollTo(0, messageContainer.get(0).scrollHeight)
         }, 100)
     }
 

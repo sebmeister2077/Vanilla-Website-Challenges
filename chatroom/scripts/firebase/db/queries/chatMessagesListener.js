@@ -41,22 +41,28 @@ export function initChatMessagesListener(db) {
 export function scrollBackChatMessages(db) {
     if (window.oldestMessageTimeStamp === undefined) throw new Error('last message was not found')
     const messagesListRef = ref(db, DATABASE_ROUTES.Chat)
-    onValue(
-        query(messagesListRef, orderByChild('timestamp'), endBefore(window.oldestMessageTimeStamp), limitToLast(PAGE_SIZE)),
-        (snapshot) => {
-            if (!snapshot.exists()) return
-            const objectValues = snapshot.val()
+    return new Promise((resolve, reject) => {
+        onValue(
+            query(messagesListRef, orderByChild('timestamp'), endBefore(window.oldestMessageTimeStamp), limitToLast(PAGE_SIZE)),
+            (snapshot) => {
+                if (!snapshot.exists()) return
+                const objectValues = snapshot.val()
 
-            const prepend = true
-            Object.values(objectValues)
-                .sort(sortByComparer(['timestamp'], false))
-                .forEach((data) => {
-                    createDomMessage(data, prepend)
-                    window.oldestMessageTimeStamp = Math.min(window.oldestMessageTimeStamp ?? Number.MAX_SAFE_INTEGER, data.timestamp)
-                })
-        },
-        {
-            onlyOnce: true,
-        },
-    )
+                // const container = $("#messages").get(0);
+                // const {scrollHeight } = container;
+
+                const prepend = true
+                Object.values(objectValues)
+                    .sort(sortByComparer(['timestamp'], false))
+                    .forEach((data) => {
+                        createDomMessage(data, prepend)
+                        window.oldestMessageTimeStamp = Math.min(window.oldestMessageTimeStamp ?? Number.MAX_SAFE_INTEGER, data.timestamp)
+                    })
+                setTimeout(resolve, 300)
+            },
+            {
+                onlyOnce: true,
+            },
+        )
+    })
 }

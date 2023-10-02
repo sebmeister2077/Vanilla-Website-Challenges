@@ -25,24 +25,8 @@ $(function () {
         initDatabaseListeners(db)
         lastActiveAtInterval = setInterval(() => {
             window.currentUserData.lastActiveAt = Date.now()
-            //1hour
         }, 1 * HOUR_MS)
     })
 
     initDOMListeners()
-
-    // //initial messages render
-    // onValue(
-    //     messagesListRef,
-    //     (snapshot) => {
-    //         if (!snapshot.exists()) return
-    //         const values = snapshot.val()
-    //         const messages = Object.keys(values)
-    //             .map((k) => values[k])
-    //             .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
-    //         // .forEach(createDomMessage)
-    //     },
-    //     { onlyOnce: true },
-    // )
-    //listen for new messages
 })

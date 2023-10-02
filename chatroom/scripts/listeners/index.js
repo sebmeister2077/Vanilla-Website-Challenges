@@ -5,6 +5,7 @@ import { cubeMouseup } from './cubeMouseup.js'
 import { cubeMousedown } from './cubeMousedown.js'
 import { throttledCursorMove } from './cursorMove.js'
 import { chatScrollListener } from './chatScrollListener.js'
+import { initNetworkChangeListener, onOfflineListener, onOnlineListener } from './onlineListener.js'
 
 export function initDOMListeners() {
     $('#change-color').on('click', changeColorClick)
@@ -24,6 +25,14 @@ export function initDOMListeners() {
         mouseup: function () {
             $(`svg[key=${window.currentUserData.uid}]`).removeClass('scale-150')
         },
+    })
+
+    requestIdleCallback(() => {
+        $(window).on({
+            offline: onOfflineListener,
+            online: onOnlineListener,
+        })
+        initNetworkChangeListener()
     })
 
     $('#messages').on('scroll', function (e) {

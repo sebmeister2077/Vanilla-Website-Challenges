@@ -8,13 +8,28 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet" />
         <script
-            src="https://code.jquery.com/jquery-3.6.4.slim.js"
-            integrity="sha256-dWvV84T6BhzO4vG6gWhsWVKVoa4lVmLnpBOZh/CAHU4="
+            src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
             crossorigin="anonymous"
         ></script>
+
         <script src="https://cdn.tailwindcss.com"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js" referrerpolicy="no-referrer"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
+            integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <!-- Toastr needs the full jquery version (NOT SLIM) -->
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
+            integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
 
         <title>Chat Room</title>
         <style>
@@ -107,6 +122,10 @@
                         },
                     },
                 },
+            }
+            toastr.options = {
+                newestOnTop: true,
+                progressBar: true,
             }
         </script>
     </head>

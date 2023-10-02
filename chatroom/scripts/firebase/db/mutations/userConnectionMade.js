@@ -31,9 +31,9 @@ export function userConnectionMade(db, user) {
         if (snapshot.exists()) {
             val = snapshot.val()
         }
-        currentUserData.color = val.color ?? getRandomColor()
-        currentUserData.photoURL = val.photoURL ?? (await getRandomImage())
-        currentUserData.name = val.name ?? user.displayName ?? faker.internet.userName()
+        window.currentUserData.color = val.color ?? getRandomColor()
+        window.currentUserData.photoURL = val.photoURL ?? (await getRandomImage())
+        window.currentUserData.name = val.name ?? user.displayName ?? faker.internet.userName()
         setUserData({
             isOnline: true,
             uid: user.uid,
@@ -42,6 +42,7 @@ export function userConnectionMade(db, user) {
         })
         applyCurrentUserChatStyles($(`#messages > [data-uid=${user.uid}]`))
 
+        //these are applied on the server after user looses connection
         onDisconnect(ref(db, DATABASE_ROUTES.LastOnline(user.uid))).set(serverTimestamp())
         onDisconnect(ref(db, DATABASE_ROUTES.OnlineStatus(user.uid))).set(false)
     })

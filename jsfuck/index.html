@@ -37,27 +37,35 @@
         <link rel="stylesheet" href="./index.css" />
     </head>
 
-    <body class="bg-indigo-950 text-white flex items-center justify-center w-screen h-screen m-0 overflow-hidden">
+    <body class="bg-indigo-600 text-white flex items-center justify-center w-screen h-screen m-0 overflow-hidden">
         <main class="z-10 flex flex-col w-full h-full p-12 gap-6">
-            <h1 class="text-2xl">Write your javascript here and compile it to JSFuck</h1>
+            <h1 class="text-3xl is-bold">Write your javascript here and compile it to JSFuck</h1>
             <textarea id="in" autofocus class="materialize-textarea" placeholder="Add script you want to compile to jsfuck">
 alert(1)</textarea
             >
             <div class="flex gap-6 w-full items-center">
-                <button id="copy-code" title="Copy code" class="focus:bg-transparent">
+                <button
+                    id="copy-code"
+                    title="Copy code"
+                    class="focus:bg-transparent z-depth-2 waves-effect teal lighten-1 rounded-full p-3"
+                >
                     <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24">
                         <path
                             d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
                         ></path>
                     </svg>
                 </button>
-                <label class="ml-auto">
-                    <input type="checkbox" id="instant-check" />
-                    <span class="text-white">Instant Compile</span>
-                </label>
+
+                <div class="switch ml-auto">
+                    <label class="text-white text-lg">
+                        <input type="checkbox" id="instant-check" />
+                        <span class="lever"></span>
+                        Instant Compile
+                    </label>
+                </div>
                 <button id="run" class="waves-effect waves-light btn w-24">Run</button>
             </div>
-            <div id="out" class="s-full max-h-[60%] overflow-auto"></div>
+            <blockquote id="out" class="s-full max-h-[60%] overflow-auto"></blockquote>
         </main>
         <footer class="z-10 fixed bottom-0 w-screen flex items-center justify-center p-6 gap-4">
             <svg height="24" viewBox="0 0 16 16" width="24" class="fill-white">

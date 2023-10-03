@@ -123,8 +123,8 @@ alert(1)</textarea
             function copyCode() {
                 navigator.clipboard
                     .writeText(encodedText)
-                    .then(() => M.toast({ html: 'Code copied!', classes: 'bg-success' }))
-                    .catch(() => M.toast({ html: 'Failed to copy.', classes: 'bg-error' }))
+                    .then(() => M.toast({ html: 'Code copied!', classes: 'green' }))
+                    .catch(() => M.toast({ html: 'Failed to copy.', classes: 'red' }))
             }
             function updateOutput() {
                 const text = input.val().trim()

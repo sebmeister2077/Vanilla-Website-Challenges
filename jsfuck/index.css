@@ -1,0 +1,30 @@
+@media only screen and (max-width: 600px) {
+    #toast-container {
+        min-width: 100%;
+        bottom: 0%;
+    }
+}
+
+@media only screen and (min-width: 601px) and (max-width: 992px) {
+    #toast-container {
+        left: 5%;
+        bottom: 5%;
+        max-width: 90%;
+    }
+}
+
+@media only screen and (min-width: 993px) {
+    #toast-container {
+        top: 2%;
+        right: 5%;
+        max-width: 86%;
+    }
+}
+
+.bg-success {
+    background-color: #22c55e;
+}
+
+.bg-error {
+    background-color: #ef4444;
+}

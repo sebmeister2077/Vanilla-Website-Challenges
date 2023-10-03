@@ -29,7 +29,7 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         /> -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js" referrerpolicy="no-referrer"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js" referrerpolicy="no-referrer"></script> -->
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -80,7 +80,11 @@ alert(1)</textarea
                 INSTANT_COMPILE: 'instant-compile',
                 LAST_SCRIPT: 'last-written-script',
             })
-            const DEFAULT_TEXT = `alert(${1})`
+
+            const DEFAULT_TEXT = `alert('${Intl.DateTimeFormat(navigator.languages, {
+                dateStyle: 'short',
+                timeStyle: 'medium',
+            }).format(new Date())}')`
             const input = $('#in')
             const output = $('#out')
             const runBtn = $('#run')
@@ -89,7 +93,7 @@ alert(1)</textarea
                 constructor = encode('constructor')
             const instantCheck = $('#instant-check')
 
-            input.text(getParsedFromStorage(STORAGE_KEYS.LAST_SCRIPT) || DEFAULT_TEXT)
+            input.text(DEFAULT_TEXT)
             var isInstantCompile = getParsedFromStorage(STORAGE_KEYS.INSTANT_COMPILE) ?? true
             var encodedText = ''
             if (isInstantCompile) {

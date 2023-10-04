@@ -83,7 +83,6 @@ const timeFormattor = new Intl.RelativeTimeFormat(navigator.language, {
 })
 function getTimeSeparator(timeStamp) {
     const daysAgo = Math.ceil((timeStamp - Date.now()) / DAY_MS)
-    console.log('🚀 ~ file: createMessage.js:86 ~ getTimeSeparator ~ daysAgo:', daysAgo)
     return $('#time-separator-template')
         .html((i, old) => old.trim())
         .contents()

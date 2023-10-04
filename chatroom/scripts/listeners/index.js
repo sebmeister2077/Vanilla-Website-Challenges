@@ -6,7 +6,6 @@ import { cubeMousedown } from './cubeMousedown.js'
 import { throttledCursorMove } from './cursorMove.js'
 import { chatScrollListener } from './chatScrollListener.js'
 import { initNetworkChangeListener, onOfflineListener, onOnlineListener } from './onlineListener.js'
-import { uploadImageUrl } from '../firebase/storage/uploadImage.js'
 
 export function initDOMListeners() {
     $('#change-color').on('click', changeColorClick)
@@ -38,8 +37,5 @@ export function initDOMListeners() {
 
     $('#messages').on('scroll', function (e) {
         chatScrollListener.call(this, e)
-    })
-    $('#test').on('click', function () {
-        uploadImageUrl('https://avatars.githubusercontent.com/u/68665394?v=4')
     })
 }

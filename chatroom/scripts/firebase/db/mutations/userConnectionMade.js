@@ -21,18 +21,18 @@ import {
 import { DATABASE_ROUTES } from '../../../global-vars/index.js'
 import { setUserData } from '../../setGlobalData.js'
 import { applyCurrentUserChatStyles } from '../../../dom-manipulation/createMessage.js'
-import { getRandomImage } from '../../../utils/randomImage.js'
 import { getRandomColor } from '../../../utils/randomColor.js'
+import { uploadRandomImage } from '../../storage/uploadImage.js'
 
 export function userConnectionMade(db, user) {
     const currentUserRef = child(ref(db), DATABASE_ROUTES.OneUser(user.uid))
     get(currentUserRef).then(async (snapshot) => {
         var val = {}
-        if (snapshot.exists()) {
-            val = snapshot.val()
-        }
+        if (snapshot.exists()) val = snapshot.val()
+        else toastr.info('Setting up anonymous profile...')
+
         window.currentUserData.color = val.color ?? getRandomColor()
-        window.currentUserData.photoURL = val.photoURL ?? (await getRandomImage())
+        window.currentUserData.photoURL = val.photoURL ?? (await uploadRandomImage())
         window.currentUserData.name = val.name ?? user.displayName ?? faker.internet.userName()
         setUserData({
             isOnline: true,

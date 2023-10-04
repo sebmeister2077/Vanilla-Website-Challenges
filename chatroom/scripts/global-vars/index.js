@@ -17,5 +17,8 @@ export const DATABASE_ROUTES = new (class {
     InfoConnected = '.info/connected'
     Chat = this.#BASE_ROUTE + '/chat'
 })()
+export const STORAGE_ROUTES = {
+    SavePublic: (id) => `public/${id || throwError('Bro, id is undefined')}`,
+}
 export const MAX_USERS_CONNECTION_LIMIT = 100
 export const PAGE_SIZE = 20

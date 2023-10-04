@@ -56,7 +56,8 @@ export function scrollBackChatMessages(db) {
                 Object.values(objectValues)
                     .sort(sortByComparer(['timestamp'], false))
                     .forEach((data) => {
-                        createDomMessage(data, prepend)
+                        const timeout = createDomMessage(data, prepend)
+                        if (timeout) clearTimeout(timeout)
                         window.oldestMessageTimeStamp = Math.min(window.oldestMessageTimeStamp ?? Number.MAX_SAFE_INTEGER, data.timestamp)
                     })
 

@@ -8,9 +8,10 @@ import { initDatabaseListeners } from './firebase/db/queries/index.js'
 import { HOUR_MS } from './constants/time.js'
 
 $(function () {
-    const { analytics, appCheck, auth, db, performance } = initFirebase()
+    const { analytics, appCheck, auth, db, performance, storage } = initFirebase()
     window.db = db
     window.auth = auth
+    window.storage = storage
 
     let lastActiveAtInterval = null
     auth.onAuthStateChanged((user) => {

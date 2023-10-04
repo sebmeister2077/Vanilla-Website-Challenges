@@ -6,6 +6,7 @@ import { cubeMousedown } from './cubeMousedown.js'
 import { throttledCursorMove } from './cursorMove.js'
 import { chatScrollListener } from './chatScrollListener.js'
 import { initNetworkChangeListener, onOfflineListener, onOnlineListener } from './onlineListener.js'
+import { uploadImage } from '../firebase/storage/uploadImage.js'
 
 export function initDOMListeners() {
     $('#change-color').on('click', changeColorClick)
@@ -37,5 +38,8 @@ export function initDOMListeners() {
 
     $('#messages').on('scroll', function (e) {
         chatScrollListener.call(this, e)
+    })
+    $('#test').on('click', function () {
+        uploadImage('https://loremflickr.com/cache/resized/65535_52484905727_ff8da3b42e_c_640_480_nofilter.jpg')
     })
 }

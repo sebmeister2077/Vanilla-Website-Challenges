@@ -109,6 +109,7 @@
                         Chat Messages
                     </h2>
                 </header>
+                <!-- <button id="test">Test</button> -->
                 <section class="flex flex-col grow gap-2 p-3 overflow-hidden">
                     <article
                         aria-label="Chat messages"
@@ -137,6 +138,12 @@
                                     <div data-message class="rounded-xl bg-neutral-50/[.85] relative px-4 py-2 shadow-md"></div>
                                 </div>
                             </div>
+                        </template>
+                        <template id="time-separator-template">
+                            <div
+                                data-time-separator
+                                class="flex items-center justify-center gap-4 before:content-[''] before:h-px before:grow before:bg-gray-300/[.56] after:content-[''] after:h-px after:grow after:bg-gray-300/[.56]"
+                            ></div>
                         </template>
                     </article>
                     <footer class="w-full flex justify-between items-center">

@@ -1,7 +1,20 @@
+import { DAY_MS } from '../constants/time.js'
+
 var scrollTimeout = null
+let oldestTimestamp = null
+let newestTimestamp = null
 export function createDomMessage({ message, photoURL, username, timestamp, userId }, prepend = false) {
+    oldestTimestamp = oldestTimestamp ?? timestamp
+    newestTimestamp = newestTimestamp ?? timestamp
+
     if (scrollTimeout) clearTimeout(scrollTimeout)
     scrollTimeout = null
+
+    const needsTimeSeparator = prepend
+        ? new Date(oldestTimestamp).getDate() != new Date(timestamp).getDate()
+        : new Date(newestTimestamp).getDate() != new Date(timestamp).getDate()
+    oldestTimestamp = Math.min(oldestTimestamp, timestamp)
+    newestTimestamp = Math.max(newestTimestamp, timestamp)
 
     const template = $('#message-template')
     const el = template
@@ -37,28 +50,45 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     const firstUserId = firstMessage.attr('data-uid')
     const lastUserId = lastMessage.attr('data-uid')
 
-    if (lastUserId === userId && !prepend) {
+    if (lastUserId === userId && !prepend && !needsTimeSeparator) {
         const textEl = $('[data-message]', el)
         lastMessage.children('[data-messages]').append(textEl)
-        setScroll()
-        return
+        return setScroll()
     }
-    if (firstUserId === userId && prepend) {
+    if (firstUserId === userId && prepend && !needsTimeSeparator) {
         const textEl = $('[data-message]', el)
         firstMessage.children('[data-messages]').children('[data-username]').after(textEl)
         // setScroll(textEl)
         return
     }
 
-    setScroll()
     function setScroll() {
         scrollTimeout = setTimeout(() => {
             messageContainer.get(0).scrollTo(0, messageContainer.get(0).scrollHeight)
         }, 100)
+        return scrollTimeout
     }
 
-    if (prepend) messageContainer.prepend(el)
-    else messageContainer.append(el)
+    if (prepend) {
+        if (needsTimeSeparator) messageContainer.prepend(getTimeSeparator(timestamp))
+        messageContainer.prepend(el)
+    } else {
+        if (needsTimeSeparator) messageContainer.append(getTimeSeparator(timestamp))
+        messageContainer.append(el)
+    }
+    return setScroll()
+}
+const timeFormattor = new Intl.RelativeTimeFormat(navigator.language, {
+    numeric: 'auto',
+})
+function getTimeSeparator(timeStamp) {
+    const daysAgo = Math.ceil((timeStamp - Date.now()) / DAY_MS)
+    console.log('🚀 ~ file: createMessage.js:86 ~ getTimeSeparator ~ daysAgo:', daysAgo)
+    return $('#time-separator-template')
+        .html((i, old) => old.trim())
+        .contents()
+        .clone(true, true)
+        .text(timeFormattor.format(daysAgo, 'day'))
 }
 
 export function applyCurrentUserChatStyles(jqueryEl) {

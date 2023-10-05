@@ -1,4 +1,5 @@
 import { DAY_MS } from '../constants/time.js'
+import { utcTimestampToLocalTime } from '../utils/utcTimestampToLocalTime.js'
 
 var scrollTimeout = null
 let oldestTimestamp = null
@@ -38,7 +39,8 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
 
     $('[data-username]', el).text(username).attr('id', userNameId)
 
-    const messageEl = $('[data-message]', el).text(message).attr('aria-labelledby', `${userNameId} said`)
+    const localTime = utcTimestampToLocalTime(timestamp)
+    const messageEl = $('[data-message]', el).text(message).attr('aria-labelledby', `${userNameId} said`).attr('data-local-time', localTime)
     const NR_CHARACTERS_ON_ONE_ROW = 28
     if (message.length >= NR_CHARACTERS_ON_ONE_ROW) messageEl.addClass(`min-w-[${NR_CHARACTERS_ON_ONE_ROW}ch]`)
     else messageEl.addClass('min-w-max')
@@ -99,4 +101,8 @@ export function applyCurrentUserChatStyles(jqueryEl) {
         .children('[data-message]')
         .addClass('bg-yellow-400/[.85]')
         .attr('data-currentuser', '')
+        .removeClass('after:translate-x-[120%]')
+        .removeClass('after:right-0')
+        .addClass('after:left-0')
+        .addClass('after:translate-x-[-120%]')
 }

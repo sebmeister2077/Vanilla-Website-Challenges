@@ -42,8 +42,9 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     const localTime = utcTimestampToLocalTime(timestamp)
     const messageEl = $('[data-message]', el).text(message).attr('aria-labelledby', `${userNameId} said`).attr('data-local-time', localTime)
     const NR_CHARACTERS_ON_ONE_ROW = 28
+    const NR_TIME_CHARACTERS = 5
     if (message.length >= NR_CHARACTERS_ON_ONE_ROW) messageEl.addClass(`min-w-[${NR_CHARACTERS_ON_ONE_ROW}ch]`)
-    else if (message.length < 3) messageEl.addClass('min-w-[3rem]')
+    else if (message.length < NR_TIME_CHARACTERS) messageEl.addClass('min-w-[3rem]')
     else messageEl.addClass('min-w-max')
 
     const messageContainer = $('#messages')

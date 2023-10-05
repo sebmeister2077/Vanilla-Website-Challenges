@@ -43,6 +43,7 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     const messageEl = $('[data-message]', el).text(message).attr('aria-labelledby', `${userNameId} said`).attr('data-local-time', localTime)
     const NR_CHARACTERS_ON_ONE_ROW = 28
     if (message.length >= NR_CHARACTERS_ON_ONE_ROW) messageEl.addClass(`min-w-[${NR_CHARACTERS_ON_ONE_ROW}ch]`)
+    else if (message.length < 3) messageEl.addClass('min-w-[3rem]')
     else messageEl.addClass('min-w-max')
 
     const messageContainer = $('#messages')
@@ -101,8 +102,6 @@ export function applyCurrentUserChatStyles(jqueryEl) {
         .children('[data-message]')
         .addClass('bg-yellow-400/[.85]')
         .attr('data-currentuser', '')
-        .removeClass('after:translate-x-[120%]')
-        .removeClass('after:right-0')
-        .addClass('after:left-0')
-        .addClass('after:translate-x-[-120%]')
+        .removeClass('after:left-1')
+        .addClass('after:right-1')
 }

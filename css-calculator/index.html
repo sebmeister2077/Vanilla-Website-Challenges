@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CSS Calculator</title>
+        <style>
+            body {
+                background-color: antiquewhite;
+                margin: 0px;
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .calculator {
+                display: grid;
+                grid-template-columns: repeat(4, 64px);
+                grid-template-rows: repeat(4, 64px);
+                border-collapse: separate;
+                gap: 8px;
+                padding: 8px;
+            }
+            .calculator > * {
+                background-color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                user-select: none;
+                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+                transition: box-shadow 0.4s;
+            }
+            .calculator > *:hover {
+                box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            }
+            .calculator > [data-big-span] {
+                grid-column: 1 / span 2;
+            }
+        </style>
+    </head>
+    <body>
+        <section>
+            <form class="calculator">
+                <label>
+                    <span>7</span>
+                    <input type="radio" name="number" hidden value="7" />
+                </label>
+                <label>
+                    <span>8</span>
+                    <input type="radio" name="number" hidden value="8" />
+                </label>
+                <label>
+                    <span> 9 </span>
+                    <input type="radio" name="number" hidden value="9" />
+                </label>
+                <label>
+                    <span>/</span>
+                    <input type="radio" name="operator" hidden value="/" />
+                </label>
+                <label>
+                    <span>4</span>
+                    <input type="radio" name="number" hidden value="4" />
+                </label>
+                <label>
+                    <span>5</span>
+                    <input type="radio" name="number" hidden value="5" />
+                </label>
+                <label>
+                    <span>6</span>
+                    <input type="radio" name="number" hidden value="6" />
+                </label>
+                <label>
+                    <span>x</span>
+                    <input type="radio" name="operator" hidden value="x" />
+                </label>
+                <label>
+                    <span>1</span>
+                    <input type="radio" name="number" hidden value="1" />
+                </label>
+                <label>
+                    <span>2</span>
+                    <input type="radio" name="number" hidden value="2" />
+                </label>
+                <label>
+                    <span>3</span>
+                    <input type="radio" name="number" hidden value="3" />
+                </label>
+                <label>
+                    <span>-</span>
+                    <input type="radio" name="operator" hidden value="-" />
+                </label>
+                <label data-big-span>
+                    <span>0</span>
+                    <input type="radio" name="number" hidden value="0" />
+                </label>
+                <label>
+                    <span>=</span>
+                    <input type="radio" name="operator" hidden value="=" />
+                </label>
+                <label>
+                    <span>+</span>
+                    <input type="radio" name="operator" hidden value="+" />
+                </label>
+            </form>
+        </section>
+    </body>
+</html>

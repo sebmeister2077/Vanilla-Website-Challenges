@@ -27,8 +27,8 @@ import { DATABASE_ROUTES, PAGE_SIZE } from '../../../global-vars/index.js'
 import { createDomMessage } from '../../../dom-manipulation/createMessage.js'
 import { sortByComparer } from '../../../utils/sortByComparer.js'
 
-export function initChatMessagesListener(db) {
-    const messagesListRef = ref(db, DATABASE_ROUTES.Chat)
+export function initChatMessagesListener(db, chatId) {
+    const messagesListRef = ref(db, chatId ? DATABASE_ROUTES.PrivateChat(chatId) : DATABASE_ROUTES.PublicChat)
 
     onChildAdded(query(messagesListRef, orderByChild('timestamp'), limitToLast(PAGE_SIZE)), (snapshot) => {
         if (!snapshot.exists()) return
@@ -38,9 +38,10 @@ export function initChatMessagesListener(db) {
     })
 }
 
-export function scrollBackChatMessages(db) {
+export function scrollBackChatMessages(db, chatId) {
     if (window.oldestMessageTimeStamp === undefined) throw new Error('last message was not found')
-    const messagesListRef = ref(db, DATABASE_ROUTES.Chat)
+    const messagesListRef = ref(db, chatId ? DATABASE_ROUTES.PrivateChat(chatId) : DATABASE_ROUTES.PublicChat)
+
     return new Promise((resolve, reject) => {
         onValue(
             query(messagesListRef, orderByChild('timestamp'), endBefore(window.oldestMessageTimeStamp), limitToLast(PAGE_SIZE)),

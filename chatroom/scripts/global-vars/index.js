@@ -5,7 +5,7 @@ export const DATABASE_ROUTES = new (class {
     Cube = this.#BASE_ROUTE + '/cube'
     AllUsers = this.#BASE_ROUTE + '/users'
     OneUser(uid) {
-        if (!uid) throw Error('Uid is not defined')
+        if (!uid) throw new Error('Uid is not defined')
         return this.AllUsers + '/' + uid
     }
     LastOnline(uid) {
@@ -15,7 +15,12 @@ export const DATABASE_ROUTES = new (class {
         return this.OneUser(uid) + '/isOnline'
     }
     InfoConnected = '.info/connected'
-    Chat = this.#BASE_ROUTE + '/chat'
+    #Chat = this.#BASE_ROUTE + '/chat'
+    PublicChat = this.#Chat + '/public'
+    PrivateChat(chatId) {
+        if (!chatId) throw new Error('chatId is not defined')
+        return this.#Chat + '/' + chatId
+    }
 })()
 export const STORAGE_ROUTES = {
     SavePublic: (id) => `public/${id || throwError('Bro, id is undefined')}`,

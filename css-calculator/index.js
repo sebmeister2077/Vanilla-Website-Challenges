@@ -25,66 +25,21 @@ function generateTemplate() {
                     //IMPORTANT, dont remove this join
                     .join('\n')}
             </style>
-            <label>
-                <span>7</span>
-                <input type="radio" name="number" hidden value="7" />
-            </label>
-            <label>
-                <span>8</span>
-                <input type="radio" name="number" hidden value="8" />
-            </label>
-            <label>
-                <span> 9 </span>
-                <input type="radio" name="number" hidden value="9" />
-            </label>
-            <label>
-                <span>/</span>
-                <input type="radio" name="operator" hidden value="/" />
-            </label>
-            <label>
-                <span>4</span>
-                <input type="radio" name="number" hidden value="4" />
-            </label>
-            <label>
-                <span>5</span>
-                <input type="radio" name="number" hidden value="5" />
-            </label>
-            <label>
-                <span>6</span>
-                <input type="radio" name="number" hidden value="6" />
-            </label>
-            <label>
-                <span>x</span>
-                <input type="radio" name="operator" hidden value="x" />
-            </label>
-            <label>
-                <span>1</span>
-                <input type="radio" name="number" hidden value="1" />
-            </label>
-            <label>
-                <span>2</span>
-                <input type="radio" name="number" hidden value="2" />
-            </label>
-            <label>
-                <span>3</span>
-                <input type="radio" name="number" hidden value="3" />
-            </label>
-            <label>
-                <span>-</span>
-                <input type="radio" name="operator" hidden value="-" />
-            </label>
-            <label data-big-span>
-                <span>0</span>
-                <input type="radio" name="number" hidden value="0" />
-            </label>
-            <label>
-                <span>A/C</span>
-                <input type="reset" hidden value="ac" />
-            </label>
-            <label>
-                <span>+</span>
-                <input type="radio" name="operator" hidden value="+" />
-            </label>
+            ${generateInput(cssChildNumber, 7)}
+            ${generateInput(cssChildNumber, 8)}
+            ${generateInput(cssChildNumber, 9)}
+            ${generateInput(cssChildNumber, '/')}
+            ${generateInput(cssChildNumber, 4)}
+            ${generateInput(cssChildNumber, 5)}
+            ${generateInput(cssChildNumber, 6)}
+            ${generateInput(cssChildNumber, 'x')}
+            ${generateInput(cssChildNumber, 1)}
+            ${generateInput(cssChildNumber, 2)}
+            ${generateInput(cssChildNumber, 3)}
+            ${generateInput(cssChildNumber, '-')}
+            ${generateInput(cssChildNumber, 0)}
+            ${generateInput(cssChildNumber, 'A/C')}
+            ${generateInput(cssChildNumber, '+')}
         </fieldset>
      `
     document.querySelector('.output').append(document.createElement('span'))
@@ -92,11 +47,23 @@ function generateTemplate() {
 
 function generateCssForNumber(childNumber, valueNr) {
     return /*css*/ `
-    body:has(.calculator:nth-child(${childNumber}) [value='${valueNr}']:checked) .output :nth-child(${childNumber}) {
-        ${cssVariableBaseName}${childNumber}: ${
+        body:has(.calculator:nth-child(${childNumber}) [value='${valueNr}']:checked) .output :nth-child(${childNumber}) {
+            ${cssVariableBaseName}${childNumber}: ${
         childNumber > 1 ? `calc(var(${cssVariableBaseName}${childNumber - 1}) * 10 + ${valueNr})` : valueNr
     };
     }
+    `
+}
+
+function generateInput(childNumber, value) {
+    const isNumber = !isNaN(value) && typeof value === 'number'
+    return /*html*/ `
+        <label>
+            <span>${value}</span>
+            <input type="${value === 'A/C' ? 'reset' : 'radio'}" name="${
+        isNumber ? 'number' : 'operand'
+    }${childNumber}" hidden value="${value}" />
+        </label>
     `
 }
 

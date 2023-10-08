@@ -68,13 +68,16 @@ function generateCssForNumber(childNumber, valueNr) {
 }
 
 function generateInput(childNumber, value) {
+    function getInputType() {
+        if (childNumber === 1 && value === 0) return 'hidden'
+        if (value === 'A/C') return 'reset'
+        return 'radio'
+    }
     const isNumber = !isNaN(value) && typeof value === 'number'
     return /*html*/ `
         <label>
             <span>${value}</span>
-            <input type="${value === 'A/C' ? 'reset' : 'radio'}" name="${
-        isNumber ? 'number' : 'operand'
-    }${childNumber}" hidden value="${value}" />
+            <input type="${getInputType()}" name="${isNumber ? 'number' : 'operand'}${childNumber}" hidden value="${value}" />
         </label>
     `
 }

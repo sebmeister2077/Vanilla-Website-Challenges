@@ -38,6 +38,10 @@
                 grid-column: 1 / span 2;
             }
 
+            .calculator:has(:checked) {
+                display: none !important;
+            }
+
             .calculator:first-child:not(:has(:checked)),
             .calculator:has(:checked) + .calculator:not(:checked) {
                 display: grid;

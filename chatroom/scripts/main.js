@@ -7,8 +7,8 @@ import { USER_ID_LOCATION } from './global-vars/index.js'
 import { initDatabaseListeners } from './firebase/db/queries/index.js'
 import { HOUR_MS } from './constants/time.js'
 
-$(function () {
-    const { analytics, appCheck, auth, db, performance, storage } = initFirebase()
+$(async function () {
+    const { analytics, appCheck, auth, db, performance, storage } = await initFirebase()
     window.db = db
     window.auth = auth
     window.storage = storage

@@ -15,12 +15,23 @@ import { IS_DEBUG } from '../global-vars/index.js'
 import { getAppCheck } from './appcheck/index.js'
 
 export async function initFirebase() {
+    const ENV_LOCATION = 'firebase_config'
     let config
-    if (IS_DEBUG) {
-        config = (await import('../../env.local.json', { assert: { type: 'json' } })).default
-        self.FIREBASE_APPCHECK_DEBUG_TOKEN = config.LOCAL_RECAPTCHA_DEBUG_TOKEN
-    } else config = (await import('../../env.json', { assert: { type: 'json' } })).default
-
+    try {
+        // x50 faster that await import();
+        const localEnvData = sessionStorage.getItem(ENV_LOCATION)
+        if (localEnvData) config = JSON.parse(localEnvData)
+    } catch {
+        //its mallformed
+        sessionStorage.removeItem(ENV_LOCATION)
+    }
+    if (!config) {
+        if (IS_DEBUG) {
+            config = (await import('../../env.local.json', { assert: { type: 'json' } })).default
+            self.FIREBASE_APPCHECK_DEBUG_TOKEN = config.LOCAL_RECAPTCHA_DEBUG_TOKEN
+        } else config = (await import('../../env.json', { assert: { type: 'json' } })).default
+        sessionStorage.setItem(ENV_LOCATION, JSON.stringify(config))
+    }
     Object.freeze(config)
 
     // Initialize Firebase

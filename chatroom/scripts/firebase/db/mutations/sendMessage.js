@@ -34,8 +34,4 @@ export function pushToChat(db, message, chatId) {
         ...data,
         timestamp: serverTimestamp(),
     })
-    // createDomMessage({
-    //     ...data,
-    //     timestamp: Date.now(),
-    // })
 }

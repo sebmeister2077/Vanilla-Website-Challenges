@@ -1,9 +1,8 @@
 export const USER_ID_LOCATION = 'chatroom_user_uid'
 export const IS_DEBUG = window.location.hostname === '127.0.0.1'
 export const DATABASE_ROUTES = new (class {
-    #BASE_ROUTE = 'env/' + (IS_DEBUG ? 'development' : window.location.hostname.replace(/\./g, '_'))
-    Cube = this.#BASE_ROUTE + '/cube'
-    AllUsers = this.#BASE_ROUTE + '/users'
+    Cube = 'cube'
+    AllUsers = 'users'
     OneUser(uid) {
         if (!uid) throw new Error('Uid is not defined')
         return this.AllUsers + '/' + uid
@@ -15,7 +14,7 @@ export const DATABASE_ROUTES = new (class {
         return this.OneUser(uid) + '/isOnline'
     }
     InfoConnected = '.info/connected'
-    #Chat = this.#BASE_ROUTE + '/chat'
+    #Chat = 'chat'
     PublicChat = this.#Chat + '/public'
     PrivateChat(chatId) {
         if (!chatId) throw new Error('chatId is not defined')

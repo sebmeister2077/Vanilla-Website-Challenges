@@ -9,6 +9,16 @@ function generateTemplate() {
     const form = document.getElementsByTagName('form')[0]
     const amountOfFields = form.querySelectorAll('fieldset').length
     const cssChildNumber = amountOfFields + 1
+
+    const hidePreviousResultLabel = /*css*/ `
+    body:has(.calculator:nth-child(${
+        cssChildNumber - 1
+    }) [name^="number"]:checked):has(.calculator:nth-child(${cssChildNumber}) [name^="number"]:checked) .output :nth-child(${
+        cssChildNumber - 1
+    })::before{
+            display:none;
+        }
+    `
     form.innerHTML += /*html*/ `
         <fieldset class="calculator">
             <style>
@@ -16,6 +26,8 @@ function generateTemplate() {
                     counter-reset: child${cssChildNumber} var(${cssVariableBaseName}${cssChildNumber});
                     content: counter(child${cssChildNumber});
                 }
+                
+                ${cssChildNumber > 1 ? hidePreviousResultLabel : ''}
                 body:not(:has(.calculator:nth-child(${cssChildNumber}) :checked)) .output :nth-child(${cssChildNumber})::before{
                     display:none;
                 }
@@ -47,7 +59,7 @@ function generateTemplate() {
 
 function generateCssForNumber(childNumber, valueNr) {
     return /*css*/ `
-        body:has(.calculator:nth-child(${childNumber}) [value='${valueNr}']:checked) .output :nth-child(${childNumber}) {
+        body:has(.calculator:nth-child(${childNumber}) [value='${valueNr}']:checked) .output  {
             ${cssVariableBaseName}${childNumber}: ${
         childNumber > 1 ? `calc(var(${cssVariableBaseName}${childNumber - 1}) * 10 + ${valueNr})` : valueNr
     };

@@ -90,11 +90,16 @@ function generateInput(cssTemplateNumber, value) {
         if (value === 'A/C') return 'reset'
         return 'radio'
     }
-    const isNumber = !isNaN(value) && typeof value === 'number'
+    function getName() {
+        const isNumber = !isNaN(value) && typeof value === 'number'
+        if (isNumber) return 'number'
+        if (value === 'A/C') return 'A/C'
+        return 'operator'
+    }
     return /*html*/ `
         <label>
             <span>${value}</span>
-            <input type="${getInputType()}" name="${isNumber ? 'number' : 'operand'}${cssTemplateNumber}" hidden value="${value}" />
+            <input type="${getInputType()}" name="${getName()}${cssTemplateNumber}" hidden value="${value}" />
         </label>
     `
 }

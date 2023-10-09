@@ -14,7 +14,11 @@
                 align-items: center;
             }
             .calculator {
-                display: none;
+                position: absolute;
+                inset: 0px;
+                opacity: 0;
+                z-index: -1;
+                display: grid;
                 grid-template-columns: repeat(4, 64px);
                 grid-template-rows: repeat(4, 64px);
                 border-collapse: separate;
@@ -29,7 +33,7 @@
                 cursor: pointer;
                 user-select: none;
                 box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-                transition: box-shadow 0.4s;
+                transition: box-shadow 0.4s, opacity 0.4s;
             }
             .calculator > label:hover {
                 box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
@@ -39,12 +43,22 @@
             }
 
             .calculator:has(:checked) {
-                display: none !important;
+                opacity: 0 !important;
+                z-index: -1 !important;
             }
 
             .calculator:first-child:not(:has(:checked)),
             .calculator:has(:checked) + .calculator:not(:checked) {
-                display: grid;
+                opacity: 1;
+                z-index: 1;
+            }
+
+            /* Hide current operator labels */
+            .calculator:has([name^='operator']:checked) + .calculator label:has([name^='operator']),
+            /* Hide next label until current is checked (for smooth transition) */
+            .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has([name^='operator']) {
+                pointer-events: none;
+                opacity: 0.56;
             }
             fieldset {
                 border: none;
@@ -52,11 +66,16 @@
             .note {
                 margin-bottom: 3rem;
             }
+            form {
+                position: relative;
+                width: 360px;
+                height: 360px;
+            }
         </style>
     </head>
     <body>
         <section>
-            <p class="note">Note: Cannot display value greater than 2147783</p>
+            <p class="note">Note: Cannot display value greater than 2147783647</p>
             <code class="output"></code>
             <form></form>
         </section>

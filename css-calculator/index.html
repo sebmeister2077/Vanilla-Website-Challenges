@@ -65,9 +65,9 @@
             .calculator > label:hover {
                 box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
             }
-            .calculator > label:has(input[value='0']) {
-                grid-column: 1 / span 2;
-            }
+            /* .calculator > label:has(input[value='0']) {
+                grid-column: 2 / span 2;
+            } */
 
             .calculator:has(:checked) {
                 opacity: 0 !important;
@@ -96,12 +96,15 @@
             /* Transition */
             .calculator:first-child:not(:has(:checked)) + .calculator label:has(input[value='0']),
             
-            /* 0 Can't be used as the first value after an operation */
+            /* 0 Can't be used as the first value after an operator */
             .calculator:has([name^='operator']:checked) + .calculator label:has(input[value='0']),
             /* Transition */
-            .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0']) {
+            .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0']),
+            
+            /* User pressed '=' */
+            body:has(.calculator [value="="]:checked) .calculator label:not(:has([value="A/C"])) {
                 pointer-events: none;
-                opacity: 0.56;
+                opacity: 0.36;
             }
 
             .output {
@@ -109,9 +112,6 @@
                 padding: 36px;
                 display: flex;
                 justify-content: flex-end;
-            }
-            .output::after {
-                content: '=';
             }
         </style>
     </head>

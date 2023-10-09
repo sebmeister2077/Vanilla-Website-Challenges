@@ -3,7 +3,8 @@ function generateTemplates(count) {
         generateTemplate()
     }
 }
-const cssVariableBaseName = '--value'
+const cssVariableDisplay = '--display-value'
+const cssVariableResult = '--result-value'
 
 function generateTemplate() {
     const form = document.getElementsByTagName('form')[0]
@@ -23,7 +24,7 @@ function generateTemplate() {
         <fieldset class="calculator">
             <style>
                 .output :nth-child(${cssTemplateNumber})::before{
-                    counter-reset: child${cssTemplateNumber} var(${cssVariableBaseName}${cssTemplateNumber});
+                    counter-reset: child${cssTemplateNumber} var(${cssVariableDisplay}${cssTemplateNumber});
                     content: counter(child${cssTemplateNumber});
                 }
                 
@@ -31,8 +32,11 @@ function generateTemplate() {
                 body:not(:has(.calculator:nth-child(${cssTemplateNumber}) :checked)) .output :nth-child(${cssTemplateNumber})::before{
                     display:none;
                 }
+
+                
+
                 ${new Array(10)
-                    .fill(2)
+                    .fill(null)
                     .map((_, idx) => generateCssForNumber(cssTemplateNumber, idx))
                     //IMPORTANT, dont remove this join
                     .join('\n')}
@@ -40,6 +44,7 @@ function generateTemplate() {
                     ${generateCssForOperator(cssTemplateNumber, '*')}
                     ${generateCssForOperator(cssTemplateNumber, '-')}
                     ${generateCssForOperator(cssTemplateNumber, '+')}
+                    ${generateCssForOperator(cssTemplateNumber, '=')}
             </style>
             ${generateInput(cssTemplateNumber, 7)}
             ${generateInput(cssTemplateNumber, 8)}
@@ -53,8 +58,9 @@ function generateTemplate() {
             ${generateInput(cssTemplateNumber, 2)}
             ${generateInput(cssTemplateNumber, 3)}
             ${generateInput(cssTemplateNumber, '-')}
-            ${generateInput(cssTemplateNumber, 0)}
             ${generateInput(cssTemplateNumber, 'A/C')}
+            ${generateInput(cssTemplateNumber, 0)}
+            ${generateInput(cssTemplateNumber, '=')}
             ${generateInput(cssTemplateNumber, '+')}
         </fieldset>
      `
@@ -64,8 +70,8 @@ function generateTemplate() {
 function generateCssForNumber(cssTemplateNumber, valueNr) {
     return /*css*/ `
         body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${valueNr}']:checked) .output  {
-            ${cssVariableBaseName}${cssTemplateNumber}: ${
-        cssTemplateNumber > 1 ? `calc(var(${cssVariableBaseName}${cssTemplateNumber - 1}) * 10 + ${valueNr})` : valueNr
+            ${cssVariableDisplay}${cssTemplateNumber}: ${
+        cssTemplateNumber > 1 ? `calc(var(${cssVariableDisplay}${cssTemplateNumber - 1}) * 10 + ${valueNr})` : valueNr
     };
     }
     `
@@ -75,7 +81,7 @@ function generateCssForOperator(cssTemplateNumber, operator) {
     return /*css*/ `
         body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${operator}']:checked) .output  {
             /* Reset value  */
-            ${cssVariableBaseName}${cssTemplateNumber}: 0;
+            ${cssVariableDisplay}${cssTemplateNumber}: 0;
         }
 
         body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${operator}']:checked) .output :nth-child(${cssTemplateNumber})::before{

@@ -8,13 +8,13 @@ const cssVariableBaseName = '--value'
 function generateTemplate() {
     const form = document.getElementsByTagName('form')[0]
     const amountOfFields = form.querySelectorAll('fieldset').length
-    const cssChildNumber = amountOfFields + 1
+    const cssTemplateNumber = amountOfFields + 1
 
     const hidePreviousResultLabel = /*css*/ `
     body:has(.calculator:nth-child(${
-        cssChildNumber - 1
-    }) [name^="number"]:checked):has(.calculator:nth-child(${cssChildNumber}) [name^="number"]:checked) .output :nth-child(${
-        cssChildNumber - 1
+        cssTemplateNumber - 1
+    }) [name^="number"]:checked):has(.calculator:nth-child(${cssTemplateNumber}) [name^="number"]:checked) .output :nth-child(${
+        cssTemplateNumber - 1
     })::before{
             display:none;
         }
@@ -22,54 +22,71 @@ function generateTemplate() {
     form.innerHTML += /*html*/ `
         <fieldset class="calculator">
             <style>
-                .output :nth-child(${cssChildNumber})::before{
-                    counter-reset: child${cssChildNumber} var(${cssVariableBaseName}${cssChildNumber});
-                    content: counter(child${cssChildNumber});
+                .output :nth-child(${cssTemplateNumber})::before{
+                    counter-reset: child${cssTemplateNumber} var(${cssVariableBaseName}${cssTemplateNumber});
+                    content: counter(child${cssTemplateNumber});
                 }
                 
-                ${cssChildNumber > 1 ? hidePreviousResultLabel : ''}
-                body:not(:has(.calculator:nth-child(${cssChildNumber}) :checked)) .output :nth-child(${cssChildNumber})::before{
+                ${cssTemplateNumber > 1 ? hidePreviousResultLabel : ''}
+                body:not(:has(.calculator:nth-child(${cssTemplateNumber}) :checked)) .output :nth-child(${cssTemplateNumber})::before{
                     display:none;
                 }
                 ${new Array(10)
                     .fill(2)
-                    .map((_, idx) => generateCssForNumber(cssChildNumber, idx))
+                    .map((_, idx) => generateCssForNumber(cssTemplateNumber, idx))
                     //IMPORTANT, dont remove this join
                     .join('\n')}
+                    ${generateCssForOperator(cssTemplateNumber, '/')}
+                    ${generateCssForOperator(cssTemplateNumber, '*')}
+                    ${generateCssForOperator(cssTemplateNumber, '-')}
+                    ${generateCssForOperator(cssTemplateNumber, '+')}
             </style>
-            ${generateInput(cssChildNumber, 7)}
-            ${generateInput(cssChildNumber, 8)}
-            ${generateInput(cssChildNumber, 9)}
-            ${generateInput(cssChildNumber, '/')}
-            ${generateInput(cssChildNumber, 4)}
-            ${generateInput(cssChildNumber, 5)}
-            ${generateInput(cssChildNumber, 6)}
-            ${generateInput(cssChildNumber, 'x')}
-            ${generateInput(cssChildNumber, 1)}
-            ${generateInput(cssChildNumber, 2)}
-            ${generateInput(cssChildNumber, 3)}
-            ${generateInput(cssChildNumber, '-')}
-            ${generateInput(cssChildNumber, 0)}
-            ${generateInput(cssChildNumber, 'A/C')}
-            ${generateInput(cssChildNumber, '+')}
+            ${generateInput(cssTemplateNumber, 7)}
+            ${generateInput(cssTemplateNumber, 8)}
+            ${generateInput(cssTemplateNumber, 9)}
+            ${generateInput(cssTemplateNumber, '/')}
+            ${generateInput(cssTemplateNumber, 4)}
+            ${generateInput(cssTemplateNumber, 5)}
+            ${generateInput(cssTemplateNumber, 6)}
+            ${generateInput(cssTemplateNumber, '*')}
+            ${generateInput(cssTemplateNumber, 1)}
+            ${generateInput(cssTemplateNumber, 2)}
+            ${generateInput(cssTemplateNumber, 3)}
+            ${generateInput(cssTemplateNumber, '-')}
+            ${generateInput(cssTemplateNumber, 0)}
+            ${generateInput(cssTemplateNumber, 'A/C')}
+            ${generateInput(cssTemplateNumber, '+')}
         </fieldset>
      `
     document.querySelector('.output').append(document.createElement('span'))
 }
 
-function generateCssForNumber(childNumber, valueNr) {
+function generateCssForNumber(cssTemplateNumber, valueNr) {
     return /*css*/ `
-        body:has(.calculator:nth-child(${childNumber}) [value='${valueNr}']:checked) .output  {
-            ${cssVariableBaseName}${childNumber}: ${
-        childNumber > 1 ? `calc(var(${cssVariableBaseName}${childNumber - 1}) * 10 + ${valueNr})` : valueNr
+        body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${valueNr}']:checked) .output  {
+            ${cssVariableBaseName}${cssTemplateNumber}: ${
+        cssTemplateNumber > 1 ? `calc(var(${cssVariableBaseName}${cssTemplateNumber - 1}) * 10 + ${valueNr})` : valueNr
     };
     }
     `
 }
 
-function generateInput(childNumber, value) {
+function generateCssForOperator(cssTemplateNumber, operator) {
+    return /*css*/ `
+        body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${operator}']:checked) .output  {
+            /* Reset value  */
+            ${cssVariableBaseName}${cssTemplateNumber}: 0;
+        }
+
+        body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${operator}']:checked) .output :nth-child(${cssTemplateNumber})::before{
+            content: '${operator}';
+        }
+    `
+}
+
+function generateInput(cssTemplateNumber, value) {
     function getInputType() {
-        if (childNumber === 1 && value === 0) return 'hidden'
+        if (cssTemplateNumber === 1 && value === 0) return 'hidden'
         if (value === 'A/C') return 'reset'
         return 'radio'
     }
@@ -77,9 +94,9 @@ function generateInput(childNumber, value) {
     return /*html*/ `
         <label>
             <span>${value}</span>
-            <input type="${getInputType()}" name="${isNumber ? 'number' : 'operand'}${childNumber}" hidden value="${value}" />
+            <input type="${getInputType()}" name="${isNumber ? 'number' : 'operand'}${cssTemplateNumber}" hidden value="${value}" />
         </label>
     `
 }
 
-generateTemplates(12)
+generateTemplates(50)

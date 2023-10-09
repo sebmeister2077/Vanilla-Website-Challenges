@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>CSS Calculator</title>
         <style>
+            * {
+                box-sizing: border-box;
+            }
             body {
                 background-color: antiquewhite;
                 margin: 0px;
@@ -13,9 +16,33 @@
                 justify-content: center;
                 align-items: center;
             }
+            form {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 1/1;
+            }
+            section {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 12px;
+                padding: 24px;
+                width: 400px;
+                height: 100%;
+            }
+            fieldset {
+                border: none;
+            }
+            .note {
+                margin-bottom: 3rem;
+            }
+
             .calculator {
                 position: absolute;
-                inset: 0px;
+                top: 50%;
+                left: 50%;
+                transform: translateX(-50%) translateY(-50%);
                 opacity: 0;
                 z-index: -1;
                 display: grid;
@@ -55,21 +82,36 @@
 
             /* Hide current operator labels */
             .calculator:has([name^='operator']:checked) + .calculator label:has([name^='operator']),
-            /* Hide next label until current is checked (for smooth transition) */
-            .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has([name^='operator']) {
+            /* Transition */
+            .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has([name^='operator']),
+            
+            /* Hide current operator labels for first selection */
+            .calculator:first-child:not(:has(:checked)) label:has([name^='operator']),
+            /* Transition */
+            .calculator:first-child:not(:has(:checked)) + .calculator label:has([name^='operator']),
+            
+
+            /* 0 Can't be used as the first value */
+            .calculator:first-child:not(:has(:checked)) label:has(input[value='0']),
+            /* Transition */
+            .calculator:first-child:not(:has(:checked)) + .calculator label:has(input[value='0']),
+            
+            /* 0 Can't be used as the first value after an operation */
+            .calculator:has([name^='operator']:checked) + .calculator label:has(input[value='0']),
+            /* Transition */
+            .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0']) {
                 pointer-events: none;
                 opacity: 0.56;
             }
-            fieldset {
-                border: none;
+
+            .output {
+                width: 100%;
+                padding: 36px;
+                display: flex;
+                justify-content: flex-end;
             }
-            .note {
-                margin-bottom: 3rem;
-            }
-            form {
-                position: relative;
-                width: 360px;
-                height: 360px;
+            .output::after {
+                content: '=';
             }
         </style>
     </head>

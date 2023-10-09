@@ -34,7 +34,7 @@ function generateTemplate() {
 
                 body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="number"]:checked) .output{
                     /* Pass the previous result forward even if it doesnt exist*/
-                    ${cssVariableResult}${cssTemplateNumber}: ${cssTemplateNumber > 1 ? `var(${cssVariableResult}${cssTemplateNumber - 1})` : '300000000000'};
+                    ${cssVariableResult}${cssTemplateNumber}: ${cssTemplateNumber > 1 ? `var(${cssVariableResult}${cssTemplateNumber - 1})` : '-300000000000'};
                 }
 
                 /* This is for result */
@@ -128,7 +128,7 @@ function generateOperationCss(cssTemplateNumber, operator) {
          /* Base is still on body */
         ${operationCanBeMadeSelector}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked) .output
         {
-            ${cssVariableResult}${cssTemplateNumber}: calc(min(var(${cssVariableResult}${cssTemplateNumber - 1}),var(${cssVariableDisplay}${
+            ${cssVariableResult}${cssTemplateNumber}: calc(max(var(${cssVariableResult}${cssTemplateNumber - 1}),var(${cssVariableDisplay}${
         cssTemplateNumber - 1
     })) ${operator} var(${cssVariableDisplay}${cssTemplateNumber + 1}));
         }

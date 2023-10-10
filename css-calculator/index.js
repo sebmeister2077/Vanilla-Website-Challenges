@@ -141,6 +141,14 @@ function generateOperationCss(cssTemplateNumber, operator) {
             body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${cssTemplateNumber + 1}) [value="="]:checked)
     `;
     return /*css*/ `
+     /* Base is still on body */
+        ${isLastOperation}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked) .output
+        {
+            ${cssVariableResult}${cssTemplateNumber}: calc(var(${cssVariableResult}${cssTemplateNumber - 1}, var(${cssVariableDisplay}${
+        cssTemplateNumber - 1
+    }, ${operatorDefaultValue})) ${operator} var(${cssVariableLastDisplay}));
+        }
+        
          /* Base is still on body */
         ${operationCanBeMadeSelector}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked) .output
         {
@@ -148,16 +156,6 @@ function generateOperationCss(cssTemplateNumber, operator) {
         cssTemplateNumber - 1
     }, ${operatorDefaultValue})) ${operator} var(${cssVariableDisplay}${cssTemplateNumber + 1}));
         }
-
-         /* Base is still on body */
-        ${isLastOperation}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked) .output
-        {
-            ${cssVariableResult}${cssTemplateNumber}: calc(var(${cssVariableResult}${cssTemplateNumber - 1}, var(${cssVariableDisplay}${
-        cssTemplateNumber - 1
-    }, ${operatorDefaultValue})) ${operator} var(${cssVariableLastDisplay}));
-        }
-
-
     `;
 }
 

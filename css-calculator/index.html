@@ -34,8 +34,17 @@
             fieldset {
                 border: none;
             }
-            .note:last-of-type {
+            .notes {
+                height: 160px;
+                width: 360px;
                 margin-bottom: 3rem;
+            }
+            .notes summary {
+                font-size: 24px;
+            }
+            .notes p::before {
+                content: 'Note: ';
+                font-weight: bold;
             }
 
             .calculator {
@@ -122,8 +131,12 @@
     </head>
     <body>
         <section>
-            <p class="note">Note: Order of operations is preserved, all operations have equal priority.</p>
-            <p class="note">Note: Cannot display value greater than <var> 2147783647 </var></p>
+            <details class="notes">
+                <summary>Notes</summary>
+                <p>Order of operations is preserved, all operations have equal priority.</p>
+                <p>Cannot display value greater than <var> 2147783647 </var></p>
+                <p>Cannot display floating point numbers</p>
+            </details>
             <code class="output"></code>
             <form></form>
         </section>

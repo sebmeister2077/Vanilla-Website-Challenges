@@ -35,7 +35,7 @@ fieldset {
 .notes summary {
     font-size: 24px;
 }
-.notes p::before {
+.notes p:not([data-info])::before {
     content: 'Note: ';
     font-weight: bold;
 }

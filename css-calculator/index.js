@@ -1,6 +1,6 @@
 function generateTemplates(count) {
     for (let i = 0; i < count; i++) {
-        generateTemplate()
+        requestIdleCallback(generateTemplate)
     }
 }
 const cssVariableDisplay = '--display-value'
@@ -23,6 +23,10 @@ function generateTemplate() {
     form.innerHTML += /*html*/ `
         <fieldset class="calculator">
             <style>
+                [data-info]:after {
+                    content:' ${cssTemplateNumber}';
+                }
+
                 .output :nth-child(${cssTemplateNumber})::before{
                     counter-reset: child${cssTemplateNumber} var(${cssVariableDisplay}${cssTemplateNumber});
                     content: counter(child${cssTemplateNumber});
@@ -146,5 +150,6 @@ function generatePotentialResultCss(cssTemplateNumber) {
         }
     `
 }
-
-generateTemplates(50)
+requestIdleCallback(() => {
+    generateTemplates(40)
+})

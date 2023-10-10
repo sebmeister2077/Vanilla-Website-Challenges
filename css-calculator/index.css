@@ -106,7 +106,7 @@ fieldset {
 /* Transition */
 .calculator:first-child:not(:has(:checked)) + .calculator label:has(input[value='0']),
 
-/* 0 Can't be used as the first value after an operator */
+/* 0 Can't be used as the first value after a '/' operator */
 .calculator:has([name^='operator'][value='/']:checked) + .calculator label:has(input[value='0']),
 /* Transition */
 .calculator:has([name^='operator'][value='/']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0']),

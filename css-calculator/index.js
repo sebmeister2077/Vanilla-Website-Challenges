@@ -151,5 +151,5 @@ function generatePotentialResultCss(cssTemplateNumber) {
     `
 }
 requestIdleCallback(() => {
-    generateTemplates(40)
+    generateTemplates(30)
 })

@@ -24,6 +24,20 @@ section {
     width: 400px;
     height: 100%;
 }
+
+footer {
+    position: fixed;
+    bottom: 0px;
+    padding: 20px;
+    cursor: pointer;
+}
+footer > a {
+    all: unset;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    vertical-align: middle;
+}
 fieldset {
     border: none;
 }

@@ -5,6 +5,7 @@ function generateTemplates(count) {
 }
 const cssVariableDisplay = '--display-value'
 const cssVariableResult = '--result-value'
+const cssVariableMaxDisplay = '--display-max'
 
 function generateTemplate() {
     const form = document.getElementsByTagName('form')[0]
@@ -34,7 +35,7 @@ function generateTemplate() {
 
                 body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="number"]:checked) .output{
                     /* Pass the previous result forward even if it doesnt exist*/
-                    ${cssVariableResult}${cssTemplateNumber}: ${cssTemplateNumber > 1 ? `var(${cssVariableResult}${cssTemplateNumber - 1})` : '-300000000000'};
+                    ${cssVariableResult}${cssTemplateNumber}: var(${cssVariableResult}${cssTemplateNumber - 1});
                 }
 
                 /* This is for result */
@@ -119,6 +120,8 @@ function generateInput(cssTemplateNumber, value) {
 }
 
 function generateOperationCss(cssTemplateNumber, operator) {
+    const operatorDefaultValue = ['+', '-'].includes(operator) ? 0 : 1
+
     const operationCanBeMadeSelector = /*css*/ `
             /* We want to check if we can make an operation at cssTemplateNumber
             Note we make use of css newest -> prioritize rule to not override unwanted variables*/
@@ -128,9 +131,9 @@ function generateOperationCss(cssTemplateNumber, operator) {
          /* Base is still on body */
         ${operationCanBeMadeSelector}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked) .output
         {
-            ${cssVariableResult}${cssTemplateNumber}: calc(max(var(${cssVariableResult}${cssTemplateNumber - 1}),var(${cssVariableDisplay}${
+            ${cssVariableResult}${cssTemplateNumber}: calc(var(${cssVariableResult}${cssTemplateNumber - 1}, var(${cssVariableDisplay}${
         cssTemplateNumber - 1
-    })) ${operator} var(${cssVariableDisplay}${cssTemplateNumber + 1}));
+    }, ${operatorDefaultValue})) ${operator} var(${cssVariableDisplay}${cssTemplateNumber + 1}));
         }
     `
 }

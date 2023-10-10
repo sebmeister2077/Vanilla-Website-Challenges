@@ -5,6 +5,7 @@ function generateTemplates(count) {
 }
 const cssVariableDisplay = '--display-value';
 const cssVariableResult = '--result-value';
+const cssVariableLastDisplay = '--last-display';
 
 function generateTemplate() {
     const form = document.getElementsByTagName('form')[0];
@@ -88,6 +89,7 @@ function generateCssForNumber(cssTemplateNumber, valueNr) {
     return /*css*/ `
         body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${valueNr}']:checked) .output  {
             ${cssVariableDisplay}${cssTemplateNumber}: ${cssTemplateNumber > 1 ? `calc(var(${cssVariableDisplay}${cssTemplateNumber - 1}) * 10 + ${valueNr})` : valueNr};
+            ${cssVariableLastDisplay}:var(${cssVariableDisplay}${cssTemplateNumber});
     }
     `;
 }
@@ -133,6 +135,11 @@ function generateOperationCss(cssTemplateNumber, operator) {
             Note we make use of css newest -> prioritize rule to not override unwanted variables*/
             body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${cssTemplateNumber + 1}) [name^="operator"]:checked)
     `;
+    const isLastOperation = /*css*/ `
+            /* We want to check if we can make an operation at cssTemplateNumber
+            Note we make use of css newest -> prioritize rule to not override unwanted variables*/
+            body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${cssTemplateNumber + 1}) [value="="]:checked)
+    `;
     return /*css*/ `
          /* Base is still on body */
         ${operationCanBeMadeSelector}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked) .output
@@ -141,6 +148,16 @@ function generateOperationCss(cssTemplateNumber, operator) {
         cssTemplateNumber - 1
     }, ${operatorDefaultValue})) ${operator} var(${cssVariableDisplay}${cssTemplateNumber + 1}));
         }
+
+         /* Base is still on body */
+        ${isLastOperation}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked) .output
+        {
+            ${cssVariableResult}${cssTemplateNumber}: calc(var(${cssVariableResult}${cssTemplateNumber - 1}, var(${cssVariableDisplay}${
+        cssTemplateNumber - 1
+    }, ${operatorDefaultValue})) ${operator} var(${cssVariableLastDisplay}));
+        }
+
+
     `;
 }
 

@@ -101,6 +101,11 @@
             /* Transition */
             .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0']),
             
+            /* = Can't be used unless there has been at least 1 operator and at least a number after it */
+            .calculator:not(:has([name^='operator']:checked),:has([name^='operator']:checked) + :has([name^="number"]:checked)) + .calculator label:has(input[value='=']),
+            /* Transition */
+            .calculator:not(:has([name^='operator']:checked),:has([name^='operator']:checked) + :has([name^="number"]:checked)) + .calculator + .calculator label:has(input[value='=']),
+
             /* User pressed '=' */
             body:has(.calculator [value="="]:checked) .calculator label:not(:has([value="A/C"])) {
                 pointer-events: none;

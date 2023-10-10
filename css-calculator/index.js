@@ -133,12 +133,16 @@ function generateOperationCss(cssTemplateNumber, operator) {
     const operationCanBeMadeSelector = /*css*/ `
             /* We want to check if we can make an operation at cssTemplateNumber
             Note we make use of css newest -> prioritize rule to not override unwanted variables*/
-            body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${cssTemplateNumber + 1}) [name^="operator"]:checked)
+            body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${
+        cssTemplateNumber + 1
+    }) [name^="operator"]:not([value="="]):checked)
     `;
     const isLastOperation = /*css*/ `
             /* We want to check if we can make an operation at cssTemplateNumber
             Note we make use of css newest -> prioritize rule to not override unwanted variables*/
-            body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${cssTemplateNumber + 1}) [value="="]:checked)
+            body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${
+        cssTemplateNumber + 1
+    }) [name^="operator"][value="="]:checked)
     `;
     return /*css*/ `
      /* Base is still on body */

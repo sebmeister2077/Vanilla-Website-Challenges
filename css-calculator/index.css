@@ -1,0 +1,122 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    background-color: antiquewhite;
+    margin: 0px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+form {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1;
+}
+section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 24px;
+    width: 400px;
+    height: 100%;
+}
+fieldset {
+    border: none;
+}
+.notes {
+    height: 160px;
+    width: 360px;
+    margin-bottom: 3rem;
+}
+.notes summary {
+    font-size: 24px;
+}
+.notes p::before {
+    content: 'Note: ';
+    font-weight: bold;
+}
+
+.calculator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    opacity: 0;
+    z-index: -1;
+    display: grid;
+    grid-template-columns: repeat(4, 64px);
+    grid-template-rows: repeat(4, 64px);
+    border-collapse: separate;
+    gap: 8px;
+    padding: 8px;
+}
+.calculator > label {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    transition: box-shadow 0.4s, opacity 0.4s;
+}
+.calculator > label:hover {
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+/* .calculator > label:has(input[value='0']) {
+                grid-column: 2 / span 2;
+            } */
+
+.calculator:has(:checked) {
+    opacity: 0 !important;
+    z-index: -1 !important;
+}
+
+.calculator:first-child:not(:has(:checked)),
+.calculator:has(:checked) + .calculator:not(:checked) {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* Hide current operator labels */
+.calculator:has([name^='operator']:checked) + .calculator label:has([name^='operator']),
+            /* Transition */
+            .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has([name^='operator']),
+            
+            /* Hide current operator labels for first selection */
+            .calculator:first-child:not(:has(:checked)) label:has([name^='operator'],[name^='A/C']),
+            /* Transition */
+            .calculator:first-child:not(:has(:checked)) + .calculator label:has([name^='operator'],[name^='A/C']),
+            
+
+            /* 0 Can't be used as the first value */
+            .calculator:first-child:not(:has(:checked)) label:has(input[value='0']),
+            /* Transition */
+            .calculator:first-child:not(:has(:checked)) + .calculator label:has(input[value='0']),
+            
+            /* 0 Can't be used as the first value after an operator */
+            .calculator:has([name^='operator']:checked) + .calculator label:has(input[value='0']),
+            /* Transition */
+            .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0']),
+            
+            /* = Can't be used unless there has been at least 1 operator and at least a number after it */
+            .calculator:not(:has([name^='operator']:checked),:has([name^='operator']:checked) + :has([name^="number"]:checked)) + .calculator label:has(input[value='=']),
+            /* Transition */
+            .calculator:not(:has([name^='operator']:checked),:has([name^='operator']:checked) + :has([name^="number"]:checked)) + .calculator + .calculator label:has(input[value='=']),
+
+            /* User pressed '=' */
+            body:has(.calculator [value="="]:checked) .calculator label:not(:has([value="A/C"])) {
+    pointer-events: none;
+    opacity: 0.36;
+}
+
+.output {
+    width: 100%;
+    padding: 36px;
+    display: flex;
+    justify-content: flex-end;
+}

@@ -146,4 +146,5 @@ function generatePotentialResultCss(cssTemplateNumber) {
         }
     `
 }
-generateTemplates(50)
+
+generateTemplates(8)

@@ -40,6 +40,12 @@ fieldset {
     font-weight: bold;
 }
 
+.overflow-error {
+    opacity: 0;
+    color: #dc2626;
+    transition: opacity 0.6s;
+}
+
 .calculator {
     position: absolute;
     top: 50%;
@@ -53,6 +59,7 @@ fieldset {
     border-collapse: separate;
     gap: 8px;
     padding: 8px;
+    will-change: opacity, z-index;
 }
 .calculator > label {
     background-color: white;
@@ -62,6 +69,7 @@ fieldset {
     cursor: pointer;
     user-select: none;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    will-change: opacity, box-shadow;
     transition: box-shadow 0.4s, opacity 0.4s;
 }
 .calculator > label:hover {
@@ -84,36 +92,42 @@ fieldset {
 
 /* Hide current operator labels */
 .calculator:has([name^='operator']:checked) + .calculator label:has([name^='operator']),
-            /* Transition */
-            .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has([name^='operator']),
-            
-            /* Hide current operator labels for first selection */
-            .calculator:first-child:not(:has(:checked)) label:has([name^='operator'],[name^='A/C']),
-            /* Transition */
-            .calculator:first-child:not(:has(:checked)) + .calculator label:has([name^='operator'],[name^='A/C']),
-            
+/* Transition */
+.calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has([name^='operator']),
 
-            /* 0 Can't be used as the first value */
-            .calculator:first-child:not(:has(:checked)) label:has(input[value='0']),
-            /* Transition */
-            .calculator:first-child:not(:has(:checked)) + .calculator label:has(input[value='0']),
-            
-            /* 0 Can't be used as the first value after an operator */
-            .calculator:has([name^='operator']:checked) + .calculator label:has(input[value='0']),
-            /* Transition */
-            .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0']),
-            
-            /* = Can't be used unless there has been at least 1 operator and at least a number after it */
-            .calculator:not(:has([name^='operator']:checked),:has([name^='operator']:checked) + :has([name^="number"]:checked)) + .calculator label:has(input[value='=']),
-            /* Transition */
-            .calculator:not(:has([name^='operator']:checked),:has([name^='operator']:checked) + :has([name^="number"]:checked)) + .calculator + .calculator label:has(input[value='=']),
+/* Hide current operator labels for first selection */
+.calculator:first-child:not(:has(:checked)) label:has([name^='operator'],[name^='A/C']),
+/* Transition */
+.calculator:first-child:not(:has(:checked)) + .calculator label:has([name^='operator'],[name^='A/C']),
 
-            /* User pressed '=' */
-            body:has(.calculator [value="="]:checked) .calculator label:not(:has([value="A/C"])) {
+
+/* 0 Can't be used as the first value */
+.calculator:first-child:not(:has(:checked)) label:has(input[value='0']),
+/* Transition */
+.calculator:first-child:not(:has(:checked)) + .calculator label:has(input[value='0']),
+
+/* 0 Can't be used as the first value after an operator */
+.calculator:has([name^='operator']:checked) + .calculator label:has(input[value='0']),
+/* Transition */
+.calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0']),
+
+/* = Can't be used unless there has been at least 1 operator and at least a number after it */
+.calculator:not(:has([name^='operator']:checked),:has([name^='operator']:checked) + :has([name^="number"]:checked)) + .calculator label:has(input[value='=']),
+/* Transition */
+.calculator:not(:has([name^='operator']:checked),:has([name^='operator']:checked) + :has([name^="number"]:checked)) + .calculator + .calculator label:has(input[value='=']),
+
+/* User pressed '=' */
+body:has(.calculator [value="="]:checked) .calculator label:not(:has([value="A/C"])),
+
+/* User used up all calculators */
+.calculator:nth-last-child(2):has( :checked) + .calculator label:not(:has([value="A/C"])) {
     pointer-events: none;
     opacity: 0.36;
 }
 
+body:has(.calculator:nth-last-child(2) :checked) .overflow-error {
+    opacity: 1;
+}
 .output {
     width: 100%;
     padding: 36px;

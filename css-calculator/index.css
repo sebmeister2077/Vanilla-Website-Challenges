@@ -99,17 +99,19 @@ fieldset {
 .calculator:first-child:not(:has(:checked)) label:has([name^='operator'],[name^='A/C']),
 /* Transition */
 .calculator:first-child:not(:has(:checked)) + .calculator label:has([name^='operator'],[name^='A/C']),
-
+.calculator:first-child label:has([value='=']),
 
 /* 0 Can't be used as the first value */
 .calculator:first-child:not(:has(:checked)) label:has(input[value='0']),
 /* Transition */
 .calculator:first-child:not(:has(:checked)) + .calculator label:has(input[value='0']),
 
-/* 0 Can't be used as the first value after an operator */
+/*
+0 Can't be used as the first value after an operator
 .calculator:has([name^='operator']:checked) + .calculator label:has(input[value='0']),
-/* Transition */
+Transition
 .calculator:has([name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0']),
+*/
 
 /* = Can't be used unless there has been at least 1 operator and at least a number after it */
 .calculator:not(:has([name^='operator']:checked),:has([name^='operator']:checked) + :has([name^="number"]:checked)) + .calculator label:has(input[value='=']),

@@ -73,7 +73,7 @@ fieldset {
     border-collapse: separate;
     gap: 8px;
     padding: 8px;
-    will-change: opacity, z-index;
+    will-change: opacity, z-index, display;
 }
 .calculator > label {
     background-color: white;
@@ -140,6 +140,16 @@ body:has(.calculator [value="="]:checked) .calculator label:not(:has([value="A/C
 
 body:has(.calculator:nth-last-child(2) :checked) .overflow-error {
     opacity: 1;
+}
+
+/* Performance improvements */
+.calculator:first-child ~ .calculator:has(:checked),
+.calculator:where(:has(:checked), :first-child) + .calculator:not(:has(:checked)) + .calculator ~ .calculator {
+    display: none;
+}
+
+.output ::before {
+    will-change: content;
 }
 .output {
     width: 100%;

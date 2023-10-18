@@ -85,6 +85,11 @@ function generateTemplate() {
     document.querySelector('.output').append(document.createElement('span'));
 }
 
+//add manually (generated ofc)
+//TODO add body:has(operator ~operator ~operator){
+// ${cssVariableLastDisplay}3
+//}
+
 function generateCssForNumber(cssTemplateNumber, valueNr) {
     return /*css*/ `
         body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${valueNr}']:checked) .output  {
@@ -119,13 +124,45 @@ function generateInput(cssTemplateNumber, value) {
         if (value === 'A/C') return 'A/C';
         return 'operator';
     }
+    const inputId = crypto.randomUUID();
     return /*html*/ `
-        <label>
+        <label for="${inputId}">
             <span>${value}</span>
-            <input type="${getInputType()}" name="${getName()}${cssTemplateNumber}" hidden value="${value}" />
+            <input type="${getInputType()}" name="${getName()}${cssTemplateNumber}" hidden value="${value}" id="${inputId}" />
         </label>
     `;
 }
+
+requestIdleCallback(() => {
+    generateTemplates(30);
+});
+
+function generatePotentialResultCss(cssTemplateNumber) {
+    return /*css*/ `
+        body:has(.calculator:nth-child(${cssTemplateNumber}) [value="="]:checked) .output::after{
+            counter-reset:final-result var(${cssVariableResult}${cssTemplateNumber - 1});
+            content:counter(final-result);
+        }
+    `;
+}
+function emulateClick(sequence) {
+    if (!sequence || typeof sequence !== 'string') return;
+    const chars = sequence.split('');
+    let n = 1;
+    for (const char of chars) {
+        clickEl(char);
+    }
+    clickEl('=');
+    function clickEl(char) {
+        const el = document.querySelector(`.calculator:nth-child(${n++}) label:has([value="${char}"])`);
+        if (!(el instanceof HTMLElement)) return;
+        el.click();
+    }
+}
+
+setTimeout(() => {
+    if (window.location.hostname === '127.0.0.1') emulateClick('2*55-12');
+}, 1200);
 
 function generateOperationCss(cssTemplateNumber, operator) {
     const operatorDefaultValue = ['+', '-'].includes(operator) ? 0 : 1;
@@ -162,15 +199,3 @@ function generateOperationCss(cssTemplateNumber, operator) {
         }
     `;
 }
-
-function generatePotentialResultCss(cssTemplateNumber) {
-    return /*css*/ `
-        body:has(.calculator:nth-child(${cssTemplateNumber}) [value="="]:checked) .output::after{
-            counter-reset:final-result var(${cssVariableResult}${cssTemplateNumber - 1});
-            content:counter(final-result);
-        }
-    `;
-}
-requestIdleCallback(() => {
-    generateTemplates(30);
-});

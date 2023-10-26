@@ -160,7 +160,7 @@ setTimeout(() => {
 }, 1200);
 
 function generateOperationCss(cssTemplateNumber, operator) {
-    // 9 bilion
+    // 9 bilion, since the max display value is 2 bilion...
     const MAX_DIGITS_LIMIT = 10;
     const operatorDefaultValue = ['+', '-'].includes(operator) ? 0 : 1;
 

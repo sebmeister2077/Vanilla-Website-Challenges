@@ -181,21 +181,43 @@ function generateOperationCss(cssTemplateNumber, operator) {
         cssTemplateNumber + 1
     }) [name^="operator"][value="="]:checked)
     `;
+    const MAX_DIGITS_LIMIT = 10;
     return /*css*/ `
-     /* Base is still on body */
+
+        /* This is the final operation */
+        /* Base is still on body */
         ${isLastOperation}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked) .output
         {
             ${cssVariableResult}${cssTemplateNumber}: calc(var(${cssVariableResult}${cssTemplateNumber - 1}, var(${cssVariableDisplay}${
         cssTemplateNumber - 1
     }, ${operatorDefaultValue})) ${operator} var(${cssVariableLastDisplay}));
         }
-        
+
+        /* This is any intermediary operation */ 
+        ${new Array(MAX_DIGITS_LIMIT)
+            .fill(0)
+            .map((_, idx) => generateForDigitsCount(idx + 1))
+            .join('\n')}
+    `;
+
+    //Number of digits checked after the operation at index cssTemplateNumber
+    function generateForDigitsCount(checkedDigits) {
+        return /*css*/ `
          /* Base is still on body */
-        ${operationCanBeMadeSelector}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked) .output
+             ${operationCanBeMadeSelector}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked)${generateSelectedDigitsSelector(checkedDigits)} .output
         {
             ${cssVariableResult}${cssTemplateNumber}: calc(var(${cssVariableResult}${cssTemplateNumber - 1}, var(${cssVariableDisplay}${
-        cssTemplateNumber - 1
-    }, ${operatorDefaultValue})) ${operator} var(${cssVariableDisplay}${cssTemplateNumber + 1}));
+            cssTemplateNumber - 1
+        }, ${operatorDefaultValue})) ${operator} var(${cssVariableDisplay}${cssTemplateNumber + checkedDigits}));
         }
-    `;
+        `;
+    }
+    function generateSelectedDigitsSelector(checkedDigits) {
+        return /*css*/ `
+            ${new Array(checkedDigits)
+                .fill(0)
+                .map((_, idx) => /*css*/ `:has(.calculator:nth-child(${cssTemplateNumber + idx + 1}) [name^="number"]:checked)`)
+                .join('')}
+        `.trim();
+    }
 }

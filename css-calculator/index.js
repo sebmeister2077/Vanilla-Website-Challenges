@@ -165,34 +165,16 @@ setTimeout(() => {
 }, 1200);
 
 function generateOperationCss(cssTemplateNumber, operator) {
+    // 9 bilion
+    const MAX_DIGITS_LIMIT = 10;
     const operatorDefaultValue = ['+', '-'].includes(operator) ? 0 : 1;
 
     const operationCanBeMadeSelector = /*css*/ `
             /* We want to check if we can make an operation at cssTemplateNumber
             Note we make use of css newest -> prioritize rule to not override unwanted variables*/
-            body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${
-        cssTemplateNumber + 1
-    }) [name^="operator"]:not([value="="]):checked)
+            body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${cssTemplateNumber + 1}) [name^="operator"]:checked)
     `;
-    const isLastOperation = /*css*/ `
-            /* We want to check if we can make an operation at cssTemplateNumber
-            Note we make use of css newest -> prioritize rule to not override unwanted variables*/
-            body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${
-        cssTemplateNumber + 1
-    }) [name^="operator"][value="="]:checked)
-    `;
-    const MAX_DIGITS_LIMIT = 10;
     return /*css*/ `
-
-        /* This is the final operation */
-        /* Base is still on body */
-        ${isLastOperation}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked) .output
-        {
-            ${cssVariableResult}${cssTemplateNumber}: calc(var(${cssVariableResult}${cssTemplateNumber - 1}, var(${cssVariableDisplay}${
-        cssTemplateNumber - 1
-    }, ${operatorDefaultValue})) ${operator} var(${cssVariableLastDisplay}));
-        }
-
         /* This is any intermediary operation */ 
         ${new Array(MAX_DIGITS_LIMIT)
             .fill(0)
@@ -200,9 +182,10 @@ function generateOperationCss(cssTemplateNumber, operator) {
             .join('\n')}
     `;
 
-    //Number of digits checked after the operation at index cssTemplateNumber
+    //Generate operation for each amount of checked digits
     function generateForDigitsCount(checkedDigits) {
         return /*css*/ `
+        /* Use variable display from the last display */
          /* Base is still on body */
              ${operationCanBeMadeSelector}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked)${generateSelectedDigitsSelector(checkedDigits)} .output
         {
@@ -212,6 +195,8 @@ function generateOperationCss(cssTemplateNumber, operator) {
         }
         `;
     }
+
+    //Number of digits checked after the operation at index cssTemplateNumber
     function generateSelectedDigitsSelector(checkedDigits) {
         return /*css*/ `
             ${new Array(checkedDigits)

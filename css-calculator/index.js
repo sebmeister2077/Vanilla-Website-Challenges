@@ -85,11 +85,6 @@ function generateTemplate() {
     document.querySelector('.output').append(document.createElement('span'));
 }
 
-//add manually (generated ofc)
-//TODO add body:has(operator ~operator ~operator){
-// ${cssVariableLastDisplay}3
-//}
-
 function generateCssForNumber(cssTemplateNumber, valueNr) {
     return /*css*/ `
         body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${valueNr}']:checked) .output  {
@@ -161,7 +156,7 @@ function emulateClick(sequence) {
 }
 
 setTimeout(() => {
-    if (window.location.hostname === '127.0.0.1') emulateClick('2*55-12');
+    // if (window.location.hostname === '127.0.0.1') emulateClick('2*55-12');
 }, 1200);
 
 function generateOperationCss(cssTemplateNumber, operator) {

@@ -51,10 +51,6 @@ fieldset {
 .notes summary {
     font-size: 24px;
 }
-.notes p:not([data-info])::before {
-    content: 'Note: ';
-    font-weight: bold;
-}
 
 .overflow-error {
     opacity: 0;

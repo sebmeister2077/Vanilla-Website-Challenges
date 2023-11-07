@@ -1,3 +1,5 @@
+//This javascript file is used to generate all the necessary css and html
+
 function generateTemplates(count) {
     for (let i = 0; i < count; i++) {
         requestIdleCallback(generateTemplate);

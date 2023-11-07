@@ -109,7 +109,7 @@ function generateCssForOperator(cssTemplateNumber, operator) {
     `;
 }
 
-function generateInput(cssTemplateNumber, value) {
+function generateInput(cssTemplateNumber, value, label = value) {
     function getInputType() {
         if (cssTemplateNumber === 1 && value === 0) return 'hidden';
         if (value === 'A/C') return 'reset';
@@ -124,7 +124,7 @@ function generateInput(cssTemplateNumber, value) {
     const inputId = crypto.randomUUID();
     return /*html*/ `
         <label for="${inputId}">
-            <span>${value}</span>
+            <span>${label}</span>
             <input type="${getInputType()}" name="${getName()}${cssTemplateNumber}" hidden value="${value}" id="${inputId}" />
         </label>
     `;
@@ -161,23 +161,18 @@ setTimeout(() => {
     // if (window.location.hostname === '127.0.0.1') emulateClick('2*55-12');
 }, 1200);
 
-function generateOperationCss(cssTemplateNumber, operator) {
+function generateOperationCss(cssTemplateNumber, operator, specialFunction) {
     // 9 bilion, since the max display value is 2 bilion...
     const MAX_DIGITS_LIMIT = 10;
     const operatorDefaultValue = ['+', '-'].includes(operator) ? 0 : 1;
-
-    const operationCanBeMadeSelector = /*css*/ `
-            /* We want to check if we can make an operation at cssTemplateNumber
-            Note we make use of css newest -> prioritize rule to not override unwanted variables*/
-            body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${cssTemplateNumber + 1}) [name^="operator"]:checked)
-    `;
-    return /*css*/ `
-        /* This is any intermediary operation */ 
-        ${new Array(MAX_DIGITS_LIMIT)
-            .fill(0)
-            .map((_, idx) => generateForDigitsCount(idx + 1))
-            .join('\n')}
-    `;
+    const firstOperand = /*css*/ `var(${cssVariableResult}${cssTemplateNumber - 1}, var(${cssVariableDisplay}${cssTemplateNumber - 1}, ${operatorDefaultValue}))`;
+    const secondOperand = (checkedDigits) => /*css*/ `var(${cssVariableDisplay}${cssTemplateNumber + checkedDigits})`;
+    function getVariableContent(checkedDigits) {
+        if (specialFunction) {
+            return /*css*/ `calc(${specialFunction}(${firstOperand} , ${secondOperand(checkedDigits)}));`;
+        }
+        return /*css*/ `calc(${firstOperand} ${operator} ${secondOperand(checkedDigits)});`;
+    }
 
     //Generate operation for each amount of checked digits
     function generateForDigitsCount(checkedDigits) {
@@ -186,9 +181,7 @@ function generateOperationCss(cssTemplateNumber, operator) {
          /* Base is still on body */
              ${operationCanBeMadeSelector}:has(.calculator:nth-child(${cssTemplateNumber}) [value="${operator}"]:checked)${generateSelectedDigitsSelector(checkedDigits)} .output
         {
-            ${cssVariableResult}${cssTemplateNumber}: calc(var(${cssVariableResult}${cssTemplateNumber - 1}, var(${cssVariableDisplay}${
-            cssTemplateNumber - 1
-        }, ${operatorDefaultValue})) ${operator} var(${cssVariableDisplay}${cssTemplateNumber + checkedDigits}));
+            ${cssVariableResult}${cssTemplateNumber}: ${getVariableContent(checkedDigits)}
         }
         `;
     }
@@ -202,4 +195,17 @@ function generateOperationCss(cssTemplateNumber, operator) {
                 .join('')}
         `.trim();
     }
+    const operationCanBeMadeSelector = /*css*/ `
+            /* We want to check if we can make an operation at cssTemplateNumber
+            Note we make use of css newest -> prioritize rule to not override unwanted variables*/
+            body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${cssTemplateNumber + 1}) [name^="operator"]:checked)
+    `;
+
+    return /*css*/ `
+        /* This is any intermediary operation */ 
+        ${new Array(MAX_DIGITS_LIMIT)
+            .fill(0)
+            .map((_, idx) => generateForDigitsCount(idx + 1))
+            .join('\n')}
+    `;
 }

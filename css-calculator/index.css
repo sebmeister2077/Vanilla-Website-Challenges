@@ -10,9 +10,10 @@ body {
     align-items: center;
 }
 form {
+    margin-top: 20px;
     position: relative;
     width: 100%;
-    aspect-ratio: 1/1;
+    aspect-ratio: 4/5;
     contain: content;
 }
 section {
@@ -67,7 +68,7 @@ fieldset {
     z-index: -1;
     display: grid;
     grid-template-columns: repeat(4, 64px);
-    grid-template-rows: repeat(4, 64px);
+    grid-template-rows: repeat(5, 64px);
     border-collapse: separate;
     gap: 8px;
     padding: 8px;

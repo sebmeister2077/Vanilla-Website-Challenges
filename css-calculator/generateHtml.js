@@ -9,6 +9,9 @@ const cssVariableDisplay = '--display-value';
 const cssVariableResult = '--result-value';
 const cssVariableLastDisplay = '--last-display';
 
+function supports(funcName) {
+    return CSS.supports(`opacity: ${funcName}(1,1)`) ? 'true' : '';
+}
 function generateTemplate() {
     const form = document.getElementsByTagName('form')[0];
     const amountOfFields = form.querySelectorAll('fieldset').length;
@@ -18,9 +21,14 @@ function generateTemplate() {
     body:has(.calculator:nth-child(${
         cssTemplateNumber - 1
     }) [name^="number"]:checked):has(.calculator:nth-child(${cssTemplateNumber}) [name^="number"]:checked) .output :nth-child(${cssTemplateNumber - 1})::before{
-            display:none;
-        }
+        display:none;
+    }
     `;
+
+    const supportsMod = supports('mod');
+    const supportsPow = supports('pow');
+    const supportsLog = supports('log');
+    const supportsHypot = supports('hypot');
 
     const newCalculatorHTML = /*html*/ `
         <fieldset class="calculator">
@@ -49,9 +57,13 @@ function generateTemplate() {
                 ${generateOperationCss(cssTemplateNumber, '-')}
                 ${generateOperationCss(cssTemplateNumber, '/')}
                 ${generateOperationCss(cssTemplateNumber, '*')}
+                ${generateOperationCss(cssTemplateNumber, '%', 'rem')}
+                ${generateOperationCss(cssTemplateNumber, '^', 'pow')}
+                ${generateOperationCss(cssTemplateNumber, 'log', 'log')}
+                ${generateOperationCss(cssTemplateNumber, 'hypot', 'hypot')}
                 ${generatePotentialResultCss(cssTemplateNumber)}
 
-                /* This is for display */
+                /* This is for DISPLAY */
                 ${new Array(10)
                     .fill(null)
                     .map((_, idx) => generateCssForNumber(cssTemplateNumber, idx))
@@ -62,7 +74,15 @@ function generateTemplate() {
                 ${generateCssForOperator(cssTemplateNumber, '-')}
                 ${generateCssForOperator(cssTemplateNumber, '+')}
                 ${generateCssForOperator(cssTemplateNumber, '=')}
+                ${generateCssForOperator(cssTemplateNumber, '%')}
+                ${generateCssForOperator(cssTemplateNumber, '^')}
+                ${generateCssForOperator(cssTemplateNumber, 'log')}
+                ${generateCssForOperator(cssTemplateNumber, 'hypot')}
             </style>
+            ${supportsHypot && generateInput(cssTemplateNumber, 'hypot', 'Hypot')}
+            ${supportsMod && generateInput(cssTemplateNumber, '%', 'Mod')}
+            ${supportsPow && generateInput(cssTemplateNumber, '^', 'Exp')}
+            ${supportsLog && generateInput(cssTemplateNumber, 'log', 'Log')}
             ${generateInput(cssTemplateNumber, 7)}
             ${generateInput(cssTemplateNumber, 8)}
             ${generateInput(cssTemplateNumber, 9)}
@@ -131,7 +151,7 @@ function generateInput(cssTemplateNumber, value, label = value) {
 }
 
 requestIdleCallback(() => {
-    generateTemplates(30);
+    generateTemplates(10);
 });
 
 function generatePotentialResultCss(cssTemplateNumber) {

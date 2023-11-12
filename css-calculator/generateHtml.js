@@ -140,6 +140,7 @@ function generateInput(cssTemplateNumber, value, label = value) {
         const isNumber = !isNaN(value) && typeof value === 'number';
         if (isNumber) return 'number';
         if (value === 'A/C') return 'A/C';
+        if (value === 'back') return 'back';
         return 'operator';
     }
     const inputId = crypto.randomUUID();

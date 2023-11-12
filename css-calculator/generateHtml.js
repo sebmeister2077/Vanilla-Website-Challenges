@@ -85,23 +85,23 @@ function generateTemplate() {
             ${supportsMod && generateInput(cssTemplateNumber, '%', 'Mod')}
             ${supportsPow && generateInput(cssTemplateNumber, '^', 'Exp')}
             ${supportsLog && generateInput(cssTemplateNumber, 'log', 'Log')}
-            ${generateInput(cssTemplateNumber, 'A/C')}
-            ${generateInput(cssTemplateNumber - 1, 'back', '←')}
             ${generateInput(cssTemplateNumber, '+')}
+            ${generateInput(cssTemplateNumber, '-')}
+            ${generateInput(cssTemplateNumber, '*')}
+            ${generateInput(cssTemplateNumber, '/')}
             ${generateInput(cssTemplateNumber, 7)}
             ${generateInput(cssTemplateNumber, 8)}
             ${generateInput(cssTemplateNumber, 9)}
-            ${generateInput(cssTemplateNumber, '/')}
+            ${generateInput(cssTemplateNumber - 1, 'back', '←')}
             ${generateInput(cssTemplateNumber, 4)}
             ${generateInput(cssTemplateNumber, 5)}
             ${generateInput(cssTemplateNumber, 6)}
-            ${generateInput(cssTemplateNumber, '*')}
             ${generateInput(cssTemplateNumber, 1)}
             ${generateInput(cssTemplateNumber, 2)}
             ${generateInput(cssTemplateNumber, 3)}
-            ${generateInput(cssTemplateNumber, '-')}
             ${generateInput(cssTemplateNumber, '00')}
             ${generateInput(cssTemplateNumber, 0)}
+            ${generateInput(cssTemplateNumber, 'A/C')}
             ${generateInput(cssTemplateNumber, '=')}
         </fieldset>
      `;

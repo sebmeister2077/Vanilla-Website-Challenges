@@ -10,9 +10,9 @@ body {
     align-items: center;
 }
 form {
-    margin-top: 20px;
+    margin-top: 24px;
     position: relative;
-    width: 100%;
+    width: 296px;
     aspect-ratio: 4/5;
     contain: content;
 }
@@ -73,6 +73,7 @@ fieldset {
     gap: 8px;
     padding: 8px;
     will-change: opacity, z-index, display;
+    margin: 0px;
 }
 .calculator > label {
     background-color: white;
@@ -84,6 +85,7 @@ fieldset {
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     will-change: opacity, box-shadow;
     transition: box-shadow 0.4s, opacity 0.4s;
+    border-radius: 4px;
 }
 .calculator > label:hover {
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
@@ -97,11 +99,12 @@ fieldset {
     display: flex;
     justify-content: flex-end;
     background-color: white;
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 16px;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     overflow: hidden;
     margin-bottom: -36px;
+    width: 280px;
 }
 
 .output::after {

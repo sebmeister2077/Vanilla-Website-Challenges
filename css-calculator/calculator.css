@@ -35,10 +35,10 @@
 .calculator:has([data-name^='operator']:checked) + .calculator:not(:has([data-name^="number"]:checked)) + .calculator + .calculator label:has(input[value='=']),
 
 /* User pressed '=' */
-body:has(.calculator [value="="]:checked) .calculator label:not(:has([value="A/C"])),
+body:has(.calculator [value="="]:checked) .calculator label:not(:has([value="A/C"],[value="back"])),
 
 /* User used up all calculators */
-.calculator:nth-last-child(2):has( :checked) + .calculator label:not(:has([value="A/C"])) {
+.calculator:nth-last-child(2):has( :checked) + .calculator label:not(:has([value="A/C"],[value="back"])) {
     pointer-events: none;
     opacity: 0.36;
 }

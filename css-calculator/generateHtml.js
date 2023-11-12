@@ -79,11 +79,13 @@ function generateTemplate() {
                 ${generateCssForOperator(cssTemplateNumber, 'log')}
                 ${generateCssForOperator(cssTemplateNumber, 'hypot')}
             </style>
-             ${supportsHypot && '' && generateInput(cssTemplateNumber, 'hypot', 'Hypot')}
+            ${supportsHypot && '' && generateInput(cssTemplateNumber, 'hypot', 'Hypot')}
             ${supportsMod && generateInput(cssTemplateNumber, '%', 'Mod')}
             ${supportsPow && generateInput(cssTemplateNumber, '^', 'Exp')}
             ${supportsLog && generateInput(cssTemplateNumber, 'log', 'Log')}
+            ${generateInput(cssTemplateNumber, 'A/C')}
             ${generateInput(cssTemplateNumber - 1, 'back', '←')}
+            ${generateInput(cssTemplateNumber, '+')}
             ${generateInput(cssTemplateNumber, 7)}
             ${generateInput(cssTemplateNumber, 8)}
             ${generateInput(cssTemplateNumber, 9)}
@@ -96,10 +98,8 @@ function generateTemplate() {
             ${generateInput(cssTemplateNumber, 2)}
             ${generateInput(cssTemplateNumber, 3)}
             ${generateInput(cssTemplateNumber, '-')}
-            ${generateInput(cssTemplateNumber, 'A/C')}
             ${generateInput(cssTemplateNumber, 0)}
             ${generateInput(cssTemplateNumber, '=')}
-            ${generateInput(cssTemplateNumber, '+')}
         </fieldset>
      `;
 
@@ -153,7 +153,7 @@ function generateInput(cssTemplateNumber, value, label = value) {
 }
 
 requestIdleCallback(() => {
-    generateTemplates(10);
+    generateTemplates(20);
 });
 
 function generatePotentialResultCss(cssTemplateNumber) {

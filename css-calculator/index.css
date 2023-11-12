@@ -107,3 +107,15 @@ fieldset {
 .output::after {
     content: '‍';
 }
+
+/* Special grid sizes */
+
+.calculator label:has([value='A/C']) {
+    grid-column: 1/3;
+}
+.calculator label:has([value='0']) {
+    grid-column: 1/3;
+}
+.calculator label:has([value='=']) {
+    grid-column: 3/5;
+}

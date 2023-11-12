@@ -100,8 +100,8 @@ function generateTemplate() {
             ${generateInput(cssTemplateNumber, 2)}
             ${generateInput(cssTemplateNumber, 3)}
             ${generateInput(cssTemplateNumber, '-')}
-            ${generateInput(cssTemplateNumber, 0)}
             ${generateInput(cssTemplateNumber, '00')}
+            ${generateInput(cssTemplateNumber, 0)}
             ${generateInput(cssTemplateNumber, '=')}
         </fieldset>
      `;

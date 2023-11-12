@@ -66,20 +66,20 @@ function generateTemplate() {
                 /* This is for DISPLAY */
                 ${new Array(10)
                     .fill(null)
-                    .map((_, idx) => generateCssForNumber(cssTemplateNumber, idx))
+                    .map((_, idx) => generateDisplayCssForNumber(cssTemplateNumber, idx))
                     //IMPORTANT, dont remove this join
                     .join('\n')}
-                ${generateCssForNumber(cssTemplateNumber, '00')}
+                ${generateDisplayCssForNumber(cssTemplateNumber, '00')}
                     
-                ${generateCssForOperator(cssTemplateNumber, '/')}
-                ${generateCssForOperator(cssTemplateNumber, '*')}
-                ${generateCssForOperator(cssTemplateNumber, '-')}
-                ${generateCssForOperator(cssTemplateNumber, '+')}
-                ${generateCssForOperator(cssTemplateNumber, '=')}
-                ${generateCssForOperator(cssTemplateNumber, '%')}
-                ${generateCssForOperator(cssTemplateNumber, '^')}
-                ${generateCssForOperator(cssTemplateNumber, 'log')}
-                ${generateCssForOperator(cssTemplateNumber, 'hypot')}
+                ${generateDisplayCssForOperator(cssTemplateNumber, '/')}
+                ${generateDisplayCssForOperator(cssTemplateNumber, '*')}
+                ${generateDisplayCssForOperator(cssTemplateNumber, '-')}
+                ${generateDisplayCssForOperator(cssTemplateNumber, '+')}
+                ${generateDisplayCssForOperator(cssTemplateNumber, '=')}
+                ${generateDisplayCssForOperator(cssTemplateNumber, '%')}
+                ${generateDisplayCssForOperator(cssTemplateNumber, '^')}
+                ${generateDisplayCssForOperator(cssTemplateNumber, 'log')}
+                ${generateDisplayCssForOperator(cssTemplateNumber, 'hypot')}
             </style>
             ${supportsHypot && '' && generateInput(cssTemplateNumber, 'hypot', 'Hypot')}
             ${supportsMod && generateInput(cssTemplateNumber, '%', 'Mod')}
@@ -111,7 +111,7 @@ function generateTemplate() {
     document.querySelector('.output').append(document.createElement('span'));
 }
 
-function generateCssForNumber(cssTemplateNumber, valueNrStr) {
+function generateDisplayCssForNumber(cssTemplateNumber, valueNrStr) {
     const valueNrLength = valueNrStr.toString().length;
     const valueNr = parseInt(valueNrStr);
     return /*css*/ `
@@ -124,7 +124,7 @@ function generateCssForNumber(cssTemplateNumber, valueNrStr) {
     `;
 }
 
-function generateCssForOperator(cssTemplateNumber, operator) {
+function generateDisplayCssForOperator(cssTemplateNumber, operator) {
     return /*css*/ `
         body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${operator}']:checked:not([value="back"])) .output  {
             /* Reset value  */
@@ -144,7 +144,7 @@ function generateInput(cssTemplateNumber, value, label = value) {
         return 'radio';
     }
     function getName() {
-        const isNumber = value && !isNaN(value);
+        const isNumber = (value === 0 || value) && !isNaN(value);
         if (isNumber) return 'number';
         if (value === 'A/C') return 'A/C';
         if (value === 'back') return 'back';
@@ -160,7 +160,7 @@ function generateInput(cssTemplateNumber, value, label = value) {
 }
 
 requestIdleCallback(() => {
-    generateTemplates(20);
+    generateTemplates(10);
 });
 
 function generatePotentialResultCss(cssTemplateNumber) {

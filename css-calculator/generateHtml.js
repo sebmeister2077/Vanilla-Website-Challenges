@@ -20,7 +20,7 @@ function generateTemplate() {
     const hidePreviousResultLabel = /*css*/ `
     body:has(.calculator:nth-child(${
         cssTemplateNumber - 1
-    }) [name^="number"]:checked):has(.calculator:nth-child(${cssTemplateNumber}) [name^="number"]:checked) .output :nth-child(${cssTemplateNumber - 1})::before{
+    }) [data-name^="number"]:checked):has(.calculator:nth-child(${cssTemplateNumber}) [data-name^="number"]:checked) .output :nth-child(${cssTemplateNumber - 1})::before{
         display:none;
     }
     `;
@@ -43,11 +43,11 @@ function generateTemplate() {
                 }
                 
                 ${cssTemplateNumber > 1 ? hidePreviousResultLabel : ''}
-                body:not(:has(.calculator:nth-child(${cssTemplateNumber}) :checked)) .output :nth-child(${cssTemplateNumber})::before{
+                body:not(:has(.calculator:nth-child(${cssTemplateNumber}) :checked:not([value="back"]))) .output :nth-child(${cssTemplateNumber})::before{
                     display:none;
                 }
 
-                body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="number"]:checked) .output{
+                body:has(.calculator:nth-child(${cssTemplateNumber}) [data-name^="number"]:checked) .output{
                     /* Pass the previous result forward even if it doesnt exist*/
                     ${cssVariableResult}${cssTemplateNumber}: var(${cssVariableResult}${cssTemplateNumber - 1});
                 }
@@ -79,10 +79,11 @@ function generateTemplate() {
                 ${generateCssForOperator(cssTemplateNumber, 'log')}
                 ${generateCssForOperator(cssTemplateNumber, 'hypot')}
             </style>
-            ${supportsHypot && generateInput(cssTemplateNumber, 'hypot', 'Hypot')}
+             ${supportsHypot && '' && generateInput(cssTemplateNumber, 'hypot', 'Hypot')}
             ${supportsMod && generateInput(cssTemplateNumber, '%', 'Mod')}
             ${supportsPow && generateInput(cssTemplateNumber, '^', 'Exp')}
             ${supportsLog && generateInput(cssTemplateNumber, 'log', 'Log')}
+            ${generateInput(cssTemplateNumber - 1, 'back', '←')}
             ${generateInput(cssTemplateNumber, 7)}
             ${generateInput(cssTemplateNumber, 8)}
             ${generateInput(cssTemplateNumber, 9)}
@@ -118,12 +119,12 @@ function generateCssForNumber(cssTemplateNumber, valueNr) {
 
 function generateCssForOperator(cssTemplateNumber, operator) {
     return /*css*/ `
-        body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${operator}']:checked) .output  {
+        body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${operator}']:checked:not([value="back"])) .output  {
             /* Reset value  */
             ${cssVariableDisplay}${cssTemplateNumber}: 0;
         }
 
-        body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${operator}']:checked) .output :nth-child(${cssTemplateNumber})::before{
+        body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${operator}']:checked:not([value="back"])) .output :nth-child(${cssTemplateNumber})::before{
             content: '${operator}';
         }
     `;
@@ -145,7 +146,7 @@ function generateInput(cssTemplateNumber, value, label = value) {
     return /*html*/ `
         <label for="${inputId}">
             <span>${label}</span>
-            <input type="${getInputType()}" name="${getName()}${cssTemplateNumber}" hidden value="${value}" id="${inputId}" />
+            <input type="${getInputType()}" data-name="${getName()}${cssTemplateNumber}" name="input-${cssTemplateNumber}" hidden value="${value}" id="${inputId}" />
         </label>
     `;
 }
@@ -211,14 +212,16 @@ function generateOperationCss(cssTemplateNumber, operator, specialFunction) {
         return /*css*/ `
             ${new Array(checkedDigits)
                 .fill(0)
-                .map((_, idx) => /*css*/ `:has(.calculator:nth-child(${cssTemplateNumber + idx + 1}) [name^="number"]:checked)`)
+                .map((_, idx) => /*css*/ `:has(.calculator:nth-child(${cssTemplateNumber + idx + 1}) [data-name^="number"]:checked)`)
                 .join('')}
         `.trim();
     }
     const operationCanBeMadeSelector = /*css*/ `
             /* We want to check if we can make an operation at cssTemplateNumber
             Note we make use of css newest -> prioritize rule to not override unwanted variables*/
-            body:has(.calculator:nth-child(${cssTemplateNumber}) [name^="operator"]:checked):has(.calculator:nth-child(n + ${cssTemplateNumber + 1}) [name^="operator"]:checked)
+            body:has(.calculator:nth-child(${cssTemplateNumber}) [data-name^="operator"]:checked):has(.calculator:nth-child(n + ${
+        cssTemplateNumber + 1
+    }) [data-name^="operator"]:checked)
     `;
 
     return /*css*/ `

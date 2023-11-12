@@ -20,14 +20,14 @@
 .calculator:first-child:not(:has(:checked)) + .calculator label:has([data-name^='operator'],[data-name^='A/C'],[data-name^='back']),
 
 /* 0 Can't be used as the first value */
-.calculator:first-child:not(:has(:checked)) label:has(input[value='0']),
+.calculator:first-child:not(:has(:checked)) label:has(input[value='0'],input[value='00']),
 /* Transition */
-.calculator:first-child:not(:has(:checked)) + .calculator label:has(input[value='0']),
+.calculator:first-child:not(:has(:checked)) + .calculator label:has(input[value='0'],input[value='00']),
 
 /* 0 Can't be used as the first value after a '/' operator */
-.calculator:has([data-name^='operator'][value='/']:checked) + .calculator label:has(input[value='0']),
+.calculator:has([data-name^='operator'][value='/']:checked) + .calculator label:has(input[value='0'],input[value='00']),
 /* Transition */
-.calculator:has([data-name^='operator'][value='/']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0']),
+.calculator:has([data-name^='operator'][value='/']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0'],input[value='00']),
 
 /* = Can't be used unless there has been at least 1 operator and at least a number after it */
 .calculator:has([data-name^='operator']:checked) + .calculator:not(:has([data-name^="number"]:checked)) + .calculator label:has(input[value='=']),

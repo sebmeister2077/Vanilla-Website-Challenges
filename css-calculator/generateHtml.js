@@ -69,6 +69,8 @@ function generateTemplate() {
                     .map((_, idx) => generateCssForNumber(cssTemplateNumber, idx))
                     //IMPORTANT, dont remove this join
                     .join('\n')}
+                ${generateCssForNumber(cssTemplateNumber, '00')}
+                    
                 ${generateCssForOperator(cssTemplateNumber, '/')}
                 ${generateCssForOperator(cssTemplateNumber, '*')}
                 ${generateCssForOperator(cssTemplateNumber, '-')}
@@ -99,6 +101,7 @@ function generateTemplate() {
             ${generateInput(cssTemplateNumber, 3)}
             ${generateInput(cssTemplateNumber, '-')}
             ${generateInput(cssTemplateNumber, 0)}
+            ${generateInput(cssTemplateNumber, '00')}
             ${generateInput(cssTemplateNumber, '=')}
         </fieldset>
      `;
@@ -108,10 +111,14 @@ function generateTemplate() {
     document.querySelector('.output').append(document.createElement('span'));
 }
 
-function generateCssForNumber(cssTemplateNumber, valueNr) {
+function generateCssForNumber(cssTemplateNumber, valueNrStr) {
+    const valueNrLength = valueNrStr.toString().length;
+    const valueNr = parseInt(valueNrStr);
     return /*css*/ `
-        body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${valueNr}']:checked) .output  {
-            ${cssVariableDisplay}${cssTemplateNumber}: ${cssTemplateNumber > 1 ? `calc(var(${cssVariableDisplay}${cssTemplateNumber - 1}) * 10 + ${valueNr})` : valueNr};
+        body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${valueNrStr}']:checked) .output  {
+            ${cssVariableDisplay}${cssTemplateNumber}: ${
+        cssTemplateNumber > 1 ? `calc(var(${cssVariableDisplay}${cssTemplateNumber - 1}) * ${Math.pow(10, valueNrLength)} + ${valueNr})` : valueNr
+    };
             ${cssVariableLastDisplay}:var(${cssVariableDisplay}${cssTemplateNumber});
     }
     `;
@@ -137,7 +144,7 @@ function generateInput(cssTemplateNumber, value, label = value) {
         return 'radio';
     }
     function getName() {
-        const isNumber = !isNaN(value) && typeof value === 'number';
+        const isNumber = value && !isNaN(value);
         if (isNumber) return 'number';
         if (value === 'A/C') return 'A/C';
         if (value === 'back') return 'back';

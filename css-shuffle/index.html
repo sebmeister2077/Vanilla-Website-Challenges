@@ -3,9 +3,28 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.tailwindcss.com"></script>
+
         <title>CSS Shuffle</title>
+        <script>
+            tailwind.config = {}
+        </script>
     </head>
-    <body>
-        <script defer src="./generateHtml.js"></script>
+    <body class="w-screen h-screen flex flex-col items-stretch bg-zinc-200">
+        <script src="./generateHtml.js"></script>
+        <header class="w-full p-6 flex items-center">
+            <script>
+                document.writeln(generateReorder())
+            </script>
+        </header>
+        <section class="flex grow shrink gap-6 p-8 items-end justify-center">
+            <script>
+                document.writeln(generateIndicator())
+                document.writeln(generateIndicator())
+                document.writeln(generateIndicator())
+                document.writeln(generateIndicator())
+                document.writeln(generateIndicator())
+            </script>
+        </section>
     </body>
 </html>

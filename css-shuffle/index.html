@@ -13,17 +13,20 @@
     <body class="w-screen h-screen flex flex-col items-stretch bg-zinc-200">
         <script src="./generateHtml.js"></script>
         <header class="w-full p-6 flex items-center">
-            <script>
-                document.writeln(generateReorder())
-            </script>
+            <div class="relative p-4 bg-blue-300 rounded-xl cursor-default select-none">
+                Re-Order
+                <script>
+                    document.writeln(generateReorder())
+                </script>
+            </div>
         </header>
         <section class="flex grow shrink gap-6 p-8 items-end justify-center">
             <script>
                 document.writeln(generateIndicator())
                 document.writeln(generateIndicator())
                 document.writeln(generateIndicator())
-                document.writeln(generateIndicator())
-                document.writeln(generateIndicator())
+                // document.writeln(generateIndicator())
+                // document.writeln(generateIndicator())
             </script>
         </section>
     </body>

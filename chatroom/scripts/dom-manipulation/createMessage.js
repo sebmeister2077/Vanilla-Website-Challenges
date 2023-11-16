@@ -81,7 +81,6 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     if (prepend) {
         if (needsTimeSeparator) {
             const lastMessageTimestamp = parseInt($('[data-timestamp][data-message]', messageContainer).attr('data-timestamp'))
-            console.log('🚀 ~ file: createMessage.js:86 ~ createDomMessage ~ lastMessageTimestamp:', lastMessageTimestamp)
             messageContainer.prepend(getTimeSeparator(lastMessageTimestamp))
         }
         messageContainer.prepend(el)

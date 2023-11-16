@@ -1,5 +1,6 @@
 import { DAY_MS } from '../constants/time.js'
 import { utcTimestampToLocalTime } from '../utils/utcTimestampToLocalTime.js'
+import { getUTCDate } from '../utils/getUTCDate.js'
 
 var scrollTimeout = null
 let oldestTimestamp = null
@@ -85,8 +86,9 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
 const timeFormattor = new Intl.RelativeTimeFormat(navigator.language, {
     numeric: 'auto',
 })
-function getTimeSeparator(timeStamp) {
-    const daysAgo = Math.ceil((timeStamp - Date.now()) / DAY_MS)
+export function getTimeSeparator(timeStamp) {
+    const utcNow = getUTCDate(new Date())
+    const daysAgo = Math.ceil((timeStamp - utcNow.getTime()) / DAY_MS)
     return $('#time-separator-template')
         .html((i, old) => old.trim())
         .contents()

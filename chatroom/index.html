@@ -33,6 +33,7 @@
 
         <title>Chat Room</title>
         <link rel="stylesheet" href="./index.css" />
+
         <script>
             tailwind.config = {
                 theme: {
@@ -89,10 +90,34 @@
                 id="chat"
                 class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col h-full cursor-auto w-20 data-[open=true]:w-96 md:w-96 overflow-hidden transition-[width] duration-1000"
             >
-                <header class="w-full p-5 bg-chat-header flex-col gap-2 flex justify-between">
-                    <div class="flex flex-row-reverse gap-8 justify-between border-b border-slate-50/[.50]">
-                        <div class="info w-max whitespace-nowrap order-2 text-neutral-800" aria-live="polite">Online friends:0/100</div>
+                <header class="w-full py-5 bg-chat-header flex-col gap-2 flex justify-between">
+                    <div class="flex flex-row-reverse gap-8 justify-between border-b border-slate-50/[.50] items-center p-5 pt-0">
+                        <div class="info w-max whitespace-nowrap order-3 text-neutral-800" aria-live="polite">Online friends:0/100</div>
                         <button
+                            id="google-btn"
+                            class="flex items-center order-2 ml-auto justify-center w-[40px] h-[40px] bg-white hover:bg-gray-200 transition-color duration-200 p-2 rounded-full"
+                        >
+                            <svg viewBox="0 0 48 48" width="20" height="20">
+                                <path
+                                    fill="#EA4335"
+                                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                                ></path>
+                                <path
+                                    fill="#4285F4"
+                                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+                                ></path>
+                                <path
+                                    fill="#FBBC05"
+                                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+                                ></path>
+                                <path
+                                    fill="#34A853"
+                                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                                ></path>
+                                <path fill="none" d="M0 0h48v48H0z"></path>
+                            </svg>
+                        </button>
+                        <!-- <button
                             aria-label="Chat Menu"
                             aria-description="Open the Chat on smaller screens"
                             class="md:opacity-0 order-1 transition-opacity duration-500 md:pointer-events-none"
@@ -101,10 +126,10 @@
                             <svg class="fill-slate-50/[80] w-8 h-8" viewBox="0 0 24 24">
                                 <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
                             </svg>
-                        </button>
+                        </button> -->
                     </div>
                     <h2
-                        class="text-3xl opacity-0 md:[opacity:1_!important] group-data-[open=true]/chat:[opacity:1_!important] transform-opacity duration-500 w-full whitespace-nowrap min-w-[300px] text-neutral-800"
+                        class="text-3xl px-5 opacity-0 md:[opacity:1_!important] group-data-[open=true]/chat:[opacity:1_!important] transform-opacity duration-500 w-full whitespace-nowrap min-w-[300px] text-neutral-800"
                     >
                         Chat Messages
                     </h2>
@@ -219,6 +244,7 @@
                 </section>
                 <footer class="flex w-full justify-end z-10">
                     <a href="https://firebase.google.com" target="_blank">
+                        <!-- https://firebase.google.com/brand-guidelines/ -->
                         <img src="./assets/firebaseLogo.svg" alt="Built with Firebase logo" loading="lazy" />
                     </a>
                 </footer>

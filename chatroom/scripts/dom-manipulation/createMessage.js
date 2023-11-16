@@ -27,7 +27,7 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     if (userId === window.currentUserData.uid) {
         applyCurrentUserChatStyles(el)
     }
-    el.attr('data-uid', userId).attr('data-timestamp', timestamp)
+    el.attr('data-uid', userId)
 
     const userNameId = crypto.randomUUID()
     function removeLoader() {
@@ -41,7 +41,11 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     $('[data-username]', el).text(username).attr('id', userNameId)
 
     const localTime = utcTimestampToLocalTime(timestamp)
-    const messageEl = $('[data-message]', el).text(message).attr('aria-labelledby', `${userNameId} said`).attr('data-local-time', localTime)
+    const messageEl = $('[data-message]', el)
+        .text(message)
+        .attr('aria-labelledby', `${userNameId} said`)
+        .attr('data-local-time', localTime)
+        .attr('data-timestamp', timestamp)
     const NR_CHARACTERS_ON_ONE_ROW = 28
     const NR_TIME_CHARACTERS = 5
     if (message.length >= NR_CHARACTERS_ON_ONE_ROW) messageEl.addClass(`min-w-[${NR_CHARACTERS_ON_ONE_ROW}ch]`)
@@ -75,7 +79,11 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     }
 
     if (prepend) {
-        if (needsTimeSeparator) messageContainer.prepend(getTimeSeparator(timestamp))
+        if (needsTimeSeparator) {
+            const lastMessageTimestamp = parseInt($('[data-timestamp][data-message]', messageContainer).attr('data-timestamp'))
+            console.log('🚀 ~ file: createMessage.js:86 ~ createDomMessage ~ lastMessageTimestamp:', lastMessageTimestamp)
+            messageContainer.prepend(getTimeSeparator(lastMessageTimestamp))
+        }
         messageContainer.prepend(el)
     } else {
         if (needsTimeSeparator) messageContainer.append(getTimeSeparator(timestamp))
@@ -88,7 +96,10 @@ const timeFormattor = new Intl.RelativeTimeFormat(navigator.language, {
 })
 export function getTimeSeparator(timeStamp) {
     const utcNow = getUTCDate(new Date())
-    const daysAgo = Math.ceil((timeStamp - utcNow.getTime()) / DAY_MS)
+    const dayDifference = (timeStamp - utcNow.getTime()) / DAY_MS
+
+    const daysAgo = dayDifference > 0 ? Math.floor(dayDifference) : Math.ceil(dayDifference)
+
     return $('#time-separator-template')
         .html((i, old) => old.trim())
         .contents()

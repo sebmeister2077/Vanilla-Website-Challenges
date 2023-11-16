@@ -1,20 +1,21 @@
-let reorders = 0
+const reorders = []
 function generateReorder(id = crypto.randomUUID()) {
-    reorders++
+    reorders.push(id)
     return /*html*/ `
-        <input type="checkbox" name="selected" id="${id}" data-current-reorder="${reorders}" hidden/>
+        <input type="checkbox" name="selected" id="${id}" data-current-reorder="${reorders.length}" hidden/>
         <label for="${id}" class="absolute inset-0 z-10 cursor-pointer"></label>
         <style>
             ${generateReorderCSS(id)}
         </style>
     `
 }
+
 function generateReorderCSS(id) {
     return /*css*/ `
         [id="${id}"]:checked + label[for="${id}"]{
             display:none;
         }
-        [data-current-reorder="${reorders}"]{
+        [data-current-reorder="${reorders.length}"]{
 
         }
     `

@@ -16,12 +16,16 @@ $(async function () {
     let isLoggedIn = false
     let lastActiveAtInterval = null
     auth.onAuthStateChanged((user) => {
+        console.log('🚀 ~ file: main.js:19 ~ auth.onAuthStateChanged ~ user:', user)
         if (lastActiveAtInterval) clearInterval(lastActiveAtInterval)
         if (!user) {
             if (localStorage.getItem(USER_ID_LOCATION)) return
             loginAnonymously(auth)
             return
         }
+        if (!user.isAnonymous) $('google-btn').remove()
+        window.firebaseIdToken = user.accessToken
+
         localStorage.setItem(USER_ID_LOCATION, user.uid)
         userConnectionMade(db, user, isLoggedIn)
         if (isLoggedIn) return

@@ -24,7 +24,7 @@ import { applyCurrentUserChatStyles } from '../../../dom-manipulation/createMess
 import { getRandomColor } from '../../../utils/randomColor.js'
 import { uploadRandomImage } from '../../storage/uploadImage.js'
 
-export function userConnectionMade(db, user) {
+export function userConnectionMade(db, user, isAlreadyLoggedIn = false) {
     const currentUserRef = child(ref(db), DATABASE_ROUTES.OneUser(user.uid))
     get(currentUserRef).then(async (snapshot) => {
         var val = {}
@@ -32,8 +32,8 @@ export function userConnectionMade(db, user) {
         else toastr.info('Setting up anonymous profile...')
 
         window.currentUserData.color = val.color ?? getRandomColor()
-        window.currentUserData.photoURL = val.photoURL ?? (await uploadRandomImage())
-        window.currentUserData.name = val.name ?? user.displayName ?? faker.internet.userName()
+        window.currentUserData.photoURL = user.photoURL ?? val.photoURL ?? (await uploadRandomImage())
+        window.currentUserData.name = user.displayName ?? val.name ?? faker.internet.userName()
         setUserData({
             isOnline: true,
             uid: user.uid,
@@ -42,6 +42,7 @@ export function userConnectionMade(db, user) {
         })
         applyCurrentUserChatStyles($(`#messages > [data-uid=${user.uid}]`))
 
+        if (isAlreadyLoggedIn) return
         //these are applied on the server after user looses connection
         onDisconnect(ref(db, DATABASE_ROUTES.LastOnline(user.uid))).set(serverTimestamp())
         onDisconnect(ref(db, DATABASE_ROUTES.OnlineStatus(user.uid))).set(false)

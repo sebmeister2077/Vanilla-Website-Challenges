@@ -6,6 +6,7 @@ import { cubeMousedown } from './cubeMousedown.js'
 import { throttledCursorMove } from './cursorMove.js'
 import { chatScrollListener } from './chatScrollListener.js'
 import { initNetworkChangeListener, onOfflineListener, onOnlineListener } from './onlineListener.js'
+import { loginWithGoogle } from '../firebase/auth/loginWithGoogle.js'
 
 export function initDOMListeners() {
     $('#change-color').on('click', changeColorClick)
@@ -35,6 +36,7 @@ export function initDOMListeners() {
         initNetworkChangeListener()
     })
 
+    $('#google-btn').on('click', loginWithGoogle)
     $('#messages').on('scroll', function (e) {
         chatScrollListener.call(this, e)
     })

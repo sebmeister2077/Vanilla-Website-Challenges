@@ -34,6 +34,7 @@ export async function initFirebase() {
         }
     }
     Object.freeze(config)
+    window.googleClientId = config.GOOGLE_CLIENT_ID
 
     // Initialize Firebase
     const app = initializeApp(config)

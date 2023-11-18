@@ -8,6 +8,7 @@ import { HOUR_MS } from './constants/time.js'
 import { loginAnonymously } from './firebase/auth/loginAnonymously.js'
 
 $(async function () {
+    if (window.location.hash.includes('#access_token')) return
     const { analytics, appCheck, auth, db, performance, storage } = await initFirebase()
     window.db = db
     window.auth = auth

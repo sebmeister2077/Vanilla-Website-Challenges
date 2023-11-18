@@ -1,5 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+    <script>
+        const { hash } = window.location
+        const isPopup = Boolean(window.opener)
+        if (isPopup) {
+            window.opener.dispatchEvent(new CustomEvent('token-load', { detail: { hash } }))
+            this.close()
+        }
+    </script>
     <head>
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -88,7 +96,7 @@
             <aside
                 aria-label="Chat"
                 id="chat"
-                class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col h-full cursor-auto w-20 data-[open=true]:w-96 md:w-96 overflow-hidden transition-[width] duration-1000"
+                class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col h-full cursor-auto data-[open=true]:w-96 w-96 overflow-hidden transition-[width] duration-1000"
             >
                 <header class="w-full py-5 bg-chat-header flex-col gap-2 flex justify-between">
                     <div class="flex flex-row-reverse gap-8 justify-between border-b border-slate-50/[.50] items-center p-5 pt-0">

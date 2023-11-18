@@ -14,7 +14,7 @@ const provider = new GoogleAuthProvider()
 // })
 
 const googleTokenRequestUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth')
-googleTokenRequestUrl.searchParams.set('redirect_uri', location.origin)
+googleTokenRequestUrl.searchParams.set('redirect_uri', location.href)
 googleTokenRequestUrl.searchParams.set('response_type', 'token')
 googleTokenRequestUrl.searchParams.set('scope', 'email profile')
 
@@ -24,8 +24,24 @@ export function loginWithGoogle() {
     if (isLoginInProgress || !clientId) return
 
     googleTokenRequestUrl.searchParams.set('client_id', clientId)
-    window.open(googleTokenRequestUrl, 'newWindow', 'popup noopener')
-
+    const width = 500,
+        height = 700,
+        left = (window.innerWidth - width) / 2,
+        top = (window.innerHeight - height) / 2
+    const w = window.open(googleTokenRequestUrl, 'newWindow', `popup,width=${width},height=${height},top=${top},left=${left}`)
+    window.addEventListener('token-load', function listenForHash(e) {
+        window.removeEventListener('token-load', listenForHash)
+        const hash = e.detail.hash
+        handleHash(hash)
+    })
+    function handleHash(hash) {
+        const params = new URLSearchParams(hash.replace(/^#/, ''))
+        const tokenType = params.get('token_type')
+        const accessToken = params.get('access_token')
+        const expiresIn = params.get('expires_in')
+        const prompt = params.get('prompt')
+        const authUser = params.get('authuser')
+    }
     // isLoginInProgress = true
 
     // const auth = getAuth()

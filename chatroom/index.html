@@ -14,6 +14,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+        <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet" />
         <script
             src="https://code.jquery.com/jquery-3.7.0.min.js"
@@ -100,7 +103,13 @@
             >
                 <header class="w-full py-5 bg-chat-header flex-col gap-2 flex justify-between">
                     <div class="flex flex-row-reverse gap-8 justify-between border-b border-slate-50/[.50] items-center p-5 pt-0">
-                        <div class="info w-max whitespace-nowrap order-3 text-neutral-800" aria-live="polite">Online friends:0/100</div>
+                        <div
+                            class="info w-max whitespace-nowrap order-3 text-neutral-800 after:content-[attr(data-online-friends)]"
+                            data-online-friends="0/100"
+                            aria-live="polite"
+                        >
+                            Online friends:
+                        </div>
                         <button
                             id="google-btn"
                             class="flex items-center order-2 ml-auto justify-center w-[40px] h-[40px] bg-white hover:bg-gray-200 transition-color duration-200 p-2 rounded-full"

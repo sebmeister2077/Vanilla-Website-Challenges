@@ -81,7 +81,7 @@ function generateTemplate() {
                 ${generateDisplayCssForOperator(cssTemplateNumber, 'log')}
                 ${generateDisplayCssForOperator(cssTemplateNumber, 'hypot')}
             </style>
-            ${supportsHypot && '' && generateInput(cssTemplateNumber, 'hypot', 'Hypot')}
+            ${supportsHypot && generateInput(cssTemplateNumber, 'hypot', 'Hypot')}
             ${supportsMod && generateInput(cssTemplateNumber, '%', 'Mod')}
             ${supportsPow && generateInput(cssTemplateNumber, '^', 'Exp')}
             ${supportsLog && generateInput(cssTemplateNumber, 'log', 'Log')}

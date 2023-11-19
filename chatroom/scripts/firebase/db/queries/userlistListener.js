@@ -22,6 +22,8 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
 import { DATABASE_ROUTES } from '../../../global-vars/index.js'
 import { updateOnlineFriends } from '../../../dom-manipulation/updateOnlineFriends.js'
+import { HOUR_MS } from '../../../constants/time.js'
+import { getUTCDate } from '../../../utils/getUTCDate.js'
 
 export function initUserlistListener(db) {
     const currentOnlineUserUids = new Set()
@@ -45,14 +47,16 @@ export function initUserlistListener(db) {
 
     function handleData(data) {
         const svgEl = $(`[data-cursor][key=${data.uid}]`)
+        // In case our code faild to update the isOnline field;
+        const isOnline = data.isOnline && getUTCDate().getTime() - data.lastActiveAt <= 2 * HOUR_MS
 
-        if (!data.isOnline && currentOnlineUserUids.has(data.uid)) {
+        if (!isOnline && currentOnlineUserUids.has(data.uid)) {
             svgEl.remove()
             currentOnlineUserUids.delete(data.uid)
             updateOnlineFriends(currentOnlineUserUids.size)
             return
         }
-        if (!data.isOnline) return
+        if (!isOnline) return
 
         if (currentOnlineUserUids.has(data.uid)) {
             svgEl

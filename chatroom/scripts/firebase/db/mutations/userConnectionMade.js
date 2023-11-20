@@ -34,6 +34,7 @@ export function userConnectionMade(db, user, isAlreadyLoggedIn = false) {
         window.currentUserData.color = val.color ?? getRandomColor()
         window.currentUserData.photoURL = user.photoURL ?? val.photoURL ?? (await uploadRandomImage())
         window.currentUserData.name = user.displayName ?? val.name ?? faker.internet.userName()
+        if (user.email) window.currentUserData.email = user.email
         setUserData({
             isOnline: true,
             uid: user.uid,
@@ -41,8 +42,8 @@ export function userConnectionMade(db, user, isAlreadyLoggedIn = false) {
             lastActiveAt: Date.now(),
         })
         applyCurrentUserChatStyles($(`#messages > [data-uid=${user.uid}]`))
-
         if (isAlreadyLoggedIn) return
+
         //these are applied on the server after user looses connection
         onDisconnect(ref(db, DATABASE_ROUTES.LastOnline(user.uid))).set(serverTimestamp())
         onDisconnect(ref(db, DATABASE_ROUTES.OnlineStatus(user.uid))).set(false)

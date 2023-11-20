@@ -5,17 +5,20 @@ import {
     linkWithCredential,
     signInWithRedirect,
     linkWithPopup,
+    signInWithCredential,
     AuthErrorCodes,
     signOut,
 } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
 import { parseJwt } from '../../utils/parseJwt.js'
 import { updateAnonUserMessages } from '../db/mutations/updateAnonUserMessages.js'
-import { getUserIdByEmail } from '../db/queries/getUserIdByEmail.js'
+import { getUserByEmail } from '../db/queries/getUserByEmail.js'
 import { removeCurrentUser } from '../db/mutations/removeCurrentUser.js'
 import { USER_ID_LOCATION } from '../../global-vars/index.js'
+import { SECOND_MS } from '../../constants/time.js'
+import { changeMessageUid } from '../../dom-manipulation/createMessage.js'
 
 const provider = new GoogleAuthProvider()
-// provider.addScope()
+provider.addScope('openid')
 // provider.setCustomParameters({
 //     login_hint: 'user@example.com',
 // })
@@ -67,32 +70,37 @@ export function loginWithGoogle() {
 
         linkWithCredential(auth.currentUser, credential)
             .then((userCred) => {
-                console.log('🚀 ~ file: loginWithGoogle.js:51 ~ .then ~ userCred:', userCred)
                 const user = userCred.user
-                console.log('Anonymous account successfully upgraded', user)
                 $('google-btn').remove()
             })
             .catch(async (err) => {
                 switch (err.code) {
                     case AuthErrorCodes.CREDENTIAL_ALREADY_IN_USE:
                         const currentUid = auth.currentUser.uid
-                        const { email, picture, name } = jwt
-                        const userIdForEmail = await getUserIdByEmail(email)
-                        if (!userIdForEmail) throw new Error('Idk bro')
+                        const { email, name } = jwt
+                        const userForEmail = await getUserByEmail(email)
+                        if (!userForEmail) throw new Error('Idk bro')
 
-                        await updateAnonUserMessages(currentUid, { photoURL: picture, username: name, userId: userIdForEmail })
+                        await updateAnonUserMessages(currentUid, {
+                            photoURL: userForEmail.photoURL,
+                            username: name,
+                            userId: userForEmail.uid,
+                        })
                         await removeCurrentUser()
                         await signOut(auth)
                         localStorage.removeItem(USER_ID_LOCATION)
-                        provider.setCustomParameters({
-                            login_hint: email,
-                            // consent: 'none', //skip everything
-                        })
-                        try {
-                            await signInWithPopup(auth, provider)
-                        } catch (e) {
-                            console.dir(e)
+
+                        const credential = GoogleAuthProvider.credential(idToken)
+                        const { user } = await signInWithCredential(auth, credential)
+                        changeMessageUid(currentUid, { uid: userForEmail, photoURL: userForEmail.photoURL, name: userForEmail.name })
+                        window.currentUserData = {
+                            ...window.currentUserData,
+                            uid: userForEmail.uid,
+                            name: userForEmail.name,
+                            photoURL: userForEmail.photoURL,
                         }
+                        $('google-btn').remove()
+
                         break
                     default:
                         throw err

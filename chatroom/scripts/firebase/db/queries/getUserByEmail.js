@@ -26,7 +26,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
 import { DATABASE_ROUTES } from '../../../global-vars/index.js'
 
-export async function getUserIdByEmail(email) {
+export async function getUserByEmail(email) {
     const db = getDatabase()
     const usersListRef = ref(db, DATABASE_ROUTES.AllUsers)
     return new Promise((resolve, reject) => {
@@ -37,8 +37,10 @@ export async function getUserIdByEmail(email) {
         onValue(
             query(usersListRef, orderByChild('email'), equalTo(email.trim()), limitToFirst(1)),
             (snapshot) => {
-                if (snapshot.exists()) resolve(Object.keys(snapshot.val())?.[0] ?? null)
-                else resolve(null)
+                if (!snapshot.exists()) resolve(null)
+                const entries = snapshot.val()
+                const uid = Object.keys(entries)[0]
+                resolve(entries[uid])
             },
             {
                 onlyOnce: true,

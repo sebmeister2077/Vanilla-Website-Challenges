@@ -118,3 +118,10 @@ export function applyCurrentUserChatStyles(jqueryEl) {
         .removeClass('after:left-1')
         .addClass('after:right-1')
 }
+
+export function changeMessageUid(oldUid, { uid, name, photoURL }) {
+    const messageContainers = $(`[data-uid=${oldUid}]`).attr('data-uid', uid)
+    applyCurrentUserChatStyles(messageContainers)
+    $('[data-username]', messageContainers).text(name)
+    $('[data-image]', messageContainers).attr('src', photoURL)
+}

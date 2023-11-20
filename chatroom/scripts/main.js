@@ -25,7 +25,6 @@ $(async function () {
             return
         }
         if (!user.isAnonymous) $('google-btn').remove()
-        window.firebaseIdToken = user.accessToken
 
         localStorage.setItem(USER_ID_LOCATION, user.uid)
         userConnectionMade(db, user, isLoggedIn)

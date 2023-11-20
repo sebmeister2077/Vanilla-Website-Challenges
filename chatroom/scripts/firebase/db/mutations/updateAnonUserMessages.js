@@ -31,7 +31,7 @@ export function updateAnonUserMessages(oldUserId = 'mgtlGaYVrEYlIc7yHjLFnuA8omr1
     const publicMessagesListRef = ref(db, DATABASE_ROUTES.PublicChat)
     if (!oldUserId || !publicMessagesListRef) return
     const { photoURL, userId, username } = newData
-    const off = onValue(
+    onValue(
         query(publicMessagesListRef, orderByChild('userId'), equalTo(oldUserId)),
         (snapshot) => {
             snapshot.forEach((childSnapshot) => {
@@ -47,7 +47,6 @@ export function updateAnonUserMessages(oldUserId = 'mgtlGaYVrEYlIc7yHjLFnuA8omr1
                 // set(ref(db, `${DATABASE_ROUTES.PublicChat}/${childKey}`), newData)
             })
             console.log(snapshot.val())
-            off()
         },
         {
             onlyOnce: true,

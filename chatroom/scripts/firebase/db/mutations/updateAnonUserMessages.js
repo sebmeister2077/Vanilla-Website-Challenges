@@ -31,25 +31,28 @@ export function updateAnonUserMessages(oldUserId = 'mgtlGaYVrEYlIc7yHjLFnuA8omr1
     const publicMessagesListRef = ref(db, DATABASE_ROUTES.PublicChat)
     if (!oldUserId || !publicMessagesListRef) return
     const { photoURL, userId, username } = newData
-    onValue(
-        query(publicMessagesListRef, orderByChild('userId'), equalTo(oldUserId)),
-        (snapshot) => {
-            snapshot.forEach((childSnapshot) => {
-                const childKey = childSnapshot.key
-                const childData = childSnapshot.val()
-                const newData = {
-                    ...childData,
-                    photoURL,
-                    username,
-                    userId,
-                }
-                console.log('🚀 ~ file: updateAnonUserMessages.js:41 ~ snapshot.forEach ~ newData:', newData)
-                // set(ref(db, `${DATABASE_ROUTES.PublicChat}/${childKey}`), newData)
-            })
-            console.log(snapshot.val())
-        },
-        {
-            onlyOnce: true,
-        },
+    return new Promise((res, rej) =>
+        onValue(
+            query(publicMessagesListRef, orderByChild('userId'), equalTo(oldUserId)),
+            (snapshot) => {
+                const queryUpdates = {}
+                snapshot.forEach((childSnapshot) => {
+                    const childKey = childSnapshot.key
+                    const childData = childSnapshot.val()
+                    const newData = {
+                        ...childData,
+                        photoURL,
+                        username,
+                        userId,
+                    }
+                    queryUpdates[`${DATABASE_ROUTES.PublicChat}/${childKey}`] = newData
+                })
+                update(ref(db), queryUpdates).catch(rej)
+                res()
+            },
+            {
+                onlyOnce: true,
+            },
+        ),
     )
 }

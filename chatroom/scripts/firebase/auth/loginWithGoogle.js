@@ -16,6 +16,7 @@ import { removeCurrentUser } from '../db/mutations/removeCurrentUser.js'
 import { USER_ID_LOCATION } from '../../global-vars/index.js'
 import { SECOND_MS } from '../../constants/time.js'
 import { changeMessageUid } from '../../dom-manipulation/createMessage.js'
+import { updateUser } from '../db/mutations/updateUser.js'
 
 const provider = new GoogleAuthProvider()
 provider.addScope('openid')

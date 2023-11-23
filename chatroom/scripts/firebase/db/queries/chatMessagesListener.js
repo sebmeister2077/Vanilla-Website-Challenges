@@ -39,7 +39,6 @@ export function initChatMessagesListener(db, chatId) {
         if (timeout) clearTimeout(timeout)
         timeout = setTimeout(() => {
             if (initialMessageCount >= PAGE_SIZE) return
-            console.log('ok')
 
             $('#messages').prepend(getTimeSeparator(firstTimestamp))
         }, 0.6 * SECOND_MS)

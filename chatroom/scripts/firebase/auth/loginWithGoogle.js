@@ -67,17 +67,18 @@ export function loginWithGoogle() {
 
         const jwt = parseJwt(idToken)
         const auth = getAuth()
+        const { email, name } = jwt
 
         linkWithCredential(auth.currentUser, credential)
             .then((userCred) => {
                 const user = userCred.user
+                setUserData({ photoURL: jwt.picture, name })
                 $('google-btn').remove()
             })
             .catch(async (err) => {
                 switch (err.code) {
                     case AuthErrorCodes.CREDENTIAL_ALREADY_IN_USE:
                         const currentUid = auth.currentUser.uid
-                        const { email, name } = jwt
                         const userForEmail = await getUserByEmail(email)
                         if (!userForEmail) throw new Error('Idk bro')
 

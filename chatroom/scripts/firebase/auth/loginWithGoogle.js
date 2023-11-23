@@ -73,6 +73,14 @@ export function loginWithGoogle() {
         linkWithCredential(auth.currentUser, credential)
             .then((userCred) => {
                 const user = userCred.user
+                const photoURL = jwt.picture
+                updateAnonUserMessages(user.uid, {
+                    photoURL,
+                    username: name,
+                    userId: user.uid,
+                })
+                changeMessageUid(user.uid, { uid: user.uid, photoURL, name })
+
                 setUserData({ photoURL: jwt.picture, name })
                 $('google-btn').remove()
             })

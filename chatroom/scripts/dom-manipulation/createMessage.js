@@ -25,7 +25,7 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
         .clone(true, true)
 
     if (userId === window.currentUserData.uid) {
-        applyCurrentUserChatStyles(el)
+        applyCurrentUserChatStyles()
     }
     el.attr('data-uid', userId)
 
@@ -106,22 +106,37 @@ export function getTimeSeparator(timeStamp) {
         .text(timeFormattor.format(daysAgo, 'day'))
 }
 
-export function applyCurrentUserChatStyles(jqueryEl) {
-    jqueryEl
+export function applyCurrentUserChatStyles(uid = window.currentUserData.uid) {
+    const messageContainers = $(`[data-uid=${uid}]`)
+    messageContainers
         .addClass('flex-row-reverse')
+        .attr('data-currentuser', '')
         .children('[data-messages]')
         .removeClass('items-start')
         .addClass('items-end')
         .children('[data-message]')
         .addClass('bg-yellow-400/[.85]')
-        .attr('data-currentuser', '')
         .removeClass('after:left-1')
         .addClass('after:right-1')
 }
 
+export function resetUserStyles(uid) {
+    const messageContainers = $(`[data-uid=${uid}][data-currentuser]`)
+    messageContainers
+        .removeClass('flex-row-reverse')
+        .removeAttr('data-currentuser', '')
+        .children('[data-messages]')
+        .addClass('items-start')
+        .removeClass('items-end')
+        .children('[data-message]')
+        .removeClass('bg-yellow-400/[.85]')
+        .addClass('after:left-1')
+        .removeLoader('after:right-1')
+}
+
 export function changeMessageUid(oldUid, { uid, name, photoURL }) {
     const messageContainers = $(`[data-uid=${oldUid}]`).attr('data-uid', uid)
-    applyCurrentUserChatStyles(messageContainers)
+    applyCurrentUserChatStyles(uid)
     $('[data-username]', messageContainers).text(name)
     $('[data-image]', messageContainers).attr('src', photoURL)
 }

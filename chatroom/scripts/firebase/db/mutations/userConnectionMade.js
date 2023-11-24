@@ -41,7 +41,7 @@ export function userConnectionMade(db, user, isAlreadyLoggedIn = false) {
             coords: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
             lastActiveAt: Date.now(),
         })
-        applyCurrentUserChatStyles($(`#messages > [data-uid=${user.uid}]`))
+        applyCurrentUserChatStyles(user.uid)
         if (isAlreadyLoggedIn) return
 
         //these are applied on the server after user looses connection

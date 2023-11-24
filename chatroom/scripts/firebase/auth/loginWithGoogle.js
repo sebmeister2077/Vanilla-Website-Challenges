@@ -15,7 +15,7 @@ import { getUserByEmail } from '../db/queries/getUserByEmail.js'
 import { removeCurrentUser } from '../db/mutations/removeCurrentUser.js'
 import { USER_ID_LOCATION } from '../../global-vars/index.js'
 import { SECOND_MS } from '../../constants/time.js'
-import { changeMessageUid } from '../../dom-manipulation/createMessage.js'
+import { applyCurrentUserChatStyles, changeMessageUid, resetUserStyles } from '../../dom-manipulation/createMessage.js'
 import { updateUser } from '../db/mutations/updateUser.js'
 
 const provider = new GoogleAuthProvider()
@@ -35,9 +35,23 @@ googleTokenRequestUrl.searchParams.set(
 )
 
 let isLoginInProgress = false
-export function loginWithGoogle() {
+export async function loginWithGoogle() {
+    const auth = getAuth()
     const clientId = window.googleClientId
     if (isLoginInProgress || !clientId) return
+    if (!auth.currentUser.isAnonymous) {
+        const oldId = auth.currentUser.uid
+        const { user } = await signInWithPopup(auth, provider)
+        window.currentUserData = {
+            ...window.currentUserData,
+            uid: user.uid,
+            name: user.displayName ?? user.providerData.find((d) => d.providerId === GoogleAuthProvider.PROVIDER_ID).displayName,
+            photoURL: user.photoURL ?? user.providerData.find((d) => d.providerId === GoogleAuthProvider.PROVIDER_ID).photoURL,
+        }
+        resetUserStyles(oldId)
+        applyCurrentUserChatStyles()
+        return
+    }
 
     isLoginInProgress = true
     googleTokenRequestUrl.searchParams.set('client_id', clientId)
@@ -67,7 +81,6 @@ export function loginWithGoogle() {
         const credential = GoogleAuthProvider.credential(idToken)
 
         const jwt = parseJwt(idToken)
-        const auth = getAuth()
         const { email, name } = jwt
 
         linkWithCredential(auth.currentUser, credential)
@@ -112,6 +125,8 @@ export function loginWithGoogle() {
                         $('google-btn').remove()
 
                         break
+                    case AuthErrorCodes.PROVIDER_ALREADY_LINKED:
+                        return
                     default:
                         throw err
                 }

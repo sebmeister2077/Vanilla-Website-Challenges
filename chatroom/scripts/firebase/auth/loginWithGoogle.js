@@ -40,6 +40,7 @@ export async function loginWithGoogle() {
     const clientId = window.googleClientId
     if (isLoginInProgress || !clientId) return
     if (!auth.currentUser.isAnonymous) {
+        //user is only switching account (probably)
         const oldId = auth.currentUser.uid
         const { user } = await signInWithPopup(auth, provider)
         window.currentUserData = {

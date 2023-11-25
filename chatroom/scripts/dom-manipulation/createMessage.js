@@ -25,7 +25,7 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
         .clone(true, true)
 
     if (userId === window.currentUserData.uid) {
-        applyCurrentUserChatStyles()
+        applyCurrentUserChatStyles(el)
     }
     el.attr('data-uid', userId)
 
@@ -106,8 +106,8 @@ export function getTimeSeparator(timeStamp) {
         .text(timeFormattor.format(daysAgo, 'day'))
 }
 
-export function applyCurrentUserChatStyles(uid = window.currentUserData.uid) {
-    const messageContainers = $(`[data-uid=${uid}]`)
+export function applyCurrentUserChatStyles(uidOrEl = window.currentUserData.uid) {
+    const messageContainers = uidOrEl instanceof jQuery ? uidOrEl : $(`[data-uid=${uidOrEl}]`)
     messageContainers
         .addClass('flex-row-reverse')
         .attr('data-currentuser', '')

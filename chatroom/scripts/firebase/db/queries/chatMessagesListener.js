@@ -39,8 +39,10 @@ export function initChatMessagesListener(db, chatId) {
         if (timeout) clearTimeout(timeout)
         timeout = setTimeout(() => {
             if (initialMessageCount >= PAGE_SIZE) return
-
-            $('#messages').prepend(getTimeSeparator(firstTimestamp))
+            const messagesContainer = $('#messages')
+            const newTimeSeparator = getTimeSeparator(firstTimestamp)
+            const firstElement = messagesContainer.children().first()
+            if (!firstElement.get(0).hasAttribute('data-time-separator')) messagesContainer.prepend(newTimeSeparator)
         }, 0.6 * SECOND_MS)
     }
     onChildAdded(query(messagesListRef, orderByChild('timestamp'), limitToLast(PAGE_SIZE)), (snapshot) => {

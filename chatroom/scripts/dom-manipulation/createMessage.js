@@ -13,8 +13,8 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     scrollTimeout = null
 
     const needsTimeSeparator = prepend
-        ? new Date(oldestTimestamp).getDate() != new Date(timestamp).getDate()
-        : new Date(newestTimestamp).getDate() != new Date(timestamp).getDate()
+        ? getUTCDate(oldestTimestamp).getDate() != getUTCDate(timestamp).getDate()
+        : getUTCDate(newestTimestamp).getDate() != getUTCDate(timestamp).getDate()
     oldestTimestamp = Math.min(oldestTimestamp, timestamp)
     newestTimestamp = Math.max(newestTimestamp, timestamp)
 
@@ -81,7 +81,8 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     if (prepend) {
         if (needsTimeSeparator) {
             const lastMessageTimestamp = parseInt($('[data-timestamp][data-message]', messageContainer).attr('data-timestamp'))
-            messageContainer.prepend(getTimeSeparator(lastMessageTimestamp))
+            const newTimeStamp = getTimeSeparator(lastMessageTimestamp)
+            messageContainer.prepend(newTimeStamp)
         }
         messageContainer.prepend(el)
     } else {

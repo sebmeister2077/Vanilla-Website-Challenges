@@ -112,7 +112,7 @@
                         </div>
                         <button
                             id="google-btn"
-                            class="flex items-center order-2 ml-auto justify-center w-[40px] h-[40px] bg-white hover:bg-gray-200 transition-color duration-200 p-2 rounded-full"
+                            class="flex items-center order-2 ml-auto justify-center w-[40px] h-[40px] bg-white hover:bg-gray-200 transition duration-200 p-2 rounded-full"
                         >
                             <svg viewBox="0 0 48 48" width="20" height="20">
                                 <path
@@ -134,22 +134,21 @@
                                 <path fill="none" d="M0 0h48v48H0z"></path>
                             </svg>
                         </button>
-                        <!-- <button
-                            aria-label="Chat Menu"
-                            aria-description="Open the Chat on smaller screens"
-                            class="md:opacity-0 order-1 transition-opacity duration-500 md:pointer-events-none"
-                            onclick="const chat = $('#chat');if(chat[0].hasAttribute('data-open')) chat.removeAttr('data-open').attr('aria-hidden','true'); else chat.attr('data-open','true').attr('aria-hidden','false');"
-                        >
+                        <template id="current-user-profile-template">
+                            <button
+                                data-current-user-btn
+                                class="rounded-full flex overflow-hidden items-center order-2 ml-auto justify-center w-[40px] h-[40px]"
+                            >
+                                <img data-current-user-img />
+                            </button>
+                        </template>
+                        <button class="hidden">
                             <svg class="fill-slate-50/[80] w-8 h-8" viewBox="0 0 24 24">
                                 <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
                             </svg>
-                        </button> -->
+                        </button>
                     </div>
-                    <h2
-                        class="text-3xl px-5 opacity-0 md:[opacity:1_!important] group-data-[open=true]/chat:[opacity:1_!important] transform-opacity duration-500 w-full whitespace-nowrap min-w-[300px] text-neutral-800"
-                    >
-                        Chat Messages
-                    </h2>
+                    <h2 class="text-3xl px-5 w-full whitespace-nowrap min-w-[300px] text-neutral-800">Chat Messages</h2>
                 </header>
                 <section class="flex flex-col grow gap-2 p-3 overflow-hidden">
                     <article
@@ -171,10 +170,7 @@
                                         ></path>
                                     </svg>
                                 </div>
-                                <div
-                                    data-messages
-                                    class="flex flex-col grow gap-2 pr-2 text-neutral-800 items-start opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
-                                >
+                                <div data-messages class="flex flex-col grow gap-2 pr-2 text-neutral-800 items-start">
                                     <span data-username class="text-sm w-fit"></span>
                                     <div
                                         data-timestamp
@@ -192,10 +188,7 @@
                         </template>
                     </article>
                     <footer class="w-full flex justify-between items-center">
-                        <form
-                            id="message-form"
-                            class="grow flex justify-between items-center px-2 py-2 relative opacity-0 group-data-[open=true]/chat:[opacity:1_!important] md:[opacity:1_!important] transition-opacity duration-500"
-                        >
+                        <form id="message-form" class="grow flex justify-between items-center px-2 py-2 relative">
                             <input
                                 placeholder="Type to chat..."
                                 name="message"

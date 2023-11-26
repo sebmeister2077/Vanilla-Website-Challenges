@@ -96,7 +96,7 @@ export async function loginWithGoogle() {
                 changeMessageUid(user.uid, { uid: user.uid, photoURL, name })
 
                 setUserData({ photoURL: jwt.picture, name })
-                $('google-btn').remove()
+                $('#google-btn').addClass('opacity-0 pointer-events-none')
             })
             .catch(async (err) => {
                 switch (err.code) {
@@ -123,7 +123,7 @@ export async function loginWithGoogle() {
                             name: userForEmail.name,
                             photoURL: userForEmail.photoURL,
                         }
-                        $('google-btn').remove()
+                        $('#google-btn').addClass('opacity-0 pointer-events-none')
 
                         break
                     case AuthErrorCodes.PROVIDER_ALREADY_LINKED:

@@ -6,6 +6,7 @@ import { USER_ID_LOCATION } from './global-vars/index.js'
 import { initDatabaseListeners } from './firebase/db/queries/index.js'
 import { HOUR_MS } from './constants/time.js'
 import { loginAnonymously } from './firebase/auth/loginAnonymously.js'
+import { createUserProfileBtn } from './dom-manipulation/createUserProfileBtn.js'
 
 $(async function () {
     if (window.location.hash.includes('#access_token')) return
@@ -24,7 +25,11 @@ $(async function () {
             loginAnonymously(auth)
             return
         }
-        if (!user.isAnonymous) $('google-btn').remove()
+        if (!user.isAnonymous) {
+            $('#google-btn').replaceWith(
+                createUserProfileBtn(user.photoURL || user.providerData.map(({ photoURL }) => photoURL).find(Boolean)),
+            )
+        }
 
         localStorage.setItem(USER_ID_LOCATION, user.uid)
         userConnectionMade(db, user, isLoggedIn)

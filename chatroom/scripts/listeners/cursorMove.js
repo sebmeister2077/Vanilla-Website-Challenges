@@ -1,3 +1,4 @@
+import { SCROLL_BUTTON } from '../constants/mouseButtons.js'
 import { setUserData } from '../firebase/setGlobalData.js'
 import { throttleFunction } from '../utils/throttleFunction.js'
 
@@ -18,7 +19,7 @@ export const throttledCursorMove = throttleFunction(function (e) {
     cursorSvg.css({
         translate: `${e.clientX}px ${e.clientY}px`,
     })
-    if (buttons === 1) cursorSvg.addClass('scale-150')
+    if (buttons === SCROLL_BUTTON) cursorSvg.addClass('scale-150')
     else cursorSvg.removeClass('scale-150')
 
     const coords = { x: e.clientX, y: e.clientY }

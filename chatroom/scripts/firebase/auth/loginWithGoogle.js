@@ -27,7 +27,7 @@ provider.addScope('openid')
 const nonce = crypto.randomUUID()
 const googleTokenRequestUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth')
 googleTokenRequestUrl.searchParams.set('redirect_uri', location.href)
-googleTokenRequestUrl.searchParams.set('response_type', 'id_token')
+googleTokenRequestUrl.searchParams.set('response_type', 'id_token') // use 'token' to get an access token
 googleTokenRequestUrl.searchParams.set('nonce', nonce)
 googleTokenRequestUrl.searchParams.set(
     'scope',

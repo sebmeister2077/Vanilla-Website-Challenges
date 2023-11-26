@@ -1,3 +1,4 @@
+import { NO_BUTTON, SCROLL_BUTTON } from '../constants/mouseButtons.js'
 import { setCubeData } from '../firebase/setGlobalData.js'
 import { throttleFunction } from '../utils/throttleFunction.js'
 
@@ -5,7 +6,7 @@ export const throttleCubeRotate = (startPosition) =>
     throttleFunction((e) => {
         if (!window.auth?.currentUser) return
 
-        if (e.buttons !== 0 && !window.currentCubeData.movingUserId && auth.currentUser) {
+        if (e.buttons === SCROLL_BUTTON && !window.currentCubeData.movingUserId && auth.currentUser) {
             setCubeData({ movingUserId: window.currentUserData.uid })
             startPosition.x = e.clientX
             startPosition.y = e.clientY
@@ -17,7 +18,7 @@ export const throttleCubeRotate = (startPosition) =>
         )
             return
 
-        if (e.buttons === 0) {
+        if (e.buttons !== SCROLL_BUTTON) {
             if (window.currentCubeData.movingUserId === window.currentUserData.uid)
                 setCubeData({
                     movingUserId: '',

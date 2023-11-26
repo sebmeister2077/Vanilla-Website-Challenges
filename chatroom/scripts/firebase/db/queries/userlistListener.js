@@ -76,7 +76,12 @@ export function initUserlistListener(db) {
             .html((i, old) => old.trim())
             .contents()
             .clone(true, true)
-        newNode.attr('key', data.uid).css({ opacity: 1 })
+        newNode
+            .attr('key', data.uid)
+            .css({ opacity: 1 })
+            .on('contextmenu', function (e) {
+                e.preventDefault()
+            })
         if (svgEl === window.currentUserData.uid) {
             newNode
                 .css({

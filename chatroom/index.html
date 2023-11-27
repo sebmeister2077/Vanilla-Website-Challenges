@@ -99,7 +99,7 @@
             <aside
                 aria-label="Chat"
                 id="chat"
-                class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col h-full cursor-auto data-[open=true]:w-96 w-96 overflow-hidden transition-[width] duration-1000"
+                class="group/chat bg-chat z-30 shadow-2xl backdrop-blur-sm gap-4 flex flex-col h-full cursor-auto data-[open=true]:w-96 w-96 overflow-visible transition-[width] duration-1000"
             >
                 <header class="w-full py-5 bg-chat-header flex-col gap-2 flex justify-between">
                     <div class="flex flex-row-reverse gap-8 justify-between border-b border-slate-50/[.50] items-center p-5 pt-0">
@@ -137,9 +137,28 @@
                         <template id="current-user-profile-template">
                             <button
                                 data-current-user-btn
-                                class="rounded-full flex overflow-hidden items-center order-2 ml-auto justify-center w-[40px] h-[40px]"
+                                class="relative flex items-center order-2 ml-auto justify-center w-[40px] h-[40px]"
                             >
-                                <img data-current-user-img />
+                                <img data-current-user-img class="rounded-full overflow-hidden" />
+                                <div
+                                    data-backdrop
+                                    class="z-[-10] w-screen duration-300 transition-color fixed inset-0 bg-transparent"
+                                ></div>
+                                <ul
+                                    data-list
+                                    class="z-50 w-48 scale-0 overflow-hidden rounded-md shadow-lg bg-white flex flex-col duration-[.4s] ease-in-out transition-transform absolute top-[125%] left-1/2 -translate-x-1/2"
+                                >
+                                    <li
+                                        class="w-full text-lg font-semibold hover:bg-gray-200 bg-gray-50 cursor-pointer transition-color duration-300 p-3"
+                                    >
+                                        Change Account
+                                    </li>
+                                    <li
+                                        class="w-full text-lg font-semibold hover:bg-gray-200 bg-gray-50 cursor-pointer transition-color duration-300 p-3"
+                                    >
+                                        Sign Out
+                                    </li>
+                                </ul>
                             </button>
                         </template>
                         <button class="hidden">

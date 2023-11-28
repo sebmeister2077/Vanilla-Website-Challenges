@@ -1,3 +1,4 @@
+import { loginWithGoogle } from '../firebase/auth/loginWithGoogle.js'
 import { signOut } from '../firebase/auth/signOut.js'
 import { USER_ID_LOCATION } from '../global-vars/index.js'
 
@@ -21,7 +22,13 @@ export function createUserProfileBtn(photoURL) {
 
         isOpen = !isOpen
     })
-    button.children('[data-list]').children('[data-change-account]').on('click')
+    button
+        .children('[data-list]')
+        .children('[data-change-account]')
+        .on('click', function () {
+            button.remove()
+            loginWithGoogle()
+        })
     button
         .children('[data-list]')
         .children('[data-signout]')

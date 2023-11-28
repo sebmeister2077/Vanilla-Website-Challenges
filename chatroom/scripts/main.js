@@ -26,9 +26,9 @@ $(async function () {
             return
         }
         if (!user.isAnonymous) {
-            $('#google-btn').replaceWith(
-                createUserProfileBtn(user.photoURL || user.providerData.map(({ photoURL }) => photoURL).find(Boolean)),
-            )
+            $('#google-btn')
+                .addClass('hidden')
+                .after(createUserProfileBtn(user.photoURL || user.providerData.map(({ photoURL }) => photoURL).find(Boolean)))
         }
 
         localStorage.setItem(USER_ID_LOCATION, user.uid)

@@ -7,7 +7,6 @@ import {
     linkWithPopup,
     signInWithCredential,
     AuthErrorCodes,
-    signOut,
 } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
 import { parseJwt } from '../../utils/parseJwt.js'
 import { updateAnonUserMessages } from '../db/mutations/updateAnonUserMessages.js'
@@ -17,6 +16,7 @@ import { USER_ID_LOCATION } from '../../global-vars/index.js'
 import { SECOND_MS } from '../../constants/time.js'
 import { applyCurrentUserChatStyles, changeMessageUid, resetUserStyles } from '../../dom-manipulation/createMessage.js'
 import { updateUser } from '../db/mutations/updateUser.js'
+import { signOut } from './signOut.js'
 
 const provider = new GoogleAuthProvider()
 provider.addScope('openid')
@@ -111,7 +111,7 @@ export async function loginWithGoogle() {
                             userId: userForEmail.uid,
                         })
                         await removeCurrentUser()
-                        await signOut(auth)
+                        await signOut()
                         localStorage.removeItem(USER_ID_LOCATION)
 
                         const credential = GoogleAuthProvider.credential(idToken)

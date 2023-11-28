@@ -1,3 +1,6 @@
+import { signOut } from '../firebase/auth/signOut.js'
+import { USER_ID_LOCATION } from '../global-vars/index.js'
+
 export function createUserProfileBtn(photoURL) {
     const button = $('#current-user-profile-template')
         .html((i, old) => old.trim())
@@ -18,6 +21,17 @@ export function createUserProfileBtn(photoURL) {
 
         isOpen = !isOpen
     })
+    button.children('[data-list]').children('[data-change-account]').on('click')
+    button
+        .children('[data-list]')
+        .children('[data-signout]')
+        .on('click', function () {
+            localStorage.removeItem(USER_ID_LOCATION)
+            signOut().then(() => {
+                button.remove()
+                $('#google-btn').removeClass('hidden')
+            })
+        })
 
     button.children('[data-current-user-img]').attr('src', photoURL)
     return button

@@ -116,7 +116,7 @@ export async function loginWithGoogle() {
 
                         const credential = GoogleAuthProvider.credential(idToken)
                         const { user } = await signInWithCredential(auth, credential)
-                        changeMessageUid(currentUid, { uid: userForEmail, photoURL: userForEmail.photoURL, name: userForEmail.name })
+                        changeMessageUid(currentUid, { uid: userForEmail.uid, photoURL: userForEmail.photoURL, name: userForEmail.name })
                         window.currentUserData = {
                             ...window.currentUserData,
                             uid: userForEmail.uid,

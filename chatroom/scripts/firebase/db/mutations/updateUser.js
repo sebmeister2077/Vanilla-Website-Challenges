@@ -28,6 +28,7 @@ export function updateUser(db, userData) {
 
     update(ref(db), { [DATABASE_ROUTES.OneUser(userData.uid)]: userData }).catch(({ code }) => {
         if (code === 'PERMISSION_DENIED') {
+            console.log(userData)
             window.toastr.error('Something went wrong')
             lastErrorTime = Date.now()
             if (lastErrorTime) clearTimeout(lastErrorTimeout)

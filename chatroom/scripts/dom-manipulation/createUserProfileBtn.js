@@ -27,6 +27,7 @@ export function createUserProfileBtn(photoURL) {
         .children('[data-signout]')
         .on('click', function () {
             localStorage.removeItem(USER_ID_LOCATION)
+            window.currentUserData = {}
             signOut().then(() => {
                 button.remove()
                 $('#google-btn').removeClass('hidden')

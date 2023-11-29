@@ -132,7 +132,7 @@ export function resetUserStyles(uid) {
         .children('[data-message]')
         .removeClass('bg-yellow-400/[.85]')
         .addClass('after:left-1')
-        .removeLoader('after:right-1')
+        .removeClass('after:right-1')
 }
 
 export function changeMessageUid(oldUid, { uid, name, photoURL }) {

@@ -1,6 +1,8 @@
 import { loginWithGoogle } from '../firebase/auth/loginWithGoogle.js'
 import { signOut } from '../firebase/auth/signOut.js'
+import { setUserData } from '../firebase/setGlobalData.js'
 import { USER_ID_LOCATION } from '../global-vars/index.js'
+import { resetUserStyles } from './createMessage.js'
 
 export function createUserProfileBtn(photoURL) {
     const button = $('#current-user-profile-template')
@@ -26,17 +28,25 @@ export function createUserProfileBtn(photoURL) {
     button
         .children('[data-list]')
         .children('[data-change-account]')
-        .on('click', function () {
-            button.remove()
+        .on('click', function (e) {
             loginWithGoogle()
+            button.remove()
+            setUserData({
+                isOnline: false,
+            })
         })
     button
         .children('[data-list]')
         .children('[data-signout]')
         .on('click', function () {
             localStorage.removeItem(USER_ID_LOCATION)
+            setUserData({
+                isOnline: false,
+            })
+            const oldUid = window.currentUserData.uid
             window.currentUserData = {}
             signOut().then(() => {
+                resetUserStyles(oldUid)
                 button.remove()
                 $('#google-btn').removeClass('hidden')
             })

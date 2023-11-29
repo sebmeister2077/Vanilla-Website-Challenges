@@ -31,9 +31,6 @@ export function createUserProfileBtn(photoURL) {
         .on('click', function (e) {
             loginWithGoogle()
             button.remove()
-            setUserData({
-                isOnline: false,
-            })
         })
     button
         .children('[data-list]')

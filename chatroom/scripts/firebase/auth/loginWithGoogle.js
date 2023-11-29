@@ -17,6 +17,7 @@ import { SECOND_MS } from '../../constants/time.js'
 import { applyCurrentUserChatStyles, changeMessageUid, resetUserStyles } from '../../dom-manipulation/createMessage.js'
 import { updateUser } from '../db/mutations/updateUser.js'
 import { signOut } from './signOut.js'
+import { setUserData } from '../setGlobalData.js'
 
 const provider = new GoogleAuthProvider()
 provider.addScope('openid')
@@ -42,6 +43,9 @@ export async function loginWithGoogle() {
     if (!auth.currentUser.isAnonymous) {
         //user is only switching account (probably)
         const oldId = auth.currentUser.uid
+        setUserData({
+            isOnline: false,
+        })
         const { user } = await signInWithPopup(auth, provider)
         window.currentUserData = {
             ...window.currentUserData,

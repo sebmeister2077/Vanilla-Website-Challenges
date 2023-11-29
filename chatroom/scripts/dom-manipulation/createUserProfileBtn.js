@@ -8,6 +8,7 @@ export function createUserProfileBtn(photoURL) {
         .contents()
         .clone(true, true)
     let isOpen = false
+
     button.on('click', function (e) {
         const backdrop = button.children('[data-backdrop]')
         if (isOpen)

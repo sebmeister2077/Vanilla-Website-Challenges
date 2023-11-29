@@ -17,6 +17,13 @@ export function initDOMListeners() {
     $('.cube-glass').on('mouseup', cubeMouseup)
     $('.cube-glass').get(0).addEventListener('mousedown', cubeMousedown(startPosition), true)
 
+    addEventListener(
+        'contextmenu',
+        function (e) {
+            e.preventDefault()
+        },
+        { capture: true },
+    )
     $(document).on({
         mousemove: throttledCursorMove,
         touchmove: throttledCursorMove,

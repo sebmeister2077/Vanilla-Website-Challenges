@@ -160,7 +160,7 @@ function generateInput(cssTemplateNumber, value, label = value) {
 }
 
 requestIdleCallback(() => {
-    generateTemplates(10);
+    generateTemplates(20);
 });
 
 function generatePotentialResultCss(cssTemplateNumber) {

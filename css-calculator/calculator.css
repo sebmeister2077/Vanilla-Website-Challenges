@@ -9,7 +9,7 @@
     z-index: 1;
 }
 
-/* Hide current operator labels */
+/* Hide current operator + 00 labels */
 .calculator:has([data-name^='operator']:checked) + .calculator label:has([data-name^='operator'],input[value="00"]),
 /* Transition */
 .calculator:has([data-name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has([data-name^='operator'],input[value="00"]),

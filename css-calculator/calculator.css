@@ -10,9 +10,14 @@
 }
 
 /* Hide current operator labels */
-.calculator:has([data-name^='operator']:checked) + .calculator label:has([data-name^='operator']),
+.calculator:has([data-name^='operator']:checked) + .calculator label:has([data-name^='operator'],input[value="00"]),
 /* Transition */
-.calculator:has([data-name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has([data-name^='operator']),
+.calculator:has([data-name^='operator']:checked) + .calculator:not(:has(:checked)) + .calculator label:has([data-name^='operator'],input[value="00"]),
+
+/* Dont allow multiple only 0 selections consecutively */
+.calculator:has([data-name^='operator']:checked) + .calculator:has(input[value='0']:checked) + .calculator label:has(input[value='0'],input[value='00']),
+/* Transition */
+.calculator:has([data-name^='operator']:checked) + .calculator:has(input[value='0']:checked) + .calculator:not(:has(:checked)) + .calculator label:has(input[value='0'],input[value='00']),
 
 /* Hide current operator labels for first selection */
 .calculator:first-child:not(:has(:checked)) label:has([data-name^='operator'],[data-name^='A/C'],[data-name^='back']),

@@ -1,5 +1,9 @@
 //This javascript file is used to generate all the necessary css and html
 
+/**
+ *
+ * @param {number} count
+ */
 function generateTemplates(count) {
     for (let i = 0; i < count; i++) {
         requestIdleCallback(generateTemplate);
@@ -10,7 +14,7 @@ const cssVariableResult = '--result-value';
 const cssVariableLastDisplay = '--last-display';
 
 function supports(funcName) {
-    return CSS.supports(`opacity: ${funcName}(1,1)`) ? 'true' : '';
+    return CSS.supports(`opacity: ${funcName}(1,1)`) || CSS.supports(`opacity: ${funcName}(1)`) ? true : '';
 }
 function generateTemplate() {
     const form = document.getElementsByTagName('form')[0];
@@ -108,9 +112,15 @@ function generateTemplate() {
 
     //This way form state is preserved
     form.insertAdjacentHTML('beforeend', newCalculatorHTML);
+    //append html for display
     document.querySelector('.output').append(document.createElement('span'));
 }
 
+/**
+ * @param {number} cssTemplateNumber
+ * @param {string | number} valueNrStr
+ * @returns {string} template
+ */
 function generateDisplayCssForNumber(cssTemplateNumber, valueNrStr) {
     const valueNrLength = valueNrStr.toString().length;
     const valueNr = parseInt(valueNrStr);
@@ -124,6 +134,12 @@ function generateDisplayCssForNumber(cssTemplateNumber, valueNrStr) {
     `;
 }
 
+/**
+ *
+ * @param {number} cssTemplateNumber
+ * @param {string} operator
+ * @returns
+ */
 function generateDisplayCssForOperator(cssTemplateNumber, operator) {
     return /*css*/ `
         body:has(.calculator:nth-child(${cssTemplateNumber}) [value='${operator}']:checked:not([value="back"])) .output  {
@@ -137,6 +153,13 @@ function generateDisplayCssForOperator(cssTemplateNumber, operator) {
     `;
 }
 
+/**
+ *
+ * @param {number} cssTemplateNumber
+ * @param {string | number} value
+ * @param {string} label
+ * @returns
+ */
 function generateInput(cssTemplateNumber, value, label = value) {
     function getInputType() {
         if (cssTemplateNumber === 1 && value === 0) return 'hidden';
@@ -163,6 +186,11 @@ requestIdleCallback(() => {
     generateTemplates(20);
 });
 
+/**
+ *
+ * @param {number} cssTemplateNumber
+ * @returns
+ */
 function generatePotentialResultCss(cssTemplateNumber) {
     return /*css*/ `
         body:has(.calculator:nth-child(${cssTemplateNumber}) [value="="]:checked) .output::after{
@@ -171,6 +199,12 @@ function generatePotentialResultCss(cssTemplateNumber) {
         }
     `;
 }
+
+/**
+ *
+ * @param {string} sequence
+ * @returns
+ */
 function emulateClick(sequence) {
     if (!sequence || typeof sequence !== 'string') return;
     const chars = sequence.split('');
@@ -190,6 +224,13 @@ setTimeout(() => {
     // if (window.location.hostname === '127.0.0.1') emulateClick('2*55-12');
 }, 1200);
 
+/**
+ *
+ * @param {number} cssTemplateNumber
+ * @param {string} operator
+ * @param {string=} specialFunction
+ * @returns
+ */
 function generateOperationCss(cssTemplateNumber, operator, specialFunction) {
     // 9 bilion, since the max display value is 2 bilion...
     const MAX_DIGITS_LIMIT = 10;

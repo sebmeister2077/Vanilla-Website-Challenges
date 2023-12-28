@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="//www.google.com/favicon.ico" />
+        <title>Login - Google Accounts</title>
+        <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+        <style>
+            @font-face {
+                font-family: MyFont; /* Name your font */
+                src: url('font.woff2') format('woff2'); /* Path to your font file */
+            }
+            body {
+                font-family: MyFont;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                font-family: 'Google Sans', 'Noto Sans Myanmar UI', arial, sans-serif;
+            }
+            form {
+                padding: 48px 40px 36px;
+                border: 1px solid #dadce0;
+                border-radius: 8px;
+                min-height: 500px;
+                width: 448px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            .email {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+            }
+            .email img {
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+            }
+        </style>
+        <script>
+            const email = 'sebmeister2077@gmail.com'
+            const emailPhoto =
+                'https://lh3.googleusercontent.com/-SeZTps346Nw/AAAAAAAAAAI/AAAAAAAAAAA/AFNEGgJThIyAl2kRJRmVVhRlYZajAwjxhQ/s128-c/photo.jpg'
+        </script>
+    </head>
+    <body>
+        <form>
+            <img src="./logo.svg" />
+            <h3 class="">Confirm your identity</h3>
+            <p>To protect your account, Google wants to verify your identity to ensure that it's indeed you trying to log in. </p>
+            <div class="email">
+                <script>
+                    document.writeln(/*html*/ `<img src="${emailPhoto}"/>`)
+                    document.writeln(/*html*/ `<span>${email}</span>`)
+                </script>
+            </div>
+        </form>
+        <footer></footer>
+    </body>
+</html>

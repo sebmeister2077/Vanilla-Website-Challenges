@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+        <style>
+            body {
+                background-color: darkgray;
+            }
+        </style>
+    </head>
+    <body>
+        ho
+        <script>
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl('https://localhost:7244/myHubPath')
+                .configureLogging(signalR.LogLevel.Information)
+                .build()
+
+            async function start() {
+                try {
+                    await connection.start()
+                    console.log('SignalR Connected.')
+                    console.log(connection)
+                    connection.on('ReceiveMessage', console.log)
+                    send.onclick = () => {
+                        connection.invoke('SendMessage', 'Seba', 'message')
+                    }
+                } catch (err) {
+                    console.log(err)
+                    setTimeout(start, 5000)
+                }
+            }
+
+            connection.onclose(async () => {
+                await start()
+            })
+
+            // Start the connection.
+            start()
+        </script>
+        <button id="send">Send</button>
+    </body>
+</html>

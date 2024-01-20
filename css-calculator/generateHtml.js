@@ -14,7 +14,7 @@ const cssVariableResult = '--result-value';
 const cssVariableLastDisplay = '--last-display';
 
 function supports(funcName) {
-    return CSS.supports(`opacity: ${funcName}(1,1)`) || CSS.supports(`opacity: ${funcName}(1)`) ? true : '';
+    return CSS.supports(`opacity: ${funcName}(1,1)`) || CSS.supports(`opacity: ${funcName}(1)`);
 }
 function generateTemplate() {
     const form = document.getElementsByTagName('form')[0];
@@ -85,27 +85,27 @@ function generateTemplate() {
                 ${generateDisplayCssForOperator(cssTemplateNumber, 'log')}
                 ${generateDisplayCssForOperator(cssTemplateNumber, 'hypot')}
             </style>
-            ${supportsHypot && generateInput(cssTemplateNumber, 'hypot', 'Hypot')}
-            ${supportsMod && generateInput(cssTemplateNumber, '%', 'Mod')}
-            ${supportsPow && generateInput(cssTemplateNumber, '^', 'Exp')}
-            ${supportsLog && generateInput(cssTemplateNumber, 'log', 'Log')}
-            ${generateInput(cssTemplateNumber, '+')}
-            ${generateInput(cssTemplateNumber, '-')}
-            ${generateInput(cssTemplateNumber, '*')}
-            ${generateInput(cssTemplateNumber, '/')}
+            ${generateInput(cssTemplateNumber, 'hypot', 'Hypot', supportsHypot)}
+            ${generateInput(cssTemplateNumber, '%', 'Mod', supportsMod)}
+            ${generateInput(cssTemplateNumber, '^', 'Exp', supportsPow)}
+            ${generateInput(cssTemplateNumber, 'log', 'Log', supportsLog)}
+            ${generateInput(cssTemplateNumber - 1, 'back', '←')}
             ${generateInput(cssTemplateNumber, 7)}
             ${generateInput(cssTemplateNumber, 8)}
             ${generateInput(cssTemplateNumber, 9)}
-            ${generateInput(cssTemplateNumber - 1, 'back', '←')}
+            ${generateInput(cssTemplateNumber, '/')}
             ${generateInput(cssTemplateNumber, 4)}
             ${generateInput(cssTemplateNumber, 5)}
             ${generateInput(cssTemplateNumber, 6)}
+            ${generateInput(cssTemplateNumber, '*')}
             ${generateInput(cssTemplateNumber, 1)}
             ${generateInput(cssTemplateNumber, 2)}
             ${generateInput(cssTemplateNumber, 3)}
+            ${generateInput(cssTemplateNumber, '-')}
             ${generateInput(cssTemplateNumber, '00')}
             ${generateInput(cssTemplateNumber, 0)}
             ${generateInput(cssTemplateNumber, 'A/C')}
+            ${generateInput(cssTemplateNumber, '+')}
             ${generateInput(cssTemplateNumber, '=')}
         </fieldset>
      `;
@@ -160,7 +160,9 @@ function generateDisplayCssForOperator(cssTemplateNumber, operator) {
  * @param {string} label
  * @returns
  */
-function generateInput(cssTemplateNumber, value, label = value) {
+function generateInput(cssTemplateNumber, value, label = value, isSupported = true) {
+    const titleAttr = isSupported ? '' : 'title="This feature does not work for your current browser"';
+    const disabledAttr = isSupported ? '' : 'disabled';
     function getInputType() {
         if (cssTemplateNumber === 1 && value === 0) return 'hidden';
         if (value === 'A/C') return 'reset';
@@ -175,9 +177,9 @@ function generateInput(cssTemplateNumber, value, label = value) {
     }
     const inputId = crypto.randomUUID();
     return /*html*/ `
-        <label for="${inputId}">
+        <label for="${inputId}" ${titleAttr}>
             <span>${label}</span>
-            <input type="${getInputType()}" data-name="${getName()}${cssTemplateNumber}" name="input-${cssTemplateNumber}" hidden value="${value}" id="${inputId}" />
+            <input type="${getInputType()}" hidden value="${value}" id="${inputId}" ${disabledAttr}  data-name="${getName()}${cssTemplateNumber}" name="input-${cssTemplateNumber}"/>
         </label>
     `;
 }

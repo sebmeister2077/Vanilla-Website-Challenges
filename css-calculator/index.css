@@ -113,11 +113,11 @@ fieldset {
 }
 
 /* Function is not supported in current browser */
-/* label:has([disabled]) {
+label:has([disabled]) {
     pointer-events: stroke;
     opacity: 0.36;
     cursor: not-allowed;
-} */
+}
 
 /* Special grid sizes */
 

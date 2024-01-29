@@ -5,7 +5,7 @@ import { getUTCDate } from '../utils/getUTCDate.js'
 var scrollTimeout = null
 let oldestTimestamp = null
 let newestTimestamp = null
-export function createDomMessage({ message, photoURL, username, timestamp, userId }, prepend = false) {
+export function createDomMessage({ message, imageUrl, photoURL, username, timestamp, userId }, prepend = false) {
     oldestTimestamp = oldestTimestamp ?? timestamp
     newestTimestamp = newestTimestamp ?? timestamp
 
@@ -18,6 +18,7 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     oldestTimestamp = Math.min(oldestTimestamp, timestamp)
     newestTimestamp = Math.max(newestTimestamp, timestamp)
 
+    const isMessage = message && typeof message === 'string'
     const template = $('#message-template')
     const el = template
         .html((i, old) => old.trim())
@@ -41,16 +42,26 @@ export function createDomMessage({ message, photoURL, username, timestamp, userI
     $('[data-username]', el).text(username).attr('id', userNameId)
 
     const localTime = utcTimestampToLocalTime(timestamp)
-    const messageEl = $('[data-message]', el)
-        .text(message)
-        .attr('aria-labelledby', `${userNameId} said`)
-        .attr('data-local-time', localTime)
-        .attr('data-timestamp', timestamp)
-    const NR_CHARACTERS_ON_ONE_ROW = 28
-    const NR_TIME_CHARACTERS = 5
-    if (message.length >= NR_CHARACTERS_ON_ONE_ROW) messageEl.addClass(`min-w-[${NR_CHARACTERS_ON_ONE_ROW}ch]`)
-    else if (message.length < NR_TIME_CHARACTERS) messageEl.addClass('min-w-[3rem]')
-    else messageEl.addClass('min-w-max')
+
+    const messageEl = $('[data-message]', el).attr('data-local-time', localTime).attr('data-timestamp', timestamp)
+    if (isMessage) {
+        messageEl.text(message).attr('aria-labelledby', `${userNameId} said`)
+        const NR_CHARACTERS_ON_ONE_ROW = 28
+        const NR_TIME_CHARACTERS = 5
+        if (message.length >= NR_CHARACTERS_ON_ONE_ROW) messageEl.addClass(`min-w-[${NR_CHARACTERS_ON_ONE_ROW}ch]`)
+        else if (message.length < NR_TIME_CHARACTERS) messageEl.addClass('min-w-[3rem]')
+        else messageEl.addClass('min-w-max')
+    } else {
+        //is image
+        console.log(arguments)
+        const image = $(
+            new DOMParser().parseFromString(messageEl[0].outerHTML.replace(/^<div/, '<img').replace(/<\/div>$/, '/>'), 'text/html').body
+                .firstChild,
+        )
+        messageEl.replaceWith(image)
+
+        image.attr('src', imageUrl).removeClass('after:content-[attr(data-local-time)]').removeClass('pb-4')
+    }
 
     const messageContainer = $('#messages')
     const lastMessage = messageContainer.children('[data-uid]').last()

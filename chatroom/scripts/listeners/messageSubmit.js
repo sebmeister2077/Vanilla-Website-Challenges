@@ -1,4 +1,4 @@
-import { pushToChat } from '../firebase/db/mutations/sendMessage.js'
+import { pushMessageToChat } from '../firebase/db/mutations/sendMessage.js'
 
 export function messageSubmit(e) {
     if (!window.auth?.currentUser || !window.db) return
@@ -9,5 +9,5 @@ export function messageSubmit(e) {
     const message = formData.get('message').trim()
     if (!message) return
     e.target.reset()
-    pushToChat(window.db, message)
+    pushMessageToChat(window.db, message)
 }

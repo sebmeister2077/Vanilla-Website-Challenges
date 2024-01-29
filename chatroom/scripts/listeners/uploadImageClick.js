@@ -1,3 +1,5 @@
+import { createDomMessage } from '../dom-manipulation/createMessage.js'
+import { pushImageToChat } from '../firebase/db/mutations/sendMessage.js'
 import { uploadBlob } from '../firebase/storage/uploadImage.js'
 
 export function uploadImageClick() {
@@ -12,9 +14,9 @@ export function uploadImageClick() {
         const firstFile = files[0]
         if (!firstFile) return
 
-        console.log(files)
-        uploadBlob(firstFile, true).then((downloadUrl) => {
-            console.log(downloadUrl)
+        const isChatUpload = true
+        uploadBlob(firstFile, isChatUpload).then((downloadUrl) => {
+            pushImageToChat(window.db, downloadUrl)
         })
     })
     document.body.appendChild(input)

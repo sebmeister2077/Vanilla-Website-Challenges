@@ -31,6 +31,7 @@ export async function uploadRandomImage() {
 
 export async function uploadBlob(blob, isChatImage) {
     if (!window.storage) return
+    if (!(blob instanceof Blob)) throw new Error("parameter 'blob' is not of type Blob")
     let path = STORAGE_ROUTES.SavePublicThumbnail(crypto.randomUUID())
     if (isChatImage) path = STORAGE_ROUTES.SavePublicChat(crypto.randomUUID())
     const newItemStorageRef = ref(window.storage, path)

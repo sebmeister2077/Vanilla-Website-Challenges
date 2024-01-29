@@ -29,9 +29,11 @@ export async function uploadRandomImage() {
     }
 }
 
-export async function uploadBlob(blob) {
+export async function uploadBlob(blob, isChatImage) {
     if (!window.storage) return
-    const newItemStorageRef = ref(window.storage, STORAGE_ROUTES.SavePublic(crypto.randomUUID()))
+    let path = STORAGE_ROUTES.SavePublicThumbnail(crypto.randomUUID())
+    if (isChatImage) path = STORAGE_ROUTES.SavePublicChat(crypto.randomUUID())
+    const newItemStorageRef = ref(window.storage, path)
 
     const snapshot = await uploadBytes(newItemStorageRef, blob)
     return await getDownloadURL(snapshot.ref)

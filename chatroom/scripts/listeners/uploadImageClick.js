@@ -13,7 +13,7 @@ export function uploadImageClick() {
         if (!firstFile) return
 
         console.log(files)
-        uploadBlob(firstFile).then((downloadUrl) => {
+        uploadBlob(firstFile, true).then((downloadUrl) => {
             console.log(downloadUrl)
         })
     })

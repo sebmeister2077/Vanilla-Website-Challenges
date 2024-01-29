@@ -7,9 +7,11 @@ import { throttledCursorMove } from './cursorMove.js'
 import { chatScrollListener } from './chatScrollListener.js'
 import { initNetworkChangeListener, onOfflineListener, onOnlineListener } from './onlineListener.js'
 import { loginWithGoogle } from '../firebase/auth/loginWithGoogle.js'
+import { uploadImageClick } from './uploadImageClick.js'
 
 export function initDOMListeners() {
     $('#change-color').on('click', changeColorClick)
+    $('#upload-image').on('click', uploadImageClick)
     $('#message-form').on('submit', messageSubmit)
 
     const startPosition = {}

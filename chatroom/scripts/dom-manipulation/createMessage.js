@@ -42,6 +42,7 @@ export function createDomMessage({ message, imageUrl, photoURL, username, timest
     $('[data-username]', el).text(username).attr('id', userNameId)
 
     const localTime = utcTimestampToLocalTime(timestamp)
+    const messageContainer = $('#messages')
 
     const messageEl = $('[data-message]', el).attr('data-local-time', localTime).attr('data-timestamp', timestamp)
     if (isMessage) {
@@ -53,17 +54,17 @@ export function createDomMessage({ message, imageUrl, photoURL, username, timest
         else messageEl.addClass('min-w-max')
     } else {
         //is image
-        console.log(arguments)
         const image = $(
             new DOMParser().parseFromString(messageEl[0].outerHTML.replace(/^<div/, '<img').replace(/<\/div>$/, '/>'), 'text/html').body
                 .firstChild,
         )
         messageEl.replaceWith(image)
 
+        // image.on('load', () => {
+        // })
         image.attr('src', imageUrl).removeClass('after:content-[attr(data-local-time)]').removeClass('pb-4')
     }
 
-    const messageContainer = $('#messages')
     const lastMessage = messageContainer.children('[data-uid]').last()
     const firstMessage = messageContainer.children('[data-uid]').first()
 
@@ -84,7 +85,8 @@ export function createDomMessage({ message, imageUrl, photoURL, username, timest
 
     function setScroll() {
         scrollTimeout = setTimeout(() => {
-            messageContainer.get(0).scrollTo(0, messageContainer.get(0).scrollHeight)
+            const height = messageContainer.get(0).scrollHeight + 300
+            messageContainer.get(0).scrollTo(0, height)
         }, 100)
         return scrollTimeout
     }

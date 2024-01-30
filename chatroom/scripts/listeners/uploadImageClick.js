@@ -1,6 +1,6 @@
-import { createDomMessage } from '../dom-manipulation/createMessage.js'
 import { pushImageToChat } from '../firebase/db/mutations/sendMessage.js'
 import { uploadBlob } from '../firebase/storage/uploadImage.js'
+import { MB } from '../constants/fileSize.js'
 
 export function uploadImageClick() {
     const input = document.createElement('input')
@@ -13,6 +13,10 @@ export function uploadImageClick() {
         if (!files.length) return
         const firstFile = files[0]
         if (!firstFile) return
+        if (firstFile.size >= 1 * MB) {
+            window.toastr.error('The File you selected is too big')
+            return
+        }
 
         const isChatUpload = true
         uploadBlob(firstFile, isChatUpload).then((downloadUrl) => {

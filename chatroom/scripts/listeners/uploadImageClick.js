@@ -1,6 +1,7 @@
 import { pushImageToChat } from '../firebase/db/mutations/sendMessage.js'
 import { uploadBlob } from '../firebase/storage/uploadImage.js'
 import { MB } from '../constants/fileSize.js'
+import { compress } from '../utils/compressImage.js'
 
 export function uploadImageClick() {
     const input = document.createElement('input')
@@ -14,13 +15,27 @@ export function uploadImageClick() {
         const firstFile = files[0]
         if (!firstFile) return
         if (firstFile.size >= 1 * MB) {
-            window.toastr.error('The File you selected is too big')
+            window.toastr.error('The File you selected is too big. Please select files less than 1MB.')
             return
         }
 
         const isChatUpload = true
-        uploadBlob(firstFile, isChatUpload).then((downloadUrl) => {
-            pushImageToChat(window.db, downloadUrl)
+        const isThumb = true
+        Promise.allSettled([
+            compress(firstFile).then((compressedFile) => {
+                return uploadBlob(compressedFile, { isChatUpload, isThumb })
+            }),
+            uploadBlob(firstFile, { isChatUpload }),
+        ]).then(([thumbResult, result]) => {
+            if (thumbResult.status === 'rejected' || result.status === 'rejected') {
+                window.toastr.error('Something went wrong while uploading your file')
+                return
+            }
+
+            const imageThumbUrl = thumbResult.value
+            const imageUrl = result.value
+
+            pushImageToChat(window.db, { imageThumbUrl, imageUrl })
         })
     })
     document.body.appendChild(input)

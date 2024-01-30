@@ -29,11 +29,13 @@ export async function uploadRandomImage() {
     }
 }
 
-export async function uploadBlob(blob, isChatImage) {
+export async function uploadBlob(blob, opts = {}) {
     if (!window.storage) return
     if (!(blob instanceof Blob)) throw new Error("parameter 'blob' is not of type Blob")
     let path = STORAGE_ROUTES.SavePublicThumbnail(crypto.randomUUID())
-    if (isChatImage) path = STORAGE_ROUTES.SavePublicChat(crypto.randomUUID())
+    if (opts.isChatUpload) path = STORAGE_ROUTES.SavePublicChat(crypto.randomUUID())
+    if (opts.isThumb) path += '_thumb'
+
     const newItemStorageRef = ref(window.storage, path)
 
     const snapshot = await uploadBytes(newItemStorageRef, blob)

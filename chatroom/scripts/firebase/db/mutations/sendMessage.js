@@ -35,7 +35,7 @@ export function pushMessageToChat(db, message, chatId) {
         timestamp: serverTimestamp(),
     })
 }
-export function pushImageToChat(db, imageUrl, chatId) {
+export function pushImageToChat(db, { imageUrl, imageThumbUrl }, chatId) {
     const messagesListRef = ref(db, chatId ? DATABASE_ROUTES.PrivateChat(chatId) : DATABASE_ROUTES.PublicChat)
     if (!window.currentUserData.uid || !messagesListRef) return
     const newMessageRef = push(messagesListRef)
@@ -44,6 +44,7 @@ export function pushImageToChat(db, imageUrl, chatId) {
         username: window.currentUserData.name,
         photoURL: window.currentUserData.photoURL,
         imageUrl,
+        imageThumbUrl,
     }
     set(newMessageRef, {
         ...data,

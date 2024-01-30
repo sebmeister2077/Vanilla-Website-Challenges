@@ -84,6 +84,7 @@ export function createDomMessage({ message, imageUrl, imageThumbUrl, photoURL, u
             .addClass('rounded-xl')
             .addClass('border')
             .addClass('border-gray-50/[.20]')
+            .attr('data-chat-image', '')
             .attr('loading', 'lazy')
             .attr('src', imageUrl);
 

@@ -22,7 +22,7 @@ export const DATABASE_ROUTES = new (class {
     }
 })()
 export const STORAGE_ROUTES = {
-    SavePublicThumbnail: (id) => `public/${id || throwError('Bro, id is undefined')}`,
+    SavePublicUserProfileImage: (id) => `public/${id || throwError('Bro, id is undefined')}`,
     SavePublicChat: (id) => `public_chat/${id || throwError('Bro, id is undefined')}`,
 }
 export const MAX_USERS_CONNECTION_LIMIT = 100

@@ -2,6 +2,7 @@ import { pushImageToChat } from '../firebase/db/mutations/sendMessage.js'
 import { uploadBlob } from '../firebase/storage/uploadImage.js'
 import { MB } from '../constants/fileSize.js'
 import { compress } from '../utils/compressImage.js'
+import { STORAGE_ROUTES } from '../global-vars/index.js'
 
 export function uploadImageClick() {
     const input = document.createElement('input')
@@ -21,11 +22,13 @@ export function uploadImageClick() {
 
         const isChatUpload = true
         const isThumb = true
+
+        const path = STORAGE_ROUTES.SavePublicChat(crypto.randomUUID())
         Promise.allSettled([
             compress(firstFile).then((compressedFile) => {
-                return uploadBlob(compressedFile, { isChatUpload, isThumb })
+                return uploadBlob(compressedFile, { isChatUpload, isThumb }, path)
             }),
-            uploadBlob(firstFile, { isChatUpload }),
+            uploadBlob(firstFile, { isChatUpload }, path),
         ]).then(([thumbResult, result]) => {
             if (thumbResult.status === 'rejected' || result.status === 'rejected') {
                 window.toastr.error('Something went wrong while uploading your file')

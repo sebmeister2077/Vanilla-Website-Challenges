@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <script>
-        const { hash } = window.location
-        const isPopup = Boolean(window.opener)
+        const { hash } = window.location;
+        const isPopup = Boolean(window.opener);
         if (isPopup) {
-            window.opener.dispatchEvent(new CustomEvent('token-load', { detail: { hash } }))
-            this.close()
+            window.opener.dispatchEvent(new CustomEvent('token-load', { detail: { hash } }));
+            this.close();
         }
     </script>
     <head>
@@ -55,11 +55,11 @@
                         },
                     },
                 },
-            }
+            };
             toastr.options = {
                 newestOnTop: true,
                 progressBar: true,
-            }
+            };
         </script>
     </head>
 
@@ -191,7 +191,7 @@
                                         ></path>
                                     </svg>
                                 </div>
-                                <div data-messages class="flex flex-col grow gap-2 pr-2 text-neutral-800 items-start">
+                                <div data-messages class="flex flex-col grow gap-3 pr-2 text-neutral-800 items-start">
                                     <span data-username class="text-sm w-fit"></span>
                                     <div
                                         data-timestamp

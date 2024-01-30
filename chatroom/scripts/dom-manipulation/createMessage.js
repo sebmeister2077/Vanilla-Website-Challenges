@@ -82,6 +82,8 @@ export function createDomMessage({ message, imageUrl, imageThumbUrl, photoURL, u
             .addClass('object-cover')
             .addClass('object-center')
             .addClass('rounded-xl')
+            .addClass('border')
+            .addClass('border-gray-50/[.20]')
             .attr('loading', 'lazy')
             .attr('src', imageUrl);
 

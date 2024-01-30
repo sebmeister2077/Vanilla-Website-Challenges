@@ -1,4 +1,4 @@
-import { DAY_MS } from '../constants/time.js';
+import { DAY_MS, HOUR_MS } from '../constants/time.js';
 import { utcTimestampToLocalTime } from '../utils/utcTimestampToLocalTime.js';
 import { getUTCDate } from '../utils/getUTCDate.js';
 
@@ -134,10 +134,8 @@ const timeFormattor = new Intl.RelativeTimeFormat(navigator.language, {
     numeric: 'auto',
 });
 export function getTimeSeparator(timeStamp) {
-    const utcNow = getUTCDate(new Date());
-    const dayDifference = (timeStamp - utcNow.getTime()) / DAY_MS;
-
-    const daysAgo = dayDifference > 0 ? Math.floor(dayDifference) : Math.ceil(dayDifference);
+    const utcNow = getUTCDate(Date.now());
+    const daysAgo = Math.ceil((getUTCDate(timeStamp) - utcNow) / DAY_MS);
 
     return $('#time-separator-template')
         .html((i, old) => old.trim())

@@ -1,45 +1,46 @@
-import { initFirebase } from './firebase/init.js'
-import { userConnectionMade } from './firebase/db/mutations/userConnectionMade.js'
+import { initFirebase } from './firebase/init.js';
+import { userConnectionMade } from './firebase/db/mutations/userConnectionMade.js';
 
-import { initDOMListeners } from './listeners/index.js'
-import { USER_ID_LOCATION } from './global-vars/index.js'
-import { initDatabaseListeners } from './firebase/db/queries/index.js'
-import { HOUR_MS } from './constants/time.js'
-import { loginAnonymously } from './firebase/auth/loginAnonymously.js'
-import { createUserProfileBtn } from './dom-manipulation/createUserProfileBtn.js'
+import { initDOMListeners } from './listeners/index.js';
+import { USER_ID_LOCATION } from './global-vars/index.js';
+import { initDatabaseListeners } from './firebase/db/queries/index.js';
+import { HOUR_MS } from './constants/time.js';
+import { loginAnonymously } from './firebase/auth/loginAnonymously.js';
+import { createUserProfileBtn } from './dom-manipulation/createUserProfileBtn.js';
 
 $(async function () {
-    if (window.location.hash.includes('#access_token')) return
-    const { analytics, appCheck, auth, db, performance, storage } = await initFirebase()
-    window.db = db
-    window.auth = auth
-    window.storage = storage
+    if (window.location.hash.includes('#access_token')) return;
+    const { analytics, appCheck, auth, db, performance, storage } = await initFirebase();
+    window.db = db;
+    window.auth = auth;
+    window.storage = storage;
+    window.analytics = analytics;
 
-    let isLoggedIn = false
-    let lastActiveAtInterval = null
+    let isLoggedIn = false;
+    let lastActiveAtInterval = null;
     auth.onAuthStateChanged((user) => {
-        console.log('🚀 ~ file: main.js:19 ~ auth.onAuthStateChanged ~ user:', user)
-        if (lastActiveAtInterval) clearInterval(lastActiveAtInterval)
+        console.log('🚀 ~ file: main.js:19 ~ auth.onAuthStateChanged ~ user:', user);
+        if (lastActiveAtInterval) clearInterval(lastActiveAtInterval);
         if (!user) {
-            if (localStorage.getItem(USER_ID_LOCATION)) return
-            loginAnonymously(auth)
-            return
+            if (localStorage.getItem(USER_ID_LOCATION)) return;
+            loginAnonymously(auth);
+            return;
         }
         if (!user.isAnonymous) {
             $('#google-btn')
                 .addClass('hidden')
-                .after(createUserProfileBtn(user.photoURL || user.providerData.map(({ photoURL }) => photoURL).find(Boolean)))
+                .after(createUserProfileBtn(user.photoURL || user.providerData.map(({ photoURL }) => photoURL).find(Boolean)));
         }
 
-        localStorage.setItem(USER_ID_LOCATION, user.uid)
-        userConnectionMade(db, user, isLoggedIn)
-        if (isLoggedIn) return
-        isLoggedIn = true
-        initDatabaseListeners(db)
+        localStorage.setItem(USER_ID_LOCATION, user.uid);
+        userConnectionMade(db, user, isLoggedIn);
+        if (isLoggedIn) return;
+        isLoggedIn = true;
+        initDatabaseListeners(db);
         lastActiveAtInterval = setInterval(() => {
-            window.currentUserData.lastActiveAt = Date.now()
-        }, 1 * HOUR_MS)
-    })
+            window.currentUserData.lastActiveAt = Date.now();
+        }, 1 * HOUR_MS);
+    });
 
-    initDOMListeners()
-})
+    initDOMListeners();
+});

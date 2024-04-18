@@ -60,14 +60,17 @@
                     const shouldIgnoreClick = historyQueue.some((h) => h.x === x && h.y === y);
                     if (shouldIgnoreClick) return;
 
+                    const newElementData = { x, y, id: crypto.randomUUID() };
+
                     const sizePercentage = 90;
                     const rotationDegrees = 45;
-                    const oElementStr = /*html*/ `<div class="border-slate-200 [height:calc(${sizePercentage}%_*_cos(${rotationDegrees}deg))] [width:calc(${sizePercentage}%_*_sin(${rotationDegrees}deg))]  border-[12px] rounded-full absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2"></div>`;
+                    const borderWidths = (sizePercentage / 100) * 12;
+                    const oElementStr = /*html*/ `<div id="${newElementData.id}" class="border-slate-200 [height:calc(${sizePercentage}%_*_cos(${rotationDegrees}deg))] [width:calc(${sizePercentage}%_*_sin(${rotationDegrees}deg))]  border-[${borderWidths}px] rounded-full absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2"></div>`;
                     const commonStyles = [
                         'absolute',
                         `content-['']`,
                         'bg-slate-200',
-                        'w-[12px]',
+                        `w-[${borderWidths}px]`,
                         `h-[${sizePercentage}%]`,
                         'rounded-lg',
                         'top-1/2',
@@ -75,19 +78,30 @@
                         '-translate-y-1/2',
                         '-translate-x-1/2',
                     ];
-                    const xElementStr = /*html*/ `<div class="before:rotate-${rotationDegrees} after:-rotate-${rotationDegrees}  ${[
-                        'before',
-                        'after',
-                    ]
+                    const xElementStr = /*html*/ `<div id="${
+                        newElementData.id
+                    }" class="before:rotate-${rotationDegrees} after:-rotate-${rotationDegrees}  ${['before', 'after']
                         .flatMap((ps) => commonStyles.map((s) => `${ps}:${s}`).join(' '))
                         .join(' ')}"></div>`;
                     const elementToAdd = new DOMParser().parseFromString(currentPlayer === 'X' ? xElementStr : oElementStr, 'text/html')
                         .body.firstElementChild;
                     if (!(elementToAdd instanceof HTMLElement)) return;
 
+                    const isQueueAlreadyFull = historyQueue.length === MAX_HISTORY_LENGTH;
+                    if (isQueueAlreadyFull) {
+                        const lastElement = document.getElementById(historyQueue[0].id);
+                        lastElement.remove();
+                        historyQueue = historyQueue.slice(1);
+                    }
+                    historyQueue.push(newElementData);
                     cellButton.appendChild(elementToAdd);
-
                     currentPlayer = nextPlayerMap[currentPlayer];
+
+                    const needToShowAnimation = historyQueue.length === MAX_HISTORY_LENGTH;
+                    if (needToShowAnimation) {
+                        const lastElement = document.getElementById(historyQueue[0].id);
+                        lastElement.classList.add('animate-pulse');
+                    }
                 });
             });
         </script>

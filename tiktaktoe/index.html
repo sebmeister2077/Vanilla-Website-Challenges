@@ -41,6 +41,9 @@
             <span class="absolute h-[4px] left-0 w-full top-2/3 bg-slate-100/[.75] rounded"></span>
         </main>
         <script>
+            const sizePercentage = 90;
+            const rotationDegrees = 45;
+            const borderWidths = (sizePercentage / 100) * 12;
             const MAX_HISTORY_LENGTH = 6;
             let historyQueue = [];
 
@@ -49,9 +52,9 @@
                 X: 'O',
                 O: 'X',
             };
-
+            let isGameOver = false;
             document.querySelectorAll('[data-cell-button]').forEach((cellButton) => {
-                if (!(cellButton instanceof HTMLButtonElement)) return;
+                if (!(cellButton instanceof HTMLButtonElement) || isGameOver) return;
                 cellButton.addEventListener('click', function () {
                     const xyData = cellButton.getAttribute('data-cell-button');
                     const x = xyData.split('-')[0],
@@ -60,14 +63,14 @@
                     const shouldIgnoreClick = historyQueue.some((h) => h.x === x && h.y === y);
                     if (shouldIgnoreClick) return;
 
-                    const newElementData = { x, y, id: crypto.randomUUID() };
+                    const newElementData = { x, y, id: crypto.randomUUID(), player: currentPlayer };
 
-                    const sizePercentage = 90;
-                    const rotationDegrees = 45;
-                    const borderWidths = (sizePercentage / 100) * 12;
-                    const oElementStr = /*html*/ `<div id="${newElementData.id}" class="shadow-md border-rose-400 [height:calc(${sizePercentage}%_*_cos(${rotationDegrees}deg))] [width:calc(${sizePercentage}%_*_sin(${rotationDegrees}deg))]  border-[${borderWidths}px] rounded-full absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2"></div>`;
+                    const COORDS_DATA_ATTR = 'data-coords';
+                    const oElementStr = /*html*/ `<div  class="shadow-md border-rose-400 [height:calc(${sizePercentage}%_*_cos(${rotationDegrees}deg))] [width:calc(${sizePercentage}%_*_sin(${rotationDegrees}deg))]  border-[${borderWidths}px] rounded-full absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 transition-transform duration-300"></div>`;
                     const commonStyles = [
                         'absolute',
+                        'transition-transform',
+                        'duration-300',
                         'shadow-md',
                         `content-['']`,
                         'bg-sky-400',
@@ -79,14 +82,17 @@
                         '-translate-y-1/2',
                         '-translate-x-1/2',
                     ];
-                    const xElementStr = /*html*/ `<div id="${
-                        newElementData.id
-                    }" class="before:rotate-${rotationDegrees} after:-rotate-${rotationDegrees}  ${['before', 'after']
+                    const xElementStr = /*html*/ `<div  class="before:rotate-${rotationDegrees} after:-rotate-${rotationDegrees}  ${[
+                        'before',
+                        'after',
+                    ]
                         .flatMap((ps) => commonStyles.map((s) => `${ps}:${s}`).join(' '))
                         .join(' ')}"></div>`;
                     const elementToAdd = new DOMParser().parseFromString(currentPlayer === 'X' ? xElementStr : oElementStr, 'text/html')
                         .body.firstElementChild;
                     if (!(elementToAdd instanceof HTMLElement)) return;
+                    elementToAdd.setAttribute(COORDS_DATA_ATTR, `${x}-${y}`);
+                    elementToAdd.id = newElementData.id;
 
                     const isQueueAlreadyFull = historyQueue.length === MAX_HISTORY_LENGTH;
                     if (isQueueAlreadyFull) {
@@ -103,8 +109,79 @@
                         const lastElement = document.getElementById(historyQueue[0].id);
                         lastElement.classList.add('animate-pulse');
                     }
+
+                    const gameOverResult = checkForWinner();
+                    if (!gameOverResult) return;
+
+                    isGameOver = true;
+                    const { coords, player } = gameOverResult;
+                    coords.forEach((coord) => {
+                        document.querySelectorAll(`[${COORDS_DATA_ATTR}="${coord[0]}-${coord[1]}"]`).forEach((el) => {
+                            setTimeout(() => {
+                                if (player === 'X') el.classList.add('before:scale-125', 'after:scale-125');
+                                else el.classList.add('scale-125');
+                            }, 200);
+                        });
+                    });
                 });
             });
+
+            function checkForWinner() {
+                const gridSize = 3;
+                const grid = Array.from({ length: gridSize + 1 }, () => Array(gridSize + 1).fill(null));
+
+                for (const click of historyQueue) {
+                    const { x, y, player } = click;
+                    grid[x][y] = player;
+                }
+
+                function checkLineMatch(a, b, c) {
+                    return a === b && b === c && a !== null;
+                }
+
+                for (let i = 1; i <= gridSize; i++) {
+                    // Check row i
+                    if (checkLineMatch(grid[i][1], grid[i][2], grid[i][3]))
+                        return {
+                            player: grid[i][1],
+                            coords: [
+                                [i, 1],
+                                [i, 2],
+                                [i, 3],
+                            ],
+                        };
+                    // Check column i
+                    if (checkLineMatch(grid[1][i], grid[2][i], grid[3][i]))
+                        return {
+                            player: grid[1][i],
+                            coords: [
+                                [1, i],
+                                [2, i],
+                                [3, i],
+                            ],
+                        };
+                }
+
+                // Check diagonals for a winner
+                if (checkLineMatch(grid[1][1], grid[2][2], grid[3][3]))
+                    return {
+                        player: grid[1][1],
+                        coords: [
+                            [1, 1],
+                            [2, 2],
+                            [3, 3],
+                        ],
+                    };
+                if (checkLineMatch(grid[1][3], grid[2][2], grid[3][1]))
+                    return {
+                        player: grid[1][3],
+                        coords: [
+                            [1, 3],
+                            [2, 2],
+                            [3, 1],
+                        ],
+                    };
+            }
         </script>
     </body>
 </html>

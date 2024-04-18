@@ -47,8 +47,8 @@
             }
         </style>
         <script>
-            const BASE_API_IP_TRACKER_URL = 'https://geo.ipify.org/service/account-balance'
-            const IP_TRACKER_API_KEY = 'at_aZBISroXZwa1igtSZ2gNr6jhPaf07'
+            const BASE_API_IP_TRACKER_URL = 'https://geo.ipify.org/service/account-balance';
+            const IP_TRACKER_API_KEY = 'at_aZBISroXZwa1igtSZ2gNr6jhPaf07';
         </script>
         <script>
             tailwind.config = {
@@ -72,7 +72,7 @@
                         },
                     },
                 },
-            }
+            };
         </script>
     </head>
 
@@ -124,7 +124,7 @@
                                 `
                                     <a tabindex="-1" href="${BASE_API_IP_TRACKER_URL}?apiKey=${IP_TRACKER_API_KEY}" target="_blank" class="bg-gray-300 rounded-md p-2">View remaining credits</a>
                             `,
-                            )
+                            );
                         </script>
                         <form class="contents" method="dialog" id="close-dialog-form">
                             <button type="submit" tabindex="-1" class="w-8 cursor-pointer absolute top-4 right-4">
@@ -173,29 +173,35 @@
                     </a>
                     ✅
                 </li>
+                <li class="flex items-center gap-2">
+                    <a class="outline-0 hover:text-blue-500 focus-visible:text-blue-500 transition-colors duration-300" href="./tiktaktoe/"
+                        >Tik tak toe</a
+                    >
+                    🚧
+                </li>
                 <!-- <li class="flex items-center gap-2 "><a class="outline-0 hover:text-blue-500 focus-visible:text-blue-500 transition-colors duration-300" href="./mirror/">Mirror</a></li> -->
             </ul>
         </nav>
         <script>
             setTimeout(() => {
-                toastr.warning('This page is under construction')
-            }, 1600)
-            const dialog = $('#ip-address-tracker-popover')[0]
+                toastr.warning('This page is under construction');
+            }, 1600);
+            const dialog = $('#ip-address-tracker-popover')[0];
             $('#ip-address-tracker-button').on('click', function () {
-                if (!(dialog instanceof HTMLDialogElement)) return
-                dialog.showModal()
+                if (!(dialog instanceof HTMLDialogElement)) return;
+                dialog.showModal();
 
-                setTabIndexOfDialog(0)
+                setTabIndexOfDialog(0);
                 $(dialog).on('close', function () {
-                    setTabIndexOfDialog(-1)
-                })
-            })
+                    setTabIndexOfDialog(-1);
+                });
+            });
             $('#close-dialog-form').on('submit', function () {
-                if (!(dialog instanceof HTMLDialogElement)) return
-                setTabIndexOfDialog(-1)
-            })
+                if (!(dialog instanceof HTMLDialogElement)) return;
+                setTabIndexOfDialog(-1);
+            });
             function setTabIndexOfDialog(tabIndex) {
-                $(dialog).find('[tabindex]').attr('tabindex', tabIndex)
+                $(dialog).find('[tabindex]').attr('tabindex', tabIndex);
             }
         </script>
     </body>

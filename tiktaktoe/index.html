@@ -67,7 +67,7 @@
                     const newElementData = { x, y, id: crypto.randomUUID(), player: currentPlayer };
 
                     const COORDS_DATA_ATTR = 'data-coords';
-                    const oElementStr = /*html*/ `<div  class="shadow-md border-rose-400 [height:calc(${sizePercentage}%_*_cos(${rotationDegrees}deg))] [width:calc(${sizePercentage}%_*_sin(${rotationDegrees}deg))]  border-[${borderWidths}px] rounded-full absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 transition-transform duration-300"></div>`;
+                    const oElementStr = /*html*/ `<div  class="scale-0 shadow-md border-rose-400 [height:calc(${sizePercentage}%_*_cos(${rotationDegrees}deg))] [width:calc(${sizePercentage}%_*_sin(${rotationDegrees}deg))]  border-[${borderWidths}px] rounded-full absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 transition-transform duration-300"></div>`;
                     const commonStyles = [
                         'absolute',
                         'transition-transform',
@@ -80,6 +80,7 @@
                         'rounded-lg',
                         'top-1/2',
                         'left-1/2',
+                        'scale-0',
                         '-translate-y-1/2',
                         '-translate-x-1/2',
                     ];
@@ -103,6 +104,9 @@
                     }
                     historyQueue.push(newElementData);
                     cellButton.appendChild(elementToAdd);
+                    requestAnimationFrame(() => {
+                        elementToAdd.classList.remove(...['', 'before:', 'after:'].map((c) => c + 'scale-0'));
+                    }, 0);
                     currentPlayer = nextPlayerMap[currentPlayer];
 
                     const gameOverResult = checkForWinner();

@@ -21,30 +21,44 @@
                     extend: {},
                 },
             };
+
+            const SIZE_PERCENTAGE = 90;
+            const ROTATION_DEGREES = 45;
+            const borderWidths = (SIZE_PERCENTAGE / 100) * 20;
+            const MAX_HISTORY_LENGTH = 6;
+            const GRID_SIZE = 3;
+            const GRID_SPACE = 8;
+
+            if (GRID_SIZE % 2 === 0) throw Error('Grid size has to be odd number');
         </script>
     </head>
     <body class="bg-gray-800 text-slate-100 flex w-screen h-screen items-center flex-col pt-12 gap-48">
         <h1 class="text-3xl">Tik Tak Toe?</h1>
-        <main class="grid grid-rows-3 grid-cols-3 gap-[8px] relative">
-            <button data-cell-button="1-1" class="relative w-28 h-28"></button>
-            <button data-cell-button="1-2" class="relative w-28 h-28"></button>
-            <button data-cell-button="1-3" class="relative w-28 h-28"></button>
-            <button data-cell-button="2-1" class="relative w-28 h-28"></button>
-            <button data-cell-button="2-2" class="relative w-28 h-28"></button>
-            <button data-cell-button="2-3" class="relative w-28 h-28"></button>
-            <button data-cell-button="3-1" class="relative w-28 h-28"></button>
-            <button data-cell-button="3-2" class="relative w-28 h-28"></button>
-            <button data-cell-button="3-3" class="relative w-28 h-28"></button>
-            <span class="absolute w-[8px] top-0 h-full left-1/3 bg-slate-100/[.75] rounded"></span>
-            <span class="absolute w-[8px] top-0 h-full left-2/3 bg-slate-100/[.75] rounded"></span>
-            <span class="absolute h-[8px] left-0 w-full top-1/3 bg-slate-100/[.75] rounded"></span>
-            <span class="absolute h-[8px] left-0 w-full top-2/3 bg-slate-100/[.75] rounded"></span>
+        <main class="grid grid-rows-3 grid-cols-3 relative">
+            <script>
+                document.getElementsByTagName('main')[0].classList.add(`gap-[${GRID_SPACE}px]`);
+                for (let i = 1; i <= GRID_SIZE * GRID_SIZE; i++) {
+                    const x = Math.ceil(i / GRID_SIZE),
+                        y = ((i - 1) % GRID_SIZE) + 1;
+                    document.writeln(/*html*/ `<button data-cell-button="${x}-${y}" class="relative w-28 h-28"></button>`);
+                }
+
+                const linesSharedClasses = ['absolute', 'top-0', 'bg-slate-100/[.75]', 'rounded'].join(' ');
+                //horizontal
+                for (let i = 1; i <= GRID_SIZE - 1; i++) {
+                    document.writeln(
+                        /*html*/ `<span class="w-[${GRID_SPACE}px] h-full left-${i}/${GRID_SIZE} ${linesSharedClasses}"></span>`,
+                    );
+                }
+                //vertical
+                for (let i = 1; i <= GRID_SIZE - 1; i++) {
+                    document.writeln(
+                        /*html*/ `<span class="h-[${GRID_SPACE}px] w-full top-${i}/${GRID_SIZE} ${linesSharedClasses}"></span>`,
+                    );
+                }
+            </script>
         </main>
         <script>
-            const sizePercentage = 90;
-            const rotationDegrees = 45;
-            const borderWidths = (sizePercentage / 100) * 20;
-            const MAX_HISTORY_LENGTH = 6;
             let historyQueue = [];
 
             let currentPlayer = 'X';
@@ -67,7 +81,7 @@
                     const newElementData = { x, y, id: crypto.randomUUID(), player: currentPlayer };
 
                     const COORDS_DATA_ATTR = 'data-coords';
-                    const oElementStr = /*html*/ `<div  class="scale-0 shadow-md border-rose-400 [height:calc(${sizePercentage}%_*_cos(${rotationDegrees}deg))] [width:calc(${sizePercentage}%_*_sin(${rotationDegrees}deg))]  border-[${borderWidths}px] rounded-full absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 transition-transform duration-300"></div>`;
+                    const oElementStr = /*html*/ `<div  class="scale-0 shadow-md border-rose-400 [height:calc(${SIZE_PERCENTAGE}%_*_cos(${ROTATION_DEGREES}deg))] [width:calc(${SIZE_PERCENTAGE}%_*_sin(${ROTATION_DEGREES}deg))]  border-[${borderWidths}px] rounded-full absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 transition-transform duration-300"></div>`;
                     const commonStyles = [
                         'absolute',
                         'transition-transform',
@@ -76,7 +90,7 @@
                         `content-['']`,
                         'bg-sky-400',
                         `w-[${borderWidths}px]`,
-                        `h-[${sizePercentage}%]`,
+                        `h-[${SIZE_PERCENTAGE}%]`,
                         'rounded-lg',
                         'top-1/2',
                         'left-1/2',
@@ -84,7 +98,7 @@
                         '-translate-y-1/2',
                         '-translate-x-1/2',
                     ];
-                    const xElementStr = /*html*/ `<div  class="before:rotate-${rotationDegrees} after:-rotate-${rotationDegrees}  ${[
+                    const xElementStr = /*html*/ `<div  class="before:rotate-${ROTATION_DEGREES} after:-rotate-${ROTATION_DEGREES}  ${[
                         'before',
                         'after',
                     ]
@@ -132,8 +146,7 @@
             });
 
             function checkForWinner() {
-                const gridSize = 3;
-                const grid = Array.from({ length: gridSize + 1 }, () => Array(gridSize + 1).fill(null));
+                const grid = Array.from({ length: GRID_SIZE + 1 }, () => Array(GRID_SIZE + 1).fill(null));
 
                 for (const click of historyQueue) {
                     const { x, y, player } = click;
@@ -144,7 +157,7 @@
                     return a === b && b === c && a !== null;
                 }
 
-                for (let i = 1; i <= gridSize; i++) {
+                for (let i = 1; i <= GRID_SIZE; i++) {
                     // Check row i
                     if (checkLineMatch(grid[i][1], grid[i][2], grid[i][3]))
                         return {

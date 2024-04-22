@@ -7,7 +7,7 @@
 
         <meta
             http-equiv="Content-Security-Policy"
-            content="script-src 'unsafe-inline' https://code.jquery.com/jquery-3.7.0.min.js https://cdn.tailwindcss.com"
+            content="script-src hash https://code.jquery.com/jquery-3.7.0.min.js https://cdn.tailwindcss.com"
         />
         <script
             src="https://code.jquery.com/jquery-3.7.0.min.js"
@@ -19,7 +19,7 @@
 
         <title>Tic Tac Toe</title>
 
-        <script>
+        <script integrity="sha256-0b68ec4466f018ad11afbc3f703038ad487933e1d5ba668f4f3f55bb26fd178c">
             tailwind.config = {
                 theme: {
                     extend: {},
@@ -35,12 +35,27 @@
 
             if (GRID_SIZE % 2 === 0) throw Error('Grid size has to be odd number');
         </script>
+        <script integrity="sha256-e5ffaf5a8b51c908b8f6202b198d237175a8b5f31ca864200c301ec9b0498eab">
+            async function hashScriptConents(scriptElement) {
+                if (!(scriptElement instanceof HTMLScriptElement)) return;
+                const data = new TextEncoder().encode(scriptElement.textContent);
+
+                // Calculate the hash
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+
+                // Convert the hash (ArrayBuffer) to a hex string
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map((byte) => byte.toString(16).padStart(2, '0')).join('');
+
+                return hashHex;
+            }
+        </script>
     </head>
     <body class="bg-gray-800 text-slate-100 flex w-screen h-screen items-center flex-col pt-12 gap-20">
         <h1 class="text-3xl">Tik Tak Toe?</h1>
         <button disabled type="button" id="restart" class="opacity-0 transition-opacity duration-300">Restart</button>
         <main class="grid grid-rows-3 grid-cols-3 relative">
-            <script>
+            <script integrity="sha256-87c65471957c1389c62ebbba9401a899e83d0402f6b3328b23b8c774176d3b32">
                 document.getElementsByTagName('main')[0].classList.add(`gap-[${GRID_SPACE}px]`);
                 for (let i = 1; i <= GRID_SIZE * GRID_SIZE; i++) {
                     const x = Math.ceil(i / GRID_SIZE),
@@ -63,7 +78,7 @@
                 }
             </script>
         </main>
-        <script>
+        <script integrity="sha256-0bc16a225b49d942ab23ab7964734d2ed0ac2de526006014cd95ca3fd31984d8">
             let historyQueue = [];
 
             let currentPlayer = 'X';

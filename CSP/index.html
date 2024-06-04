@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script>
+            const content = [
+                "default-src 'self'",
+                "style-src 'self'",
+                "script-src 'self' 'unsafe-inline'",
+                "img-src https://images.unsplash.com",
+                "font-src fonts.google.com",
+                `frame-src 'self'`,
+                "frame-ancestors 'none'", //this one is ignored from <meta> element
+                "report-uri 'self'", //this is ignored as well
+            ].join(";");
+            const meta = document.createElement("meta");
+            meta.setAttribute("http-equiv", "Content-Security-Policy");
+            meta.setAttribute("content", content);
+            document.head.append(meta);
+        </script>
+        <title>Document</title>
+        <link rel="stylesheet" href="./index.css" />
+        <script src="./index.js"></script>
+    </head>
+    <body>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/editorjs-indent-tune/dist/bundle.js"></script> -->
+        Test out content Content-Security-Policy
+        <iframe src="../css-calculator/index.html"></iframe>
+    </body>
+</html>

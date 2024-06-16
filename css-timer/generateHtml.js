@@ -1,35 +1,47 @@
-const counterPropertyName = "--counter";
+import { DAY, HOUR, MINUTE, MONTH, SECOND } from "./constants.js";
+
+const doesSupportModuloFunction = CSS.supports("mod(9,5)");
+
+const counterPropertyName = "--seconds-counter";
 
 let generatedSegments = 0;
-function generateCounterSegment(secondsInCurrentUnit) {
+/**
+ *
+ * @param {number} secondsInCurrentUnit Amount of seconds in current unit
+ * @param {number} maxAmountInCurrentUnit Max amount number the current unit will display
+ * @returns
+ */
+function generateCounterSegment(secondsInCurrentUnit, maxAmountInCurrentUnit) {
     const id = crypto.randomUUID();
     const counterName = `c${++generatedSegments}`;
+
     return /*html*/ `
     <span id="${id}" class="segment">
         ${generatedSegments >= 2 ? ":" : ""}
         <style>
             [id="${id}"]::after {
-                counter-set: ${counterName} calc(var(${counterPropertyName}) % ${4 || secondsInCurrentUnit});
+                /* Why is only the second multiplied by 1? Because 0.5 will be rounded up to 1 */
+                counter-set: ${counterName} mod(round(down, calc(var(${counterPropertyName}) /  ${secondsInCurrentUnit}), 1), ${maxAmountInCurrentUnit});
                 content: counter(${counterName});
             }
         </style>
     </span>`;
 }
 
-const maxSignedInt = 100; //Math.pow(2, 31);
+const maxSignedInt = Math.pow(2, 31);
 const timer = document.getElementById("timer");
 if (timer) {
     window.CSS.registerProperty({
         name: counterPropertyName,
         inherits: true,
-        initialValue: 0,
+        initialValue: 3570,
         syntax: "<integer>",
     });
     const timerLogicCSS =
         /*css */
         `
         #timer > span {
-            animation: timer-animation  ${maxSignedInt}s infinite;
+            animation: timer-animation  ${maxSignedInt / 6}s infinite linear;
         }
 
         @keyframes timer-animation {
@@ -40,7 +52,11 @@ if (timer) {
         `;
     timer.insertAdjacentHTML("beforeend", /*html*/ `<style>${timerLogicCSS}</style>`);
 
-    [(60, 1)].forEach((secondsInUnit) => {
-        timer.insertAdjacentHTML("beforeend", generateCounterSegment(secondsInUnit));
-    });
+    const times = [MONTH, DAY, HOUR, MINUTE, SECOND];
+    for (let i = 0; i < times.length; i++) {
+        const secondsInUnit = times[i];
+        const maxAmountInCurrentUnit = parseInt((times[i - 1] || maxSignedInt) / secondsInUnit);
+
+        timer.insertAdjacentHTML("beforeend", generateCounterSegment(secondsInUnit, maxAmountInCurrentUnit));
+    }
 }

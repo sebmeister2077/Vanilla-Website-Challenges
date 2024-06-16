@@ -1,0 +1,9 @@
+export const SECOND = 1;
+export const MINUTE = SECOND * 60;
+export const HOUR = MINUTE * 60;
+export const DAY = HOUR * 24;
+export const MONTH = DAY * 31;
+export const YEAR = MONTH * 12;
+export const DECADE = YEAR * 10;
+export const CENTURY = DECADE * 10;
+export const MILENNIA = CENTURY * 10;

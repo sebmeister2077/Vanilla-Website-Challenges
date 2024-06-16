@@ -5,18 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="./index.css" />
-        <script src="./generateHtml.js" defer></script>
+        <script src="./generateHtml.js" type="module" defer></script>
         <title>CSS Timer</title>
     </head>
     <body class="bg-gray-700 text-gray-100 h-screen">
+        <noscript> I need javascript in order register a custom property which i can transition (--seconds-counter) </noscript>
         <div class="text-3xl" id="timer">
-            <span id="test"></span>
+            <!-- <span id="test"></span>
             <style>
                 #test::after {
-                    counter-set: test var(--counter);
+                    counter-set: test mod(9, 5);
                     content: "test" counter(test);
                 }
-            </style>
+            </style> -->
         </div>
     </body>
 </html>

@@ -9,6 +9,14 @@
         <title>CSS Timer</title>
     </head>
     <body class="bg-gray-700 text-gray-100 h-screen">
-        <div class="text-3xl" id="timer"></div>
+        <div class="text-3xl" id="timer">
+            <span id="test"></span>
+            <style>
+                #test::after {
+                    counter-set: test var(--counter);
+                    content: "test" counter(test);
+                }
+            </style>
+        </div>
     </body>
 </html>

@@ -1,4 +1,4 @@
-import { DAY, HOUR, MINUTE, MONTH, SECOND } from "./constants.js";
+import { DAY, HOUR, MINUTE, MONTH, SECOND, YEAR } from "./constants.js";
 
 const counterPropertyName = "--seconds-counter";
 let generatedTimers = 0;
@@ -18,12 +18,20 @@ function generateCounterSegment(secondsInCurrentUnit, maxAmountInCurrentUnit, la
     const counterName = `c${++generatedSegments}`;
 
     return /*html*/ `
-    <span id="${id}" class="relative">
-        <label class="absolute bottom-full right-0">
+    <span id="${id}" >
+        <label >
             ${label}
         </label>
         ${generatedSegments >= 2 ? ":" : ""}
         <style>
+            [id="${id}"] {
+                position: relative;
+            }
+            [id="${id}"] label {
+                position: absolute;
+                bottom: 100%;
+                right: 0px;
+            }
             [id="${id}"]::after {
                 counter-set: ${counterName} mod(round(down, calc(var(${counterPropertyName}) /  ${secondsInCurrentUnit}), 1), ${maxAmountInCurrentUnit});
                 content: counter(${counterName});
@@ -48,9 +56,11 @@ function addTimers() {
 function generateTimerAndResetButton() {
     const timerCount = `timer${++generatedTimers}`;
     const timer = parseFromHTML(/*html*/ `
-        <div class="text-3xl timer ${timerCount}">
+        <div class="timer ${timerCount}">
             <style>
                 .timer  {
+                    font-size: 1.875rem;
+                    line-height: 2.25rem;
                     animation: timer-animation  ${maxSignedInt}s infinite linear;
                 }
 
@@ -66,8 +76,8 @@ function generateTimerAndResetButton() {
             </style>
         </div>`);
 
-    const times = [MONTH, DAY, HOUR, MINUTE, SECOND];
-    const labels = ["M", "D", "H", "M", "S"];
+    const times = [YEAR, MONTH, DAY, HOUR, MINUTE, SECOND];
+    const labels = ["Y", "M", "D", "H", "M", "S"];
     for (let i = 0; i < times.length; i++) {
         const secondsInUnit = times[i];
         const label = labels[i];
@@ -79,7 +89,7 @@ function generateTimerAndResetButton() {
 
     const resetId = crypto.randomUUID();
     const reset = parseFromHTML(/*html */ `
-        <label id="${resetId}" class=" cool-button">
+        <label id="${resetId}" class="cool-button">
             <style>
                 body:has([id="${resetId}"] input:checked)  :is(.${timerCount},[id="${resetId}"]) {
                     display: none;

@@ -43,7 +43,7 @@ function generateCounterSegment(secondsInCurrentUnit, maxAmountInCurrentUnit, la
 function addTimers() {
     const [timer1, reset1] = generateTimerAndResetButton();
     const [timer2, reset2] = generateTimerAndResetButton();
-    document.body.append(timer1, timer2, reset1, reset2);
+    document.body.prepend(timer1, timer2, reset1, reset2);
 }
 function generateTimerAndResetButton() {
     const timerCount = `timer${++generatedTimers}`;
@@ -79,14 +79,16 @@ function generateTimerAndResetButton() {
 
     const resetId = crypto.randomUUID();
     const reset = parseFromHTML(/*html */ `
-        <label id="${resetId}">
+        <label id="${resetId}" class=" cool-button">
             <style>
                 body:has([id="${resetId}"] input:checked)  :is(.${timerCount},[id="${resetId}"]) {
                     display: none;
                 }
             </style>
-            Reset
-            <input type="radio" name="reset" ${generatedTimers > 1 ? "checked" : ""} />
+            <span>
+                Reset
+            </span>
+            <input type="radio" name="reset" ${generatedTimers > 1 ? "checked" : ""} hidden />
         </label>`);
     return [timer, reset];
 }

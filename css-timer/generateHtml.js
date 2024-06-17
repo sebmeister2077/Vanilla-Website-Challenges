@@ -1,8 +1,8 @@
 import { DAY, HOUR, MINUTE, MONTH, SECOND } from "./constants.js";
 
 const counterPropertyName = "--seconds-counter";
+let generatedTimers = 0;
 let generatedSegments = 0;
-
 const maxSignedInt = Math.pow(2, 31);
 registerProperties();
 addTimers();
@@ -41,16 +41,17 @@ function generateCounterSegment(secondsInCurrentUnit, maxAmountInCurrentUnit, la
 }
 
 function addTimers() {
-    const timer1 = generateTimer();
-    const timer2 = generateTimer();
-    document.body.append(timer1);
+    const [timer1, reset1] = generateTimerAndResetButton();
+    const [timer2, reset2] = generateTimerAndResetButton();
+    document.body.append(timer1, timer2, reset1, reset2);
 }
-function generateTimer() {
+function generateTimerAndResetButton() {
+    const timerCount = `timer${++generatedTimers}`;
     const timer = parseFromHTML(/*html*/ `
-        <div class="text-3xl timer">
+        <div class="text-3xl timer ${timerCount}">
             <style>
                 .timer  {
-                    animation: timer-animation  ${maxSignedInt / 6}s infinite linear;
+                    animation: timer-animation  ${maxSignedInt}s infinite linear;
                 }
 
                 #pause:has(input:checked) ~ .timer  {
@@ -74,7 +75,20 @@ function generateTimer() {
 
         timer.insertAdjacentHTML("beforeend", generateCounterSegment(secondsInUnit, maxAmountInCurrentUnit, label));
     }
-    return timer;
+    generatedSegments = 0;
+
+    const resetId = crypto.randomUUID();
+    const reset = parseFromHTML(/*html */ `
+        <label id="${resetId}">
+            <style>
+                body:has([id="${resetId}"] input:checked)  :is(.${timerCount},[id="${resetId}"]) {
+                    display: none;
+                }
+            </style>
+            Reset
+            <input type="radio" name="reset" ${generatedTimers > 1 ? "checked" : ""} />
+        </label>`);
+    return [timer, reset];
 }
 
 function registerProperties() {

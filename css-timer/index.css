@@ -43,7 +43,8 @@
     -o-transition: background-color 300ms;
 }
 
-.cool-button:hover span {
+.cool-button:hover span,
+.cool-button#pause:has(:checked) span {
     background-color: transparent;
 }
 
@@ -52,4 +53,13 @@
         font-size: 24px;
         min-width: 196px;
     }
+}
+
+
+#pause:has(:checked) span::after {
+    content: "Resume";
+}
+
+#pause:not(:has(:checked)) span::after {
+    content: "Pause";
 }

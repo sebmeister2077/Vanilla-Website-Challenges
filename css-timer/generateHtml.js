@@ -54,7 +54,7 @@ function generateTimerAndResetButton() {
                     animation: timer-animation  ${maxSignedInt}s infinite linear;
                 }
 
-                #pause:has(input:checked) ~ .timer  {
+                body:has(#pause input:checked) .timer  {
                     animation-play-state: paused;
                 }
 

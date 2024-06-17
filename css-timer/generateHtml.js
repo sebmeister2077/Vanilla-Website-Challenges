@@ -99,7 +99,7 @@ function generateTimerAndResetButton(isContinuous) {
     const inputName = isContinuous ? "hide-once" : "reset";
     const inputChecked = generatedTimers == 1 ? "checked" : "";
     const reset = parseFromHTML(/*html */ `
-        <label id="${resetId}" class="cool-button" ${isContinuous ? "data-continuous" : ""}>
+        <label data-button id="${resetId}" class="cool-button" ${isContinuous ? "data-continuous" : ""}>
             <style>
                 body:has([id="${resetId}"] input:checked)  :is(.${timerCount},[id="${resetId}"]) {
                     display: none;

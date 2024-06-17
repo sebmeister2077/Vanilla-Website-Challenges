@@ -79,6 +79,6 @@ body {
 }
 
 body:not(:has(input[name="hide-once"]:checked)) :is(.timer:not([data-continuous]),
-    label:not([data-continuous], #pause)) {
+    label[data-button]:not([data-continuous], #pause)) {
     display: none;
 }

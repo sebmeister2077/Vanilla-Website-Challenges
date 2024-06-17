@@ -5,6 +5,13 @@ const firstTimeVisitLocation = "first-time-visit-css-Timer";
 let generatedTimers = 0;
 let generatedSegments = 0;
 const maxSignedInt = Math.pow(2, 31);
+
+const isOpera = window.navigator.userAgent.includes("OPR");
+if (isOpera) {
+    setTimeout(() => {
+        alert("Opera doesn't support all necessary features");
+    }, 100);
+}
 const firstTimeVisit = localStorage.getItem(firstTimeVisitLocation);
 if (!firstTimeVisit) localStorage.setItem(firstTimeVisitLocation, new Date().toJSON());
 const timeElapsedSinceLastVisit = firstTimeVisit ? parseInt((Date.now() - new Date(firstTimeVisit).getTime()) / 1000) : 0;

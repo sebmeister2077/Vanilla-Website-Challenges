@@ -1,17 +1,14 @@
 import { DAY, HOUR, MINUTE, MONTH, SECOND, YEAR } from "./constants.js";
 
 const counterPropertyName = "--seconds-counter";
+const floorPropertyName = "--floor";
+const modFloorPropertyName = "--mod-floor";
+const modPropertyName = "--mod";
 const firstTimeVisitLocation = "first-time-visit-css-Timer";
 let generatedTimers = 0;
 let generatedSegments = 0;
 const maxSignedInt = Math.pow(2, 31);
 
-const isOpera = window.navigator.userAgent.includes("OPR");
-if (isOpera) {
-    setTimeout(() => {
-        alert("Opera doesn't support all necessary features");
-    }, 100);
-}
 const firstTimeVisit = localStorage.getItem(firstTimeVisitLocation);
 if (!firstTimeVisit) localStorage.setItem(firstTimeVisitLocation, new Date().toJSON());
 const timeElapsedSinceLastVisit = firstTimeVisit ? parseInt((Date.now() - new Date(firstTimeVisit).getTime()) / 1000) : 0;
@@ -44,7 +41,13 @@ function generateCounterSegment(secondsInCurrentUnit, maxAmountInCurrentUnit, la
                 right: 0px;
             }
             [id="${id}"]::after {
-                counter-set: ${counterName} mod(round(down, calc(var(${counterPropertyName}) /  ${secondsInCurrentUnit}), 1), ${maxAmountInCurrentUnit});
+                ${floorPropertyName}: calc(var(${counterPropertyName}) /  ${secondsInCurrentUnit} - 0.5); 
+                /** https://css-tricks.com/using-absolute-value-sign-rounding-and-modulo-in-css-today */
+                --a: var(${floorPropertyName});
+                --b: ${maxAmountInCurrentUnit};
+                ${modFloorPropertyName}: calc(var(--a) /  var(--b) - 0.5);
+                ${modPropertyName}:  calc((var(--a) - var(--b) * var(${modFloorPropertyName})) - 0.5);
+                counter-set: ${counterName} var(${modPropertyName});
                 content: counter(${counterName});
 
                 display: inline-flex;
@@ -53,6 +56,8 @@ function generateCounterSegment(secondsInCurrentUnit, maxAmountInCurrentUnit, la
             }
         </style>
     </span>`;
+    // initial simpler solution
+    //  counter-set: ${counterName} mod(round(down, calc(var(${counterPropertyName}) /  ${secondsInCurrentUnit}), 1), ${maxAmountInCurrentUnit});
     /**
      *   --floor: calc(var(--a) / var(--b) - 0.5);
      *   --mod: calc((var(--a) - var(--b)* var(--floor)));
@@ -121,11 +126,11 @@ function generateTimerAndResetButton(isContinuous) {
 }
 
 function registerProperties() {
-    const properties = [counterPropertyName];
+    const properties = [counterPropertyName, floorPropertyName, modPropertyName, modFloorPropertyName];
     properties.forEach((prop) => {
         window.CSS.registerProperty({
             name: prop,
-            inherits: true,
+            inherits: prop === counterPropertyName,
             initialValue: 0,
             syntax: "<integer>",
         });

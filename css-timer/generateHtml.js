@@ -1,9 +1,13 @@
 import { DAY, HOUR, MINUTE, MONTH, SECOND, YEAR } from "./constants.js";
 
 const counterPropertyName = "--seconds-counter";
+const firstTimeVisitLocation = "first-time-visit-css-Timer";
 let generatedTimers = 0;
 let generatedSegments = 0;
 const maxSignedInt = Math.pow(2, 31);
+const firstTimeVisit = localStorage.getItem(firstTimeVisitLocation);
+if (!firstTimeVisit) localStorage.setItem(firstTimeVisitLocation, new Date().toJSON());
+const timeElapsedSinceLastVisit = firstTimeVisit ? parseInt((Date.now() - new Date(firstTimeVisit).getTime()) / 1000) : 0;
 registerProperties();
 addTimers();
 
@@ -69,6 +73,9 @@ function generateTimerAndResetButton() {
                 }
 
                 @keyframes timer-animation {
+                    from {
+                        ${counterPropertyName}: ${timeElapsedSinceLastVisit}
+                    }
                     100% {
                         ${counterPropertyName}: ${maxSignedInt};
                     }

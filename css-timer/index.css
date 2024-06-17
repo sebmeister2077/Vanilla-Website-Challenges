@@ -77,3 +77,8 @@ body {
     font-family: "Roboto", sans-serif;
     font-weight: 400;
 }
+
+body:not(:has(input[name="hide-once"]:checked)) :is(.timer:not([data-continuous]),
+    label:not([data-continuous], #pause)) {
+    display: none;
+}

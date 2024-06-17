@@ -55,26 +55,27 @@ function generateCounterSegment(secondsInCurrentUnit, maxAmountInCurrentUnit, la
 function addTimers() {
     const [timer1, reset1] = generateTimerAndResetButton();
     const [timer2, reset2] = generateTimerAndResetButton();
-    document.body.prepend(timer1, timer2, reset1, reset2);
+    const [timer3, reset3] = generateTimerAndResetButton(true);
+    document.body.prepend(timer1, timer2, timer3, reset1, reset2, reset3);
 }
-function generateTimerAndResetButton() {
+function generateTimerAndResetButton(isContinuous) {
     const timerCount = `timer${++generatedTimers}`;
     const timer = parseFromHTML(/*html*/ `
-        <div class="timer ${timerCount}">
+        <div class="timer ${timerCount}" ${isContinuous ? "data-continuous" : ""}>
             <style>
-                .timer  {
+                .${timerCount}  {
                     font-size: 1.875rem;
                     line-height: 2.25rem;
-                    animation: timer-animation  ${maxSignedInt}s infinite linear;
+                    animation: ${timerCount}-animation  ${maxSignedInt}s infinite linear;
                 }
 
-                body:has(#pause input:checked) .timer  {
+                body:has(#pause input:checked) .${timerCount}  {
                     animation-play-state: paused;
                 }
 
-                @keyframes timer-animation {
+                @keyframes ${timerCount}-animation {
                     from {
-                        ${counterPropertyName}: ${timeElapsedSinceLastVisit}
+                        ${counterPropertyName}: ${isContinuous ? timeElapsedSinceLastVisit : 0}
                     }
                     100% {
                         ${counterPropertyName}: ${maxSignedInt};
@@ -95,8 +96,10 @@ function generateTimerAndResetButton() {
     generatedSegments = 0;
 
     const resetId = crypto.randomUUID();
+    const inputName = isContinuous ? "hide-once" : "reset";
+    const inputChecked = generatedTimers == 1 ? "checked" : "";
     const reset = parseFromHTML(/*html */ `
-        <label id="${resetId}" class="cool-button">
+        <label id="${resetId}" class="cool-button" ${isContinuous ? "data-continuous" : ""}>
             <style>
                 body:has([id="${resetId}"] input:checked)  :is(.${timerCount},[id="${resetId}"]) {
                     display: none;
@@ -105,7 +108,7 @@ function generateTimerAndResetButton() {
             <span>
                 Reset
             </span>
-            <input type="radio" name="reset" ${generatedTimers > 1 ? "checked" : ""} hidden />
+            <input type="radio" name="${inputName}" ${inputChecked} hidden  />
         </label>`);
     return [timer, reset];
 }

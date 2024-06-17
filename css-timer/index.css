@@ -74,4 +74,6 @@ body {
     width: 100vi;
     height: 100vb;
     margin: 0px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
 }

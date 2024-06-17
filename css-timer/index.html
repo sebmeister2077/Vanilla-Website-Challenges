@@ -10,9 +10,19 @@
     </head>
     <body class="bg-gray-700 text-gray-100 h-screen w-screen flex items-center justify-center">
         <noscript> I need javascript in order register a custom property which i can transition (--seconds-counter) </noscript>
-        <div class="text-3xl" id="timer"></div>
-        <label>
+        <label class="select-none" id="pause">
             Pause
+            <input type="checkbox" />
+        </label>
+        <br />
+        <style>
+            #reset:has(input:checked) ~ .timer {
+                display: none;
+                background-color: red;
+            }
+        </style>
+        <label id="reset">
+            Reset
             <input type="checkbox" />
         </label>
     </body>

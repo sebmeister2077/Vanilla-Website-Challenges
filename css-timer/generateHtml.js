@@ -1,8 +1,12 @@
 import { DAY, HOUR, MINUTE, MONTH, SECOND } from "./constants.js";
 
 const counterPropertyName = "--seconds-counter";
-
 let generatedSegments = 0;
+
+const maxSignedInt = Math.pow(2, 31);
+registerProperties();
+addTimers();
+
 /**
  * @param {number} secondsInCurrentUnit Amount of seconds in current unit
  * @param {number} maxAmountInCurrentUnit Max amount number the current unit will display
@@ -36,28 +40,30 @@ function generateCounterSegment(secondsInCurrentUnit, maxAmountInCurrentUnit, la
      */
 }
 
-const maxSignedInt = Math.pow(2, 31);
-const timer = document.getElementById("timer");
-if (timer) {
-    registerProperties();
-    const timerLogicCSS =
-        /*css */
-        `
-        #timer  {
-            animation: timer-animation  ${maxSignedInt / 6}s infinite linear;
-        }
+function addTimers() {
+    const timer1 = generateTimer();
+    const timer2 = generateTimer();
+    document.body.append(timer1);
+}
+function generateTimer() {
+    const timer = parseFromHTML(/*html*/ `
+        <div class="text-3xl timer">
+            <style>
+                .timer  {
+                    animation: timer-animation  ${maxSignedInt / 6}s infinite linear;
+                }
 
-        #timer:has( + label input:checked) {
-            animation-play-state: paused;
-        }
+                #pause:has(input:checked) ~ .timer  {
+                    animation-play-state: paused;
+                }
 
-        @keyframes timer-animation {
-            100% {
-                ${counterPropertyName}: ${maxSignedInt};
-            }
-        }
-        `;
-    timer.insertAdjacentHTML("beforeend", /*html*/ `<style>${timerLogicCSS}</style>`);
+                @keyframes timer-animation {
+                    100% {
+                        ${counterPropertyName}: ${maxSignedInt};
+                    }
+                }
+            </style>
+        </div>`);
 
     const times = [MONTH, DAY, HOUR, MINUTE, SECOND];
     const labels = ["M", "D", "H", "M", "S"];
@@ -68,6 +74,7 @@ if (timer) {
 
         timer.insertAdjacentHTML("beforeend", generateCounterSegment(secondsInUnit, maxAmountInCurrentUnit, label));
     }
+    return timer;
 }
 
 function registerProperties() {
@@ -80,4 +87,12 @@ function registerProperties() {
             syntax: "<integer>",
         });
     });
+}
+
+/**
+ * @param {HTMLString} html
+ * @returns {HTMLElement | null}
+ */
+function parseFromHTML(html) {
+    return new DOMParser().parseFromString(html, "text/html").body.firstChild;
 }

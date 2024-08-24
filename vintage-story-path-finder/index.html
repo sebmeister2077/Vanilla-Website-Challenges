@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vintage Story Path Finder</title>
+    </head>
+    <body style="background-color: silver">
+        <script type="module">
+            import jsonData from "./data.json" with { type: "json" };
+            class JsonData {
+                constructor(data) {
+                    this.name = `${data.name}`;
+                    this.type = `${data.type}`;
+                    this.crs = new CRS(data.crs);
+                    this.features = [...data.features].map((f) => new Feature(f));
+                }
+            }
+            class CRS {
+                constructor(data) {
+                    this.Name = `${data.Name}`;
+                    this.type = `${data.type}`;
+                    this.properties = { name: `${data.properties.name}` };
+                }
+            }
+            class Feature {
+                constructor(feature) {
+                    this.type = `${feature.type}`;
+                    this.properties = {
+                        depth1: parseInt(feature.properties.depth1),
+                        depth2: parseInt(feature.properties.depth2),
+                        label: `${feature.properties.label}`,
+                        tag: `${feature.properties.tag}`,
+                    };
+                    const c = feature.geometry.coordinates;
+                    this.geometry = {
+                        type: `${feature.geometry.type}`,
+                        coordinates: [
+                            [parseInt(c[0][0]), -parseInt(c[0][1])],
+                            [parseInt(c[1][0]), -parseInt(c[1][1])],
+                        ],
+                    };
+                }
+            }
+
+            function getClosestCoordToPosition(position){
+                if(!(position instanceof Array))throw 0;
+                let closest = allUniqueCoords[0];
+                let closestDistance = getDistance(position,closest)
+
+                for(let i=1;i<allUniqueCoords.length;i++){
+                    const distance = getDistance(position,allUniqueCoords[i]);
+                    if(distance< closestDistance)
+                    {
+                        closest= allUniqueCoords[i];
+                        closestDistance=distance;
+                    }
+                }
+                return closest;
+            }
+            function getDistance(p1, p2){
+                const [x1, y1] = p1;
+
+                    const [x2, y2] = p2;
+                    const distance =parseInt(Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
+                    const cost = distance
+                    return cost;
+
+            }
+            const startPosition= [515, 18779];
+
+            function getUniqueCoords(coordRelations){
+                const uniqueCoords = [];
+                if(!(coordRelations instanceof Array)) uniqueCoords;
+                for(const coords of coordRelations){
+                    if(!(coords instanceof Array)) continue;
+                        for(const c of coords){
+                        if(!(c instanceof Array)) continue;
+
+                        if(uniqueCoords.some(uc=>uc[0]===c[0]&&uc[1]===c[1])) continue;
+                        uniqueCoords.push(Object.freeze(c));
+                    }
+                }
+                return uniqueCoords.sort((a,b)=>getDistance(startPosition,a)< getDistance(startPosition,b)?-1:1 );
+            }
+            function getRelativeMapForCoord(coord){
+                const relationCoords = allUniqueCoords.filter(uc => uc[0] !== coord[0] && uc[1] !== coord[1])
+                const map={};
+                relationCoords.forEach(relationCoord => {
+                    map[relationCoord] = getDistance(coord, relationCoord)
+                })
+                return map;
+            }
+
+            const data = new JsonData(jsonData);
+            const allCoordRelations = data.features.map(f=> f.geometry.coordinates);
+            const allUniqueCoords = getUniqueCoords(allCoordRelations).slice(0,10); // only take the ones closest to my base
+
+
+
+            const graph=allUniqueCoords.reduce((accumulator,current)=> {
+
+                accumulator[current]= getRelativeMapForCoord(current)
+                return accumulator;
+            },{})
+            console.log("🚀 ~ graph ~ graph:", graph)
+
+
+
+            const endPosition=[1000,16000];
+            const shortestPaths = findShortestPaths(graph, startPosition,endPosition);
+            console.log("🚀 ~ shortestPaths:", shortestPaths)
+
+
+
+            function findShortestPaths(graph,startPosition,endPosition){
+                const startCoord = getClosestCoordToPosition(startPosition)
+                //practic facem backtracking, ez
+            }
+        </script>
+    </body>
+</html>

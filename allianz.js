@@ -33,7 +33,20 @@ const europeEquityInterests = [];
 for (let i = 1; i < europeEquityAnualValue.length; i++) {
     europeEquityInterests.push(getAverageInflationBetweenDates(europeEquityAnualValue[i - 1], europeEquityAnualValue[i], 1));
 }
+
+// raportul intre europe si world este de 50/50 in acest calcul
+const medianInterests = [];
+for (let i = 1; i < europeEquityAnualValue.length; i++) {
+    medianInterests.push(
+        getAverageInflationBetweenDates(
+            (europeEquityAnualValue[i - 1] + worldEquityAnualValue[i - 1]) / 2,
+            (europeEquityAnualValue[i] + worldEquityAnualValue[i]) / 2,
+            1,
+        ),
+    );
+}
 const europeEquityAverage = (europeEquityInterests.reduce((curr, acc) => curr + acc, 0) / europeEquityInterests.length).toFixed(2);
+const medianAverage = (medianInterests.reduce((curr, acc) => curr + acc, 0) / medianInterests.length).toFixed(2);
 
 console.log(
     "worldEquity:",
@@ -48,13 +61,14 @@ console.log("europeEquityAverage:", europeEquityAverage);
 
 const years = new Array(20).fill(1).map((_, i) => i + 1);
 
-const yearlySum = 1820;
+const yearlySum = 1820 + 600;
 const europePortfolioValues = years.map((y) => calculatePortfolio(yearlySum, y, europeEquityAverage));
 const worldPortfolioValues = years.map((y) => calculatePortfolio(yearlySum, y, worldEquityAverage));
+const medianPortfolioValues = years.map((y) => calculatePortfolio(yearlySum, y, medianAverage));
 
 console.log("europePortfolioValues:", europePortfolioValues);
 console.log("worldPortfolioValues:", worldPortfolioValues);
-
+console.log("medianPortfolioValues (50/50):", medianPortfolioValues);
 /**
  * Taxa de asigurare- 36 EUR/an
 Taxa administrare fond - 1.29%/an din activul total

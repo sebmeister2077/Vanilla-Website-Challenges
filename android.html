@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Script anroid</title>
+    </head>
+    <body>
+        Hello bnoss
+
+        <script>
+            const package = "com.nordensa.application.dev";
+            window.location = `intent://path#Intent;scheme=https;package=${package};end`;
+
+            setTimeout(() => {
+                window.location = "https://ply.google.com/store/apps/details?id=" + package;
+            }, 1600);
+        </script>
+    </body>
+</html>
